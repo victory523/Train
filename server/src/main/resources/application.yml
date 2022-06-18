@@ -1,0 +1,10 @@
+withings:
+  clientId: ${env.WITHINGS_CLIENT_ID}
+  clientSecret: ${env.WITHINGS_CLIENT_SECRET}
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          client:
+            RestTemplate: DEBUG
