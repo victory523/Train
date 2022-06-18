@@ -6,6 +6,8 @@ import mucsi96.trainingLog.withings.data.GetAccessTokenResponseBody;
 import mucsi96.trainingLog.withings.WithingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -31,14 +33,14 @@ public class WithingsController {
     WithingsService withingsService;
 
     @GetMapping("/auth")
-    String withings(RedirectAttributes redirectAttributes, HttpSession session) {
+    String auth(RedirectAttributes redirectAttributes, HttpSession session) {
         String state = new BigInteger(130, new SecureRandom()).toString(32);
         session.setAttribute("state", state);
         return UrlBasedViewResolver.REDIRECT_URL_PREFIX + withingsService.getAuthorizationCodeUrl(state);
     }
 
     @GetMapping("/redirect")
-    String withingsAuth(
+    String redirect(
             @RequestParam("code") String authorizationCode,
             @RequestParam("state") String stateInParam,
             @SessionAttribute("state") String stateInSession,
@@ -59,11 +61,11 @@ public class WithingsController {
                 accessTokenResponseBody.getRefreshToken(),
                 REFRESH_TOKEN_EXPIRATION_TIME
         ));
-        return UrlBasedViewResolver.REDIRECT_URL_PREFIX + "/withings_measure";
+        return "home";
     }
 
-    @GetMapping("/measure")
-    String withingsMeasure(
+    @GetMapping(value = "/measure", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody Double measure(
             @CookieValue(required = false, name = ACCESS_TOKEN_COOKIE) String accessToken,
             @CookieValue(required = false, name = REFRESH_TOKEN_COOKIE) String refreshToken,
             HttpServletResponse response
@@ -75,11 +77,14 @@ public class WithingsController {
         if (accessToken == null) {
             accessToken = authenticate(refreshToken, response);
         }
-        
-        Double value = withingsService.getFirstMeasureValue(withingsService.getMeasure(accessToken));
-        log.info("Measure value {}", value);
 
-        return "home";
+        Double value = withingsService.getFirstMeasureValue(withingsService.getMeasure(accessToken));
+
+        if (value == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
+
+        return value;
     }
 
     private String authenticate(String refreshToken, HttpServletResponse response) {
