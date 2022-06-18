@@ -1,17 +1,13 @@
-package mucsi96.trainingLog;
+package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponse;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponseBody;
 import mucsi96.trainingLog.withings.WithingsService;
-import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.SessionAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
@@ -22,9 +18,10 @@ import javax.servlet.http.HttpSession;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 
-@Controller
 @Slf4j
-public class HomeController {
+@Controller
+@RequestMapping("/withings")
+public class WithingsController {
 
     static final String ACCESS_TOKEN_COOKIE = "withings_access_token";
     static final String REFRESH_TOKEN_COOKIE = "withings_refresh_token";
@@ -33,14 +30,14 @@ public class HomeController {
     @Autowired
     WithingsService withingsService;
 
-    @GetMapping("/withings/auth")
+    @GetMapping("/auth")
     String withings(RedirectAttributes redirectAttributes, HttpSession session) {
         String state = new BigInteger(130, new SecureRandom()).toString(32);
         session.setAttribute("state", state);
         return UrlBasedViewResolver.REDIRECT_URL_PREFIX + withingsService.getAuthorizationCodeUrl(state);
     }
 
-    @GetMapping("/withings/redirect")
+    @GetMapping("/redirect")
     String withingsAuth(
             @RequestParam("code") String authorizationCode,
             @RequestParam("state") String stateInParam,
@@ -65,7 +62,7 @@ public class HomeController {
         return UrlBasedViewResolver.REDIRECT_URL_PREFIX + "/withings_measure";
     }
 
-    @GetMapping("/withings/measure")
+    @GetMapping("/measure")
     String withingsMeasure(
             @CookieValue(required = false, name = ACCESS_TOKEN_COOKIE) String accessToken,
             @CookieValue(required = false, name = REFRESH_TOKEN_COOKIE) String refreshToken,
