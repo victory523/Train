@@ -61,7 +61,7 @@ public class WithingsController {
                 accessTokenResponseBody.getRefreshToken(),
                 REFRESH_TOKEN_EXPIRATION_TIME
         ));
-        return "home";
+        return UrlBasedViewResolver.REDIRECT_URL_PREFIX + "/";
     }
 
     @GetMapping(value = "/measure", produces = MediaType.APPLICATION_JSON_VALUE)

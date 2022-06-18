@@ -8,3 +8,7 @@ logging:
         web:
           client:
             RestTemplate: DEBUG
+spring:
+  web:
+    resources:
+      static-locations: file:../client
