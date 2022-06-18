@@ -1,0 +1,44 @@
+.container {
+  margin: 0 auto;
+  width: 50px;
+  height: 60px;
+  text-align: center;
+  font-size: 10px;
+}
+
+.bar {
+  background-color: chocolate;
+  opacity: 0.5;
+  height: 100%;
+  width: 7px;
+  display: inline-block;
+  margin-right: 3px;
+  animation: sk-stretchdelay 1.2s infinite ease-in-out;
+}
+
+.bar2 {
+  animation-delay: -1.1s;
+}
+
+.bar3 {
+  animation-delay: -1s;
+}
+
+.bar4 {
+  animation-delay: -0.9s;
+}
+
+.bar5 {
+  animation-delay: -0.8s;
+}
+
+@keyframes sk-stretchdelay {
+  0%,
+  40%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  20% {
+    transform: scaleY(1);
+  }
+}
