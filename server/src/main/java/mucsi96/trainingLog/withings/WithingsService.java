@@ -24,7 +24,7 @@ public class WithingsService {
     @Value("${withings.clientSecret}")
     String withingsClientSecret;
 
-    public String getAuthorizationCodeUrl(String state) {
+    public String getAuthorizationCodeUrl(String state, String redirectUri) {
         return UriComponentsBuilder
                 .fromHttpUrl("https://account.withings.com")
                 .path("/oauth2_user/authorize2")
@@ -32,13 +32,13 @@ public class WithingsService {
                 .queryParam("client_id", withingsClientId)
                 .queryParam("state", state)
                 .queryParam("scope", "user.metrics")
-                .queryParam("redirect_uri", "http://localhost:8080/withings_auth")
+                .queryParam("redirect_uri", redirectUri)
                 .build()
                 .encode()
                 .toUriString();
     }
 
-    public HttpEntity<MultiValueMap<String, String>> getAccessTokenRequest(String authorizationCode) {
+    public HttpEntity<MultiValueMap<String, String>> getAccessTokenRequest(String authorizationCode, String redirectUri) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
@@ -47,7 +47,7 @@ public class WithingsService {
         body.add("client_secret", withingsClientSecret);
         body.add("grant_type", "authorization_code");
         body.add("code", authorizationCode);
-        body.add("redirect_uri", "http://localhost:8080/withings_auth");
+        body.add("redirect_uri", redirectUri);
         return new HttpEntity<>(body, headers);
     }
 
@@ -90,14 +90,14 @@ public class WithingsService {
                 .toUriString();
     }
 
-    public GetAccessTokenResponseBody getAccessToken(String authorizationCode) {
+    public GetAccessTokenResponse getAccessToken(String authorizationCode, String redirectUri) {
         RestTemplate restTemplate = new RestTemplate();
         GetAccessTokenResponse response = restTemplate.postForObject(
                 "https://wbsapi.withings.net/v2/oauth2",
-                getAccessTokenRequest(authorizationCode),
+                getAccessTokenRequest(authorizationCode, redirectUri),
                 GetAccessTokenResponse.class
         );
-        return response.getBody();
+        return response;
     }
 
     public GetAccessTokenResponse refreshAccessToken(String refreshToken) {

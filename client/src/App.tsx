@@ -1,15 +1,10 @@
 import { useQuery } from "react-query";
+import { fetchWeight } from "./api/withings";
 import "./App.css";
-import { Spinner } from "./Spinner";
+import { Spinner } from "./components/Spinner";
 
 function App() {
-  const { isLoading, isError, isIdle, data } = useQuery("weight", () =>
-    fetch("/api/withings/measure").then((res) => res.json())
-  );
-
-  if (isIdle) {
-    return null;
-  }
+  const { isLoading, isError, data: weight } = useQuery("weight", () => fetchWeight());
 
   if (isLoading) {
     return <Spinner />;
@@ -19,7 +14,7 @@ function App() {
     return <>{"Loading weight was not succesful"}</>;
   }
 
-  return <div className="App">{data}</div>;
+  return <div className="App">{weight}</div>;
 }
 
 export default App;

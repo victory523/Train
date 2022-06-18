@@ -1,3 +1,6 @@
+app:
+  publicUrl: ${env.PUBLIC_URL}
+  publicApiUrl: ${env.PUBLIC_API_URL}
 withings:
   clientId: ${env.WITHINGS_CLIENT_ID}
   clientSecret: ${env.WITHINGS_CLIENT_SECRET}

@@ -7,9 +7,9 @@ import "./index.css";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false
-    }
-  }
+      retry: false,
+    },
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
