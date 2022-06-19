@@ -1,7 +1,6 @@
 FROM openjdk:17-alpine as build-deps
 WORKDIR /usr/src/app
 COPY mvnw .
-RUN chmod +x ./mvnw
 COPY .mvn .mvn
 COPY pom.xml .
 COPY . ./
