@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponse;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponseBody;
 import mucsi96.trainingLog.withings.WithingsService;
+import mucsi96.trainingLog.withings.data.WeightResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -85,7 +86,7 @@ public class WithingsController {
     }
 
     @GetMapping(value = "/weight", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody Double weight(
+    @ResponseBody WeightResponse weight(
             @CookieValue(required = false, name = ACCESS_TOKEN_COOKIE) String accessToken,
             @CookieValue(required = false, name = REFRESH_TOKEN_COOKIE) String refreshToken,
             HttpServletResponse response
@@ -98,13 +99,9 @@ public class WithingsController {
             accessToken = authenticate(refreshToken, response);
         }
 
-        Double value = withingsService.getFirstMeasureValue(withingsService.getMeasure(accessToken));
-
-        if (value == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-        }
-
-        return value;
+        WeightResponse weightResponse = new WeightResponse();
+        weightResponse.setWeight(withingsService.getFirstMeasureValue(withingsService.getMeasure(accessToken)));
+        return weightResponse;
     }
 
     private String authenticate(String refreshToken, HttpServletResponse response) {

@@ -4,7 +4,7 @@ import "./App.css";
 import { Spinner } from "./components/Spinner";
 
 function App() {
-  const { isLoading, isError, data: weight } = useQuery("weight", () => fetchWeight());
+  const { isLoading, isError, data } = useQuery("weight", () => fetchWeight());
 
   if (isLoading) {
     return <Spinner />;
@@ -14,7 +14,7 @@ function App() {
     return <>{"Loading weight was not succesful"}</>;
   }
 
-  return <div className="App">{weight}</div>;
+  return <div className="App">{data?.weight ?? '?'}</div>;
 }
 
 export default App;

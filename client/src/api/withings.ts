@@ -1,5 +1,9 @@
 import { fetchJSON } from "./core";
 
+export type WeightResponse = {
+    weight?: number;
+}
+
 export function fetchWeight() {
-    return fetchJSON<number>('/api/withings/weight');
+    return fetchJSON<WeightResponse>('/api/withings/weight');
 }
