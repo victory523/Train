@@ -26,5 +26,5 @@ public class GetAccessTokenResponseBody implements Serializable {
     private String csrfToken;
 
     @JsonProperty("token_type")
-    private String token_type;
+    private String tokenType;
 }

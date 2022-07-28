@@ -1,14 +1,14 @@
 package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.trainingLog.withings.data.*;
-import org.springframework.beans.factory.annotation.Value;
+import mucsi96.trainingLog.withings.data.GetMeasureResponse;
+import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
+import mucsi96.trainingLog.withings.data.Measure;
+import mucsi96.trainingLog.withings.data.MeasureGroup;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,49 +18,13 @@ import java.util.List;
 @Service
 @Slf4j
 public class WithingsService {
-    @Value("${withings.clientId}")
-    String withingsClientId;
 
-    @Value("${withings.clientSecret}")
-    String withingsClientSecret;
+    private RestTemplate restTemplate;
+    private WithingsAuthentication authentication;
 
-    public String getAuthorizationCodeUrl(String state, String redirectUri) {
-        return UriComponentsBuilder
-                .fromHttpUrl("https://account.withings.com")
-                .path("/oauth2_user/authorize2")
-                .queryParam("response_type", "code")
-                .queryParam("client_id", withingsClientId)
-                .queryParam("state", state)
-                .queryParam("scope", "user.metrics")
-                .queryParam("redirect_uri", redirectUri)
-                .build()
-                .encode()
-                .toUriString();
-    }
-
-    public HttpEntity<MultiValueMap<String, String>> getAccessTokenRequest(String authorizationCode, String redirectUri) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("action", "requesttoken");
-        body.add("client_id", withingsClientId);
-        body.add("client_secret", withingsClientSecret);
-        body.add("grant_type", "authorization_code");
-        body.add("code", authorizationCode);
-        body.add("redirect_uri", redirectUri);
-        return new HttpEntity<>(body, headers);
-    }
-
-    public HttpEntity<MultiValueMap<String, String>> getRefreshAccessTokenRequest(String refreshToken) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("action", "requesttoken");
-        body.add("client_id", withingsClientId);
-        body.add("client_secret", withingsClientSecret);
-        body.add("grant_type", "refresh_token");
-        body.add("refresh_token", refreshToken);
-        return new HttpEntity<>(body, headers);
+    public WithingsService(WithingsAuthentication authentication) {
+        this.restTemplate = new RestTemplate();
+        this.authentication = authentication;
     }
 
     int getStartDate() {
@@ -90,32 +54,22 @@ public class WithingsService {
                 .toUriString();
     }
 
-    public GetAccessTokenResponse getAccessToken(String authorizationCode, String redirectUri) {
-        RestTemplate restTemplate = new RestTemplate();
-        GetAccessTokenResponse response = restTemplate.postForObject(
-                "https://wbsapi.withings.net/v2/oauth2",
-                getAccessTokenRequest(authorizationCode, redirectUri),
-                GetAccessTokenResponse.class
-        );
-        return response;
-    }
-
-    public GetAccessTokenResponse refreshAccessToken(String refreshToken) {
-        RestTemplate restTemplate = new RestTemplate();
-        return restTemplate.postForObject(
-                "https://wbsapi.withings.net/v2/oauth2",
-                getRefreshAccessTokenRequest(refreshToken),
-                GetAccessTokenResponse.class
-        );
-    }
-
-    public GetMeasureResponseBody getMeasure(String accessToken) {
+    public GetMeasureResponseBody getMeasure() {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(accessToken);
+        headers.setBearerAuth(authentication.getAccessToken());
         HttpEntity<String> request = new HttpEntity<>("", headers);
         RestTemplate restTemplate = new RestTemplate();
         GetMeasureResponse response = restTemplate
                 .postForObject(getMeasureUrl(), request, GetMeasureResponse.class);
+
+        if (response.getStatus() == 401) {
+            throw new OAuth2AuthenticationException("dsfdsfs");
+        }
+
+        if (response.getStatus() != 0) {
+            throw new WithingsTechnicalException();
+        }
+
         return response.getBody();
     }
 

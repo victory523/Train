@@ -5,7 +5,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class GetAccessTokenResponse implements Serializable {
+public class WithingsResponse<T> implements Serializable {
     private int status;
-    private GetAccessTokenResponseBody body;
+    private T body;
 }

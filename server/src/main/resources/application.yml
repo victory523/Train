@@ -1,13 +1,31 @@
 app:
   publicUrl: ${env.PUBLIC_URL}
   publicApiUrl: ${env.PUBLIC_API_URL}
-withings:
-  clientId: ${env.WITHINGS_CLIENT_ID}
-  clientSecret: ${env.WITHINGS_CLIENT_SECRET}
+spring:
+  profiles:
+    active: develop
+  security:
+    oauth2:
+      client:
+        provider:
+          withings:
+           authorization-uri: https://account.withings.com/oauth2_user/authorize2
+           token-uri: https://wbsapi.withings.net/v2/oauth2
+        registration:
+          withings-client:
+            provider: withings
+            client-id: ${env.WITHINGS_CLIENT_ID}
+            client-secret: ${env.WITHINGS_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope: user.metrics
+
 logging:
   level:
     org:
       springframework:
         web:
           client:
-            RestTemplate: DEBUG
+            RestTemplate: TRACE
+            HttpMessageConverterExtractor: TRACE
+        security: TRACE
