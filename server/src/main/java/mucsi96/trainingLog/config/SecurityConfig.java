@@ -1,8 +1,10 @@
 package mucsi96.trainingLog.config;
 
 import mucsi96.trainingLog.withings.WithingsAuthentication;
+import mucsi96.trainingLog.withings.WithingsUnauthorizedException;
 import mucsi96.trainingLog.withings.oauth.WithingsAccessTokenResponseClient;
 import mucsi96.trainingLog.withings.oauth.WithingsUserService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -20,20 +22,17 @@ import org.springframework.web.context.annotation.RequestScope;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
+    @Value("${app.publicUrl}")
+    String PUBLIC_URL;
+
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(
             HttpSecurity http,
             WithingsUserService userService,
             WithingsAccessTokenResponseClient accessTokenResponseClient
     ) throws Exception {
-        http.authorizeRequests()
-                .antMatchers("/withings/weight").authenticated()
-                .antMatchers("/login").permitAll()
-                .antMatchers("/login/oauth2/**").permitAll();
-
         http.oauth2Login()
-                .loginPage("/login")
-                .defaultSuccessUrl("/login_success");
+                .defaultSuccessUrl(PUBLIC_URL);
 
         http.oauth2Login()
                 .tokenEndpoint()
@@ -55,13 +54,11 @@ public class SecurityConfig {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             OAuth2AuthorizedClient authorizedClient = clientService.loadAuthorizedClient("withings-client", authentication.getName());
 
-            String accessToken = null;
-
-            if (authorizedClient != null) {
-                accessToken = authorizedClient.getAccessToken().getTokenValue();
+            if (authorizedClient == null) {
+                throw new WithingsUnauthorizedException();
             }
 
-            return accessToken;
+            return authorizedClient.getAccessToken().getTokenValue();
         };
     }
 }

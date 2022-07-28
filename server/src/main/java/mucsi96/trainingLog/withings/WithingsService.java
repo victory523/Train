@@ -63,7 +63,7 @@ public class WithingsService {
                 .postForObject(getMeasureUrl(), request, GetMeasureResponse.class);
 
         if (response.getStatus() == 401) {
-            throw new OAuth2AuthenticationException("dsfdsfs");
+            throw new WithingsUnauthorizedException();
         }
 
         if (response.getStatus() != 0) {
