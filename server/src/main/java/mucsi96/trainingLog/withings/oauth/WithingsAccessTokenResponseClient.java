@@ -7,6 +7,7 @@ import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCo
 import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequestEntityConverter;
 import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
+import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -17,9 +18,12 @@ public class WithingsAccessTokenResponseClient implements OAuth2AccessTokenRespo
 
     DefaultAuthorizationCodeTokenResponseClient tokenResponseClient;
 
-    public WithingsAccessTokenResponseClient(WithingsAccessTokenResponseConverter accessTokenResponseConverter) {
+    public WithingsAccessTokenResponseClient(WithingsAccessTokenResponseConverter withingsAccessTokenResponseConverter) {
         OAuth2AuthorizationCodeGrantRequestEntityConverter requestEntityConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();
         requestEntityConverter.addParametersConverter(new WithingsAccessTokenRequestParametersConverter());
+
+        OAuth2AccessTokenResponseHttpMessageConverter accessTokenResponseConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
+        accessTokenResponseConverter.setAccessTokenResponseConverter(withingsAccessTokenResponseConverter);
 
         RestTemplate restTemplate = new RestTemplate(Arrays.asList(
                 new FormHttpMessageConverter(),
