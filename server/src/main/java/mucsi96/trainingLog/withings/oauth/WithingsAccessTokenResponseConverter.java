@@ -19,8 +19,7 @@ public class WithingsAccessTokenResponseConverter implements Converter<Map<Strin
     public OAuth2AccessTokenResponse convert(Map<String, Object> source) {
         ObjectMapper mapper = new ObjectMapper();
         WithingsResponse<GetAccessTokenResponseBody> response =
-                mapper.convertValue(source, new TypeReference<>() {
-                });
+                mapper.convertValue(source, new TypeReference<>() {});
 
         if (response.getStatus() != 0) {
             throw new WithingsTechnicalException();
