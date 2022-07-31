@@ -2,6 +2,7 @@ package mucsi96.trainingLog.config;
 
 import mucsi96.trainingLog.withings.oauth.WithingsAccessTokenResponseClient;
 import mucsi96.trainingLog.withings.oauth.WithingsAuthorizationFailureHandler;
+import mucsi96.trainingLog.withings.oauth.WithingsRefreshTokenResponseClient;
 import mucsi96.trainingLog.withings.oauth.WithingsUserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -51,14 +52,15 @@ public class SecurityConfig {
     public OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
             OAuth2AuthorizedClientRepository authorizedClientRepository,
-            WithingsAuthorizationFailureHandler authorizationFailureHandler) {
+            WithingsAuthorizationFailureHandler authorizationFailureHandler,
+            WithingsRefreshTokenResponseClient withingsRefreshTokenResponseClient) {
 
         OAuth2AuthorizedClientProvider authorizedClientProvider =
                 OAuth2AuthorizedClientProviderBuilder.builder()
                         .authorizationCode()
-                        .refreshToken()
-                        .clientCredentials()
-                        .password()
+                        .refreshToken(configurer -> {
+                            configurer.accessTokenResponseClient(withingsRefreshTokenResponseClient);
+                        })
                         .build();
 
         DefaultOAuth2AuthorizedClientManager authorizedClientManager =

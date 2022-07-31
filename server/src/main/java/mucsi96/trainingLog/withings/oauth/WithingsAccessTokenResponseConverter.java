@@ -30,7 +30,8 @@ public class WithingsAccessTokenResponseConverter implements Converter<Map<Strin
         return OAuth2AccessTokenResponse
                 .withToken(body.getAccessToken())
                 .refreshToken(body.getRefreshToken())
-                .expiresIn(body.getExpiresIn())
+//                .expiresIn(body.getExpiresIn())
+                .expiresIn(60)
                 .scopes(Collections.singleton(body.getScope()))
                 .tokenType(OAuth2AccessToken.TokenType.BEARER)
                 .additionalParameters(Collections.singletonMap("userId", body.getUserId()))

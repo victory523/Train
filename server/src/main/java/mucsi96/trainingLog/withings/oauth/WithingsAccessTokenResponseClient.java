@@ -16,7 +16,7 @@ import java.util.Arrays;
 @Component
 public class WithingsAccessTokenResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
 
-    DefaultAuthorizationCodeTokenResponseClient tokenResponseClient;
+    private final DefaultAuthorizationCodeTokenResponseClient tokenResponseClient;
 
     public WithingsAccessTokenResponseClient(WithingsAccessTokenResponseConverter withingsAccessTokenResponseConverter) {
         OAuth2AuthorizationCodeGrantRequestEntityConverter requestEntityConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();

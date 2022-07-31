@@ -8,4 +8,5 @@ import java.io.Serializable;
 public class WithingsResponse<T> implements Serializable {
     private int status;
     private T body;
+    private String error;
 }
