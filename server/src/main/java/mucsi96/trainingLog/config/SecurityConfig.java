@@ -1,8 +1,7 @@
 package mucsi96.trainingLog.config;
 
-import mucsi96.trainingLog.withings.WithingsAuthentication;
-import mucsi96.trainingLog.withings.WithingsUnauthorizedException;
 import mucsi96.trainingLog.withings.oauth.WithingsAccessTokenResponseClient;
+import mucsi96.trainingLog.withings.oauth.WithingsAuthorizationFailureHandler;
 import mucsi96.trainingLog.withings.oauth.WithingsUserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,12 +9,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.web.context.annotation.RequestScope;
 
 @Configuration
 @EnableWebSecurity
@@ -42,23 +40,33 @@ public class SecurityConfig {
                 .userInfoEndpoint()
                 .userService(userService);
 
-        http.oauth2Client();
+        http.oauth2Client()
+                .authorizationCodeGrant()
+                .accessTokenResponseClient(accessTokenResponseClient);
 
         return http.build();
     }
 
     @Bean
-    @RequestScope
-    public WithingsAuthentication withingsAuthentication(OAuth2AuthorizedClientService clientService) {
-        return () -> {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            OAuth2AuthorizedClient authorizedClient = clientService.loadAuthorizedClient("withings-client", authentication.getName());
+    public OAuth2AuthorizedClientManager authorizedClientManager(
+            ClientRegistrationRepository clientRegistrationRepository,
+            OAuth2AuthorizedClientRepository authorizedClientRepository,
+            WithingsAuthorizationFailureHandler authorizationFailureHandler) {
 
-            if (authorizedClient == null) {
-                throw new WithingsUnauthorizedException();
-            }
+        OAuth2AuthorizedClientProvider authorizedClientProvider =
+                OAuth2AuthorizedClientProviderBuilder.builder()
+                        .authorizationCode()
+                        .refreshToken()
+                        .clientCredentials()
+                        .password()
+                        .build();
 
-            return authorizedClient.getAccessToken().getTokenValue();
-        };
+        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
+                new DefaultOAuth2AuthorizedClientManager(
+                        clientRegistrationRepository, authorizedClientRepository);
+        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+        authorizedClientManager.setAuthorizationFailureHandler(authorizationFailureHandler);
+
+        return authorizedClientManager;
     }
 }

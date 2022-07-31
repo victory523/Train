@@ -7,7 +7,7 @@ import mucsi96.trainingLog.withings.data.Measure;
 import mucsi96.trainingLog.withings.data.MeasureGroup;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -20,11 +20,9 @@ import java.util.List;
 public class WithingsService {
 
     private RestTemplate restTemplate;
-    private WithingsAuthentication authentication;
 
-    public WithingsService(WithingsAuthentication authentication) {
+    public WithingsService() {
         this.restTemplate = new RestTemplate();
-        this.authentication = authentication;
     }
 
     int getStartDate() {
@@ -54,9 +52,9 @@ public class WithingsService {
                 .toUriString();
     }
 
-    public GetMeasureResponseBody getMeasure() {
+    public GetMeasureResponseBody getMeasure(OAuth2AuthorizedClient authorizedClient) {
         HttpHeaders headers = new HttpHeaders();
-        headers.setBearerAuth(authentication.getAccessToken());
+        headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
         HttpEntity<String> request = new HttpEntity<>("", headers);
         RestTemplate restTemplate = new RestTemplate();
         GetMeasureResponse response = restTemplate

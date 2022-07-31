@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mucsi96.trainingLog.withings.data.WeightResponse;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,9 +21,9 @@ public class WithingsController {
 
 
     @GetMapping(value = "/weight", produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody WeightResponse weight() {
+    @ResponseBody WeightResponse weight(@RegisteredOAuth2AuthorizedClient("withings-client") OAuth2AuthorizedClient authorizedClient) {
         WeightResponse weightResponse = new WeightResponse();
-        weightResponse.setWeight(withingsService.getFirstMeasureValue(withingsService.getMeasure()));
+        weightResponse.setWeight(withingsService.getFirstMeasureValue(withingsService.getMeasure(authorizedClient)));
         return weightResponse;
     }
 
