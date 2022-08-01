@@ -1,5 +1,6 @@
 package mucsi96.trainingLog.withings.oauth;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
+@Slf4j
 @Component
 public class WithingsAccessTokenResponseClient implements OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> {
 
@@ -38,6 +40,7 @@ public class WithingsAccessTokenResponseClient implements OAuth2AccessTokenRespo
 
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest) {
+        log.info("Requesting access token");
         return this.tokenResponseClient.getTokenResponse(authorizationGrantRequest);
     }
 }

@@ -20,12 +20,12 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: user.metrics
 
-logging:
-  level:
-    org:
-      springframework:
-        web:
-          client:
-            RestTemplate: TRACE
-            HttpMessageConverterExtractor: TRACE
-        security: TRACE
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        web:
+#          client:
+#            RestTemplate: TRACE
+#            HttpMessageConverterExtractor: TRACE
+#        security: TRACE

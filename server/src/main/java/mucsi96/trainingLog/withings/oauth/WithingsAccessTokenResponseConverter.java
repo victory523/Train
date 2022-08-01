@@ -2,6 +2,7 @@ package mucsi96.trainingLog.withings.oauth;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import mucsi96.trainingLog.withings.WithingsTechnicalException;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponseBody;
 import mucsi96.trainingLog.withings.data.WithingsResponse;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collections;
 import java.util.Map;
 
+@Slf4j
 @Component
 public class WithingsAccessTokenResponseConverter implements Converter<Map<String, Object>, OAuth2AccessTokenResponse> {
     @Override
@@ -20,6 +22,11 @@ public class WithingsAccessTokenResponseConverter implements Converter<Map<Strin
         ObjectMapper mapper = new ObjectMapper();
         WithingsResponse<GetAccessTokenResponseBody> response =
                 mapper.convertValue(source, new TypeReference<>() {});
+
+        if (response.getError() != null) {
+            log.error("Withings error", response.getError());
+            throw new WithingsTechnicalException();
+        }
 
         if (response.getStatus() != 0) {
             throw new WithingsTechnicalException();
@@ -31,7 +38,7 @@ public class WithingsAccessTokenResponseConverter implements Converter<Map<Strin
                 .withToken(body.getAccessToken())
                 .refreshToken(body.getRefreshToken())
 //                .expiresIn(body.getExpiresIn())
-                .expiresIn(60)
+                .expiresIn(120)// 2 minutes
                 .scopes(Collections.singleton(body.getScope()))
                 .tokenType(OAuth2AccessToken.TokenType.BEARER)
                 .additionalParameters(Collections.singletonMap("userId", body.getUserId()))
