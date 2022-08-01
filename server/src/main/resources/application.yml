@@ -1,6 +1,7 @@
 app:
-  publicUrl: ${env.PUBLIC_URL}
-  publicApiUrl: ${env.PUBLIC_API_URL}
+  web:
+    publicUrl: ${env.PUBLIC_URL}
+    publicApiUrl: ${env.PUBLIC_API_URL}
 spring:
   profiles:
     active: develop

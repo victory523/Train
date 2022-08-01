@@ -1,5 +1,6 @@
 package mucsi96.trainingLog.config;
 
+import lombok.RequiredArgsConstructor;
 import mucsi96.trainingLog.withings.oauth.WithingsAccessTokenResponseClient;
 import mucsi96.trainingLog.withings.oauth.WithingsAuthorizationFailureHandler;
 import mucsi96.trainingLog.withings.oauth.WithingsRefreshTokenResponseClient;
@@ -19,10 +20,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${app.publicUrl}")
-    String PUBLIC_URL;
+    private final WebConfig webConfig;
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(
@@ -31,7 +32,7 @@ public class SecurityConfig {
             WithingsAccessTokenResponseClient accessTokenResponseClient
     ) throws Exception {
         http.oauth2Login()
-                .defaultSuccessUrl(PUBLIC_URL);
+                .defaultSuccessUrl(webConfig.getPublicUrl());
 
         http.oauth2Login()
                 .tokenEndpoint()
@@ -40,10 +41,6 @@ public class SecurityConfig {
         http.oauth2Login()
                 .userInfoEndpoint()
                 .userService(userService);
-
-        http.oauth2Client()
-                .authorizationCodeGrant()
-                .accessTokenResponseClient(accessTokenResponseClient);
 
         return http.build();
     }
