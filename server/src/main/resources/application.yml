@@ -2,6 +2,8 @@ app:
   web:
     publicUrl: ${env.PUBLIC_URL}
     publicApiUrl: ${env.PUBLIC_API_URL}
+  jwt:
+    secret: ${env.JWT_SECRET}
 spring:
   profiles:
     active: develop

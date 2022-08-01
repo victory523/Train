@@ -1,11 +1,7 @@
 package mucsi96.trainingLog.config;
 
 import lombok.RequiredArgsConstructor;
-import mucsi96.trainingLog.withings.oauth.WithingsAccessTokenResponseClient;
-import mucsi96.trainingLog.withings.oauth.WithingsAuthorizationFailureHandler;
-import mucsi96.trainingLog.withings.oauth.WithingsRefreshTokenResponseClient;
-import mucsi96.trainingLog.withings.oauth.WithingsUserService;
-import org.springframework.beans.factory.annotation.Value;
+import mucsi96.trainingLog.withings.oauth.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -14,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -48,7 +43,7 @@ public class SecurityConfig {
     @Bean
     public OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
-            OAuth2AuthorizedClientRepository authorizedClientRepository,
+            CookieBasedAuthorizedClientRepository cookieBasedAuthorizedClientRepository,
             WithingsAuthorizationFailureHandler authorizationFailureHandler,
             WithingsRefreshTokenResponseClient withingsRefreshTokenResponseClient) {
 
@@ -62,7 +57,7 @@ public class SecurityConfig {
 
         DefaultOAuth2AuthorizedClientManager authorizedClientManager =
                 new DefaultOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, authorizedClientRepository);
+                        clientRegistrationRepository, cookieBasedAuthorizedClientRepository);
         authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
         authorizedClientManager.setAuthorizationFailureHandler(authorizationFailureHandler);
 
