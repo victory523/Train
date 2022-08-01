@@ -1,10 +1,9 @@
 package mucsi96.trainingLog.config;
 
 import lombok.RequiredArgsConstructor;
-import mucsi96.trainingLog.withings.oauth.*;
+import mucsi96.trainingLog.oauth.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.*;
@@ -14,7 +13,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -23,8 +21,8 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(
             HttpSecurity http,
-            WithingsUserService userService,
-            WithingsAccessTokenResponseClient accessTokenResponseClient
+            UserService userService,
+            AccessTokenResponseClient accessTokenResponseClient
     ) throws Exception {
         http.oauth2Login()
                 .defaultSuccessUrl(webConfig.getPublicUrl());
@@ -44,15 +42,13 @@ public class SecurityConfig {
     public OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
             CookieBasedAuthorizedClientRepository cookieBasedAuthorizedClientRepository,
-            WithingsAuthorizationFailureHandler authorizationFailureHandler,
-            WithingsRefreshTokenResponseClient withingsRefreshTokenResponseClient) {
+            AuthorizationFailureHandler authorizationFailureHandler,
+            RefreshTokenResponseClient refreshTokenResponseClient) {
 
         OAuth2AuthorizedClientProvider authorizedClientProvider =
                 OAuth2AuthorizedClientProviderBuilder.builder()
                         .authorizationCode()
-                        .refreshToken(configurer -> {
-                            configurer.accessTokenResponseClient(withingsRefreshTokenResponseClient);
-                        })
+                        .refreshToken(configurer -> configurer.accessTokenResponseClient(refreshTokenResponseClient))
                         .build();
 
         DefaultOAuth2AuthorizedClientManager authorizedClientManager =

@@ -1,6 +1,8 @@
 package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
+import mucsi96.trainingLog.core.TechnicalException;
+import mucsi96.trainingLog.core.UnauthorizedException;
 import mucsi96.trainingLog.withings.data.GetMeasureResponse;
 import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import mucsi96.trainingLog.withings.data.Measure;
@@ -18,12 +20,6 @@ import java.util.List;
 @Service
 @Slf4j
 public class WithingsService {
-
-    private RestTemplate restTemplate;
-
-    public WithingsService() {
-        this.restTemplate = new RestTemplate();
-    }
 
     int getStartDate() {
         Calendar cal = Calendar.getInstance();
@@ -60,12 +56,16 @@ public class WithingsService {
         GetMeasureResponse response = restTemplate
                 .postForObject(getMeasureUrl(), request, GetMeasureResponse.class);
 
+        if (response == null) {
+            throw new TechnicalException();
+        }
+
         if (response.getStatus() == 401) {
-            throw new WithingsUnauthorizedException();
+            throw new UnauthorizedException();
         }
 
         if (response.getStatus() != 0) {
-            throw new WithingsTechnicalException();
+            throw new TechnicalException();
         }
 
         return response.getBody();

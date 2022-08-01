@@ -1,4 +1,4 @@
-package mucsi96.trainingLog.withings.oauth;
+package mucsi96.trainingLog.oauth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -33,7 +33,7 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
     }
 
     @Override
-    public <T extends OAuth2AuthorizedClient> T loadAuthorizedClient(
+    public OAuth2AuthorizedClient loadAuthorizedClient(
             String clientRegistrationId,
             Authentication principal,
             HttpServletRequest request
@@ -44,7 +44,7 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
             return null;
         }
 
-        return (T) getAuthorizedClient(clientRegistrationId, cookie.getValue());
+        return getAuthorizedClient(clientRegistrationId, cookie.getValue());
     }
 
     @Override
@@ -79,10 +79,10 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
     private String getAuthorizedClientToken(OAuth2AuthorizedClient authorizedClient, Authentication principal) {
         return JWT
                 .create()
-                .withClaim("userId", authorizedClient.getPrincipalName())
-                .withClaim("accessToken", authorizedClient.getAccessToken().getTokenValue())
-                .withClaim("issuedAt", authorizedClient.getAccessToken().getIssuedAt())
+                .withSubject(authorizedClient.getPrincipalName())
+                .withIssuedAt(authorizedClient.getAccessToken().getIssuedAt())
                 .withClaim("expiresAt", authorizedClient.getAccessToken().getExpiresAt())
+                .withClaim("accessToken", authorizedClient.getAccessToken().getTokenValue())
                 .withClaim("refreshToken", authorizedClient.getRefreshToken().getTokenValue())
                 .withClaim("scopes", List.copyOf(authorizedClient.getAccessToken().getScopes()))
                 .sign(algorithm);
@@ -98,17 +98,17 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
                 .verify(token);
         return new OAuth2AuthorizedClient(
                 clientRegistrationRepository.findByRegistrationId(clientRegistrationId),
-                jwt.getClaim("userId").asString(),
+                jwt.getSubject(),
                 new OAuth2AccessToken(
                         OAuth2AccessToken.TokenType.BEARER,
                         jwt.getClaim("accessToken").asString(),
-                        jwt.getClaim("issuedAt").asInstant(),
+                        jwt.getIssuedAtAsInstant(),
                         jwt.getClaim("expiresAt").asInstant(),
                         Set.copyOf(jwt.getClaim("scopes").asList(String.class))
                 ),
                 new OAuth2RefreshToken(
                         jwt.getClaim("refreshToken").asString(),
-                        jwt.getClaim("issuedAt").asInstant()
+                        jwt.getIssuedAtAsInstant()
                 )
         );
     }

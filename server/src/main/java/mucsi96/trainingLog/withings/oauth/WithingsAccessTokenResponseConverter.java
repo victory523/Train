@@ -3,7 +3,7 @@ package mucsi96.trainingLog.withings.oauth;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.trainingLog.withings.WithingsTechnicalException;
+import mucsi96.trainingLog.core.TechnicalException;
 import mucsi96.trainingLog.withings.data.GetAccessTokenResponseBody;
 import mucsi96.trainingLog.withings.data.WithingsResponse;
 import org.springframework.core.convert.converter.Converter;
@@ -24,12 +24,12 @@ public class WithingsAccessTokenResponseConverter implements Converter<Map<Strin
                 mapper.convertValue(source, new TypeReference<>() {});
 
         if (response.getError() != null) {
-            log.error("Withings error", response.getError());
-            throw new WithingsTechnicalException();
+            log.error("Withings error {}", response.getError());
+            throw new TechnicalException();
         }
 
         if (response.getStatus() != 0) {
-            throw new WithingsTechnicalException();
+            throw new TechnicalException();
         }
 
         GetAccessTokenResponseBody body = response.getBody();
