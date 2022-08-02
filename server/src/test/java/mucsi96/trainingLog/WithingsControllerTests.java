@@ -2,27 +2,24 @@ package mucsi96.trainingLog;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.reactive.server.WebTestClient;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-
-@SpringBootTest
-@AutoConfigureMockMvc
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class WithingsControllerTests {
 
     @Autowired
-    private MockMvc mockMvc;
+    private WebTestClient webTestClient;
 
     @Test
-    public void returnsUnauthorizedWithoutBearerToken() throws Exception {
-        mockMvc.perform(get("/withings/weight"))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$._links.oauth2Login.href")
-                        .value("/api/oauth2/authorization/withings-client")
-                );
+    public void returnsUnauthorizedWithoutBearerToken() {
+        webTestClient
+                .get()
+                .uri("/withings/weight")
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                    .jsonPath("$._links.oauth2Login.href")
+                    .isEqualTo("/api/oauth2/authorization/withings-client");
     }
 }
