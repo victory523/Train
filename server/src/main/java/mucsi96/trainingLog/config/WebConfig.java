@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "app.web")
 @Data
 public class WebConfig {
-    private String publicUrl;
+    private String baseUrl;
+    private String publicAppUrl;
     private String publicApiUrl;
 }

@@ -1,7 +1,8 @@
 app:
   web:
-    publicUrl: ${env.PUBLIC_URL}
-    publicApiUrl: ${env.PUBLIC_API_URL}
+    baseUrl: ${env.BASE_URL}
+    publicAppUrl: ${env.PUBLIC_URL}
+    publicApiUrl: ${app.web.publicAppUrl}${app.web.baseUrl}
   jwt:
     secret: ${env.JWT_SECRET}
 spring:
@@ -20,7 +21,7 @@ spring:
             client-id: ${env.WITHINGS_CLIENT_ID}
             client-secret: ${env.WITHINGS_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
             scope: user.metrics
 
 #logging:
