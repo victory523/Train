@@ -1,8 +1,6 @@
 package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.trainingLog.core.TechnicalException;
-import mucsi96.trainingLog.core.UnauthorizedException;
 import mucsi96.trainingLog.withings.data.GetMeasureResponse;
 import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import mucsi96.trainingLog.withings.data.Measure;
@@ -57,15 +55,15 @@ public class WithingsService {
                 .postForObject(getMeasureUrl(), request, GetMeasureResponse.class);
 
         if (response == null) {
-            throw new TechnicalException();
+            throw new WithingsTechnicalException();
         }
 
         if (response.getStatus() == 401) {
-            throw new UnauthorizedException();
+            throw new WithingsUnauthorizedException();
         }
 
         if (response.getStatus() != 0) {
-            throw new TechnicalException();
+            throw new WithingsTechnicalException();
         }
 
         return response.getBody();
