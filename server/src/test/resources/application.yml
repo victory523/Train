@@ -1,0 +1,25 @@
+app:
+  web:
+    baseUrl: /api
+    publicAppUrl: http://training-log.com
+    publicApiUrl: ${app.web.publicAppUrl}${app.web.baseUrl}
+  jwt:
+    secret: test-jwt-secret
+spring:
+  profiles:
+    active: test
+  security:
+    oauth2:
+      client:
+        provider:
+          withings:
+           authorization-uri: http://localhost:8080/oauth2_user/authorize2
+           token-uri: http://localhost:8080/v2/oauth2
+        registration:
+          withings-client:
+            provider: withings
+            client-id: test-withings-client-id
+            client-secret: test-withings-client-secret
+            authorization-grant-type: authorization_code
+            redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
+            scope: user.metrics
