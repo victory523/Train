@@ -41,37 +41,37 @@ public class WithingsControllerTests {
     public void redirects_to_withings_oauth_page_on_calling_oauth2Login() throws Exception {
         mvc
                 .perform(get("/oauth2/authorization/withings-client"))
-                        .andExpect(status().isFound())
-                        .andExpect(header().string(HttpHeaders.LOCATION, new AssertionMatcher<String>() {
-                            @Override
-                            public void assertion(String location) throws AssertionError {
-                                UriComponents components = UriComponentsBuilder.fromUriString(location).build();
-                                assertEquals("localhost", components.getHost());
-                                assertEquals(8080, components.getPort());
-                                assertEquals("/oauth2_user/authorize2", components.getPath());
-                                assertEquals(
-                                        "code",
-                                        components.getQueryParams().get(OAuth2ParameterNames.RESPONSE_TYPE).get(0)
-                                );
-                                assertEquals(
-                                        "test-withings-client-id",
-                                        components.getQueryParams().get(OAuth2ParameterNames.CLIENT_ID).get(0)
-                                );
-                                assertEquals(
-                                        "user.metrics",
-                                        components.getQueryParams().get(OAuth2ParameterNames.SCOPE).get(0)
-                                );
-                                assertEquals(
-                                        Base64.getUrlDecoder().decode(
-                                                URLDecoder.decode(
-                                                        components.getQueryParams().get(OAuth2ParameterNames.STATE).get(0),
-                                                        StandardCharsets.UTF_8
-                                                )
-                                        ).length,
-                                        32
-                                );
-                            }
-                        }));
+                .andExpect(status().isFound())
+                .andExpect(header().string(HttpHeaders.LOCATION, new AssertionMatcher<>() {
+                    @Override
+                    public void assertion(String location) throws AssertionError {
+                        UriComponents components = UriComponentsBuilder.fromUriString(location).build();
+                        assertEquals("localhost", components.getHost());
+                        assertEquals(8080, components.getPort());
+                        assertEquals("/oauth2_user/authorize2", components.getPath());
+                        assertEquals(
+                                "code",
+                                components.getQueryParams().get(OAuth2ParameterNames.RESPONSE_TYPE).get(0)
+                        );
+                        assertEquals(
+                                "test-withings-client-id",
+                                components.getQueryParams().get(OAuth2ParameterNames.CLIENT_ID).get(0)
+                        );
+                        assertEquals(
+                                "user.metrics",
+                                components.getQueryParams().get(OAuth2ParameterNames.SCOPE).get(0)
+                        );
+                        assertEquals(
+                                Base64.getUrlDecoder().decode(
+                                        URLDecoder.decode(
+                                                components.getQueryParams().get(OAuth2ParameterNames.STATE).get(0),
+                                                StandardCharsets.UTF_8
+                                        )
+                                ).length,
+                                32
+                        );
+                    }
+                }));
 
     }
 }
