@@ -23,6 +23,13 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
             scope: user.metrics
+          google-client:
+            provider: google
+            client-id: ${env.GOOGLE_CLIENT_ID}
+            client-secret: ${env.GOOGLE_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
+            scope: https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile
 
 #logging:
 #  level:

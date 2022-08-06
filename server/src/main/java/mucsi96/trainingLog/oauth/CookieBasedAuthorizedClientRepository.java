@@ -12,6 +12,7 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,7 +84,11 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
                 .withIssuedAt(authorizedClient.getAccessToken().getIssuedAt())
                 .withClaim("expiresAt", authorizedClient.getAccessToken().getExpiresAt())
                 .withClaim("accessToken", authorizedClient.getAccessToken().getTokenValue())
-                .withClaim("refreshToken", authorizedClient.getRefreshToken().getTokenValue())
+                .withClaim(
+                        "refreshToken",
+                        authorizedClient.getRefreshToken() != null ?
+                                authorizedClient.getRefreshToken().getTokenValue() : null
+                )
                 .withClaim("scopes", List.copyOf(authorizedClient.getAccessToken().getScopes()))
                 .sign(algorithm);
     }

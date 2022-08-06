@@ -20,9 +20,13 @@ public class WithingsAccessTokenResponseClient implements OAuth2AccessTokenRespo
 
     private final DefaultAuthorizationCodeTokenResponseClient tokenResponseClient;
 
-    public WithingsAccessTokenResponseClient(WithingsAccessTokenResponseConverter withingsAccessTokenResponseConverter) {
+    public WithingsAccessTokenResponseClient(
+            WithingsAccessTokenRequestParametersConverter withingsAccessTokenRequestParametersConverter,
+            WithingsAccessTokenResponseConverter withingsAccessTokenResponseConverter
+
+    ) {
         OAuth2AuthorizationCodeGrantRequestEntityConverter requestEntityConverter = new OAuth2AuthorizationCodeGrantRequestEntityConverter();
-        requestEntityConverter.addParametersConverter(new WithingsAccessTokenRequestParametersConverter());
+        requestEntityConverter.addParametersConverter(withingsAccessTokenRequestParametersConverter);
 
         OAuth2AccessTokenResponseHttpMessageConverter accessTokenResponseConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
         accessTokenResponseConverter.setAccessTokenResponseConverter(withingsAccessTokenResponseConverter);
