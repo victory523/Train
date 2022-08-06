@@ -14,6 +14,68 @@ https://github.com/Saljack/spring-security-9477/blob/fa87deb834cfd30945c5870b4ca
 
 ## Spring Security classes
 
+### @interface RegisteredOAuth2AuthorizedClient
+
+Package: `org.springframework.security.oauth2.client.annotation`
+
+This annotation may be used to resolve a method parameter to an argument value of type `OAuth2AuthorizedClient`.
+For example:
+```java
+  @Controller
+  public class MyController {
+      @GetMapping("/authorized-client")
+      public String authorizedClient(@RegisteredOAuth2AuthorizedClient("login-client") OAuth2AuthorizedClient authorizedClient) {
+          // do something with authorizedClient
+      }
+  }
+  ```
+
+### class OAuth2AuthorizedClientArgumentResolver
+
+Package: `org.springframework.security.oauth2.client.web.method.annotation`
+
+An implementation of a `HandlerMethodArgumentResolver` that is capable of resolving a method parameter to an argument value of type `OAuth2AuthorizedClient`.
+
+### class ClientRegistration
+
+Package: `org.springframework.security.oauth2.client.registration`
+
+A representation of a client registration with an OAuth 2.0 or OpenID Connect 1.0 Provider.
+
+### class OAuth2AuthorizedClient
+
+Package: `org.springframework.security.oauth2.client`
+
+A representation of an OAuth 2.0 "Authorized Client".
+A client is considered "authorized" when the End-User (Resource Owner) has granted authorization to the client to access it's protected resources.
+This class associates the Client to the Access Token granted/authorized by the Resource Owner.
+
+### class OAuth2AuthorizeRequest
+
+Package: `org.springframework.security.oauth2.client`
+
+Represents a request the `OAuth2AuthorizedClientManager` uses to authorize (or re-authorize) the client identified by the provided clientRegistrationId.
+
+### interface OAuth2AuthorizedClientManager
+
+Package: `org.springframework.security.oauth2.client`
+
+Implementations of this interface are responsible for the overall management of Authorized Client(s).
+The primary responsibilities include:
+Authorizing (or re-authorizing) an OAuth 2.0 Client by leveraging an `OAuth2AuthorizedClientProvider(s)`.
+Delegating the persistence of an `OAuth2AuthorizedClient`, typically using an `OAuth2AuthorizedClientService` OR `OAuth2AuthorizedClientRepository`.
+
+### class DefaultOAuth2AuthorizedClientManager
+
+Package: `org.springframework.security.oauth2.client.web`
+
+The default implementation of an `OAuth2AuthorizedClientManager` for use within the context of a `HttpServletRequest`.
+(When operating outside of the context of a `HttpServletRequest`, use `AuthorizedClientServiceOAuth2AuthorizedClientManager` instead.)
+Authorized Client Persistence
+This manager utilizes an `OAuth2AuthorizedClientRepository` to persist `OAuth2AuthorizedClients`.
+By default, when an authorization attempt succeeds, the `OAuth2AuthorizedClient` will be saved in the `OAuth2AuthorizedClientRepository`. This functionality can be changed by configuring a custom `OAuth2AuthorizationSuccessHandler` via `setAuthorizationSuccessHandler(OAuth2AuthorizationSuccessHandler)`.
+By default, when an authorization attempt fails due to an `"invalid_grant"` error, the previously saved `OAuth2AuthorizedClient` will be removed from the `OAuth2AuthorizedClientRepository`. (The `"invalid_grant"` error can occur when a refresh token that is no longer valid is used to retrieve a new access token.) This functionality can be changed by configuring a custom `OAuth2AuthorizationFailureHandler` via `setAuthorizationFailureHandler(OAuth2AuthorizationFailureHandler)`.
+
 ### class OAuth2AuthorizationRequestRedirectFilter
 
 Package: `org.springframework.security.oauth2.client.web`
@@ -64,7 +126,14 @@ a fully authenticated object including credentials
 Throws:
 `AuthenticationException` – if authentication fails
 
-### OAuth2ClientConfigurer
+### class OAuth2LoginAuthenticationProvider
+
+Package: `org.springframework.security.oauth2.client.authentication`
+
+An implementation of an `AuthenticationProvider` for OAuth 2.0 Login, which leverages the OAuth 2.0 Authorization Code Grant Flow. This AuthenticationProvider is responsible for authenticating an Authorization Code credential with the Authorization Server's Token Endpoint and if valid, exchanging it for an Access Token credential.
+It will also obtain the user attributes of the End-User (Resource Owner) from the UserInfo Endpoint using an `OAuth2UserService`, which will create a `Principal` in the form of an `OAuth2User`. The `OAuth2User` is then associated to the `OAuth2LoginAuthenticationToken` to complete the authentication.
+
+### class OAuth2ClientConfigurer
 
 Package: `org.springframework.security.config.annotation.web.configurers.oauth2.client`
 
@@ -72,3 +141,33 @@ An `AbstractHttpConfigurer` for OAuth 2.0 Client support.
 The following configuration options are available:
 `authorizationCodeGrant()` - support for the OAuth 2.0 Authorization Code Grant
 Defaults are provided for all configuration options with the only required configuration being `clientRegistrationRepository(ClientRegistrationRepository)`. Alternatively, a `ClientRegistrationRepository` `@Bean` may be registered instead.
+
+## Flow
+
+![oauth-client-flow](./docs/oauth-client-flow.jpg)
+
+### Redirect
+
+1. Resource owner Make a request in the browser `GET` `/oauth2/authorization/{registrationId}`
+2. `OAuth2AuthorizationRequestRedirectFilter` takes `registrationId` passes in as a parameter and call `ClientRegistrationRepository` Interface `findByRegistrationId()` method ,`findByRegistrationId()` returns `ClientRegistration`
+3. `OAuth2AuthorizationRequestRedirectFilter` according to `ClientRegistration` Generate `OAuth2AuthorizationRequest`, And call `AuthorizationRequestRepository` of `saveAuthorizationRequest()` method is shared across sessions `OAuth2AuthorizationRequest`
+4. `OAuth2AuthorizationRequestRedirectFilter` from `ClientRegistration` Generate a URL Send to Authorization Server Of Authorization Endpoint ,Authorization Server Return to login page
+
+### Pre certification processing
+
+1. resource owner Submit user information and send login request on the login page
+2. `OAuth2LoginAuthenticationFilter` Analyze requests from Authorization Server Authorization response for , And generate `OAuth2AuthorizationResponse`
+3. `OAuth2LoginAuthenticationFilter` calls `AuthorizationRequestRepository` Interface `loadAuthorizationRequest()` How to get `OAuth2AuthorizationRequest`
+4. `OAuth2LoginAuthenticationFilter` takes `registrationId` Pass in as a parameter and call `ClientRegistrationRepository` Interface `findByRegistrationId()` Method ,`findByRegistrationId()` returns `ClientRegistration`
+
+### The certification process
+
+1. `OAuth2LoginAuthenticationFilter` generation contains `OAuth2AuthorizationRequest`、`OAuth2AuthorizationResponse` and `ClientRegistration` Of `OAuth2LoginAuthenticationToken`
+2. `OAuth2LoginAuthenticationProvider` By calling `OAuth2AccessTokenResponseClient` Interface `getTokenResponse()` Methods from Authorization Server Of Token Endpoint acquisition Access Token
+3. `OAuth2LoginAuthenticationProvider` By calling `OAuth2UserService` Interface `loadUser()` Methods from Authorization Server Of Authorization The endpoint obtains user information
+4. `OAuth2LoginAuthenticationProvider` Generate `OAuth2LoginAuthenticationToken` Return the authentication result
+
+### Post certification processing
+
+1. `OAuth2LoginAuthenticationFilter` Generate according to the authentication results `OAuth2AnthenticationToken` And set it in `SecurityContext` in
+2. `OAuth2LoginAuthenticationFilter` Generate according to the authentication results `OAuth2AuthorizedClient` , call `OAuth2AuthorizedClientService` Of `saveAuthorizedClinet()` Method , take `OAuth2AuthorizedClient` Save in an area accessible to any class

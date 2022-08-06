@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -62,12 +63,5 @@ public class SecurityConfig {
         authorizedClientManager.setAuthorizationFailureHandler(authorizationFailureHandler);
 
         return authorizedClientManager;
-    }
-
-    public String getOauth2LoginUrl(String registrationId) {
-        return UriComponentsBuilder.fromUriString(webConfig.getBaseUrl())
-                .path("/oauth2/authorization/{registrationId}")
-                .buildAndExpand(Map.of("registrationId", registrationId))
-                .toString();
     }
 }

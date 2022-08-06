@@ -15,7 +15,7 @@ import org.springframework.web.servlet.view.RedirectView;
 public class HomeController {
     private final WebConfig webConfig;
 
-    @GetMapping("/login")
+    @GetMapping("/logine")
     public RedirectView login(
             @RegisteredOAuth2AuthorizedClient(GoogleClient.id) OAuth2AuthorizedClient googleAuthorizedClient,
             @RegisteredOAuth2AuthorizedClient(WithingsClient.id) OAuth2AuthorizedClient withingsAuthorizedClient

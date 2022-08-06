@@ -1,6 +1,7 @@
 package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
+import mucsi96.trainingLog.oauth.UnauthorizedException;
 import mucsi96.trainingLog.withings.data.GetMeasureResponse;
 import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import mucsi96.trainingLog.withings.data.Measure;
@@ -59,7 +60,7 @@ public class WithingsService {
         }
 
         if (response.getStatus() == 401) {
-            throw new WithingsUnauthorizedException();
+            throw new UnauthorizedException();
         }
 
         if (response.getStatus() != 0) {

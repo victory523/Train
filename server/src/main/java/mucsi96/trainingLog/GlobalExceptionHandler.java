@@ -4,8 +4,7 @@ import lombok.RequiredArgsConstructor;
 import mucsi96.trainingLog.config.SecurityConfig;
 import mucsi96.trainingLog.config.WebConfig;
 import mucsi96.trainingLog.withings.WithingsTechnicalException;
-import mucsi96.trainingLog.withings.WithingsUnauthorizedException;
-import mucsi96.trainingLog.withings.oauth.WithingsClient;
+import mucsi96.trainingLog.oauth.UnauthorizedException;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final SecurityConfig securityConfig;
+    private final WebConfig webConfig;
     static class EmptyModel extends RepresentationModel<EmptyModel> {}
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -26,11 +25,11 @@ public class GlobalExceptionHandler {
     public void handleTechnicalException() {}
 
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    @ExceptionHandler(WithingsUnauthorizedException.class)
-    public @ResponseBody EmptyModel handleUnauthorizedException(WithingsUnauthorizedException exception) {
+    @ExceptionHandler(UnauthorizedException.class)
+    public @ResponseBody EmptyModel handleUnauthorizedException(UnauthorizedException exception) {
         EmptyModel model = new EmptyModel();
         model.add(
-                Link.of(securityConfig.getOauth2LoginUrl(exception.getRegistrationId()), "oauth2Login")
+                Link.of(webConfig.getPublicApiUrl() + "/logine", "oauth2Login")
         );
         return model;
     }

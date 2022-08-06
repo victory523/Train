@@ -1,9 +1,9 @@
-package mucsi96.trainingLog.withings;
+package mucsi96.trainingLog.oauth;
 
 import lombok.Data;
 import mucsi96.trainingLog.withings.oauth.WithingsClient;
 
 @Data
-public class WithingsUnauthorizedException extends RuntimeException {
+public class UnauthorizedException extends RuntimeException {
     private final String registrationId = WithingsClient.id;
 }
