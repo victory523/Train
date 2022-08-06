@@ -2,6 +2,7 @@ package mucsi96.trainingLog.oauth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import mucsi96.trainingLog.config.JwtConfig;
 import org.springframework.security.core.Authentication;
@@ -111,10 +112,10 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
                         jwt.getClaim("expiresAt").asInstant(),
                         Set.copyOf(jwt.getClaim("scopes").asList(String.class))
                 ),
-                new OAuth2RefreshToken(
+                jwt.getClaim("refreshToken").asString() != null ? new OAuth2RefreshToken(
                         jwt.getClaim("refreshToken").asString(),
                         jwt.getIssuedAtAsInstant()
-                )
+                ) : null
         );
     }
 }
