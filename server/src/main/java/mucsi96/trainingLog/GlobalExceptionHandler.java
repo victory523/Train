@@ -29,7 +29,7 @@ public class GlobalExceptionHandler {
     public @ResponseBody EmptyModel handleUnauthorizedException(UnauthorizedException exception) {
         EmptyModel model = new EmptyModel();
         model.add(
-                Link.of(webConfig.getBaseUrl() + "/logine", "oauth2Login")
+                Link.of(webConfig.getBaseUrl() + "/login", "oauth2Login")
         );
         return model;
     }

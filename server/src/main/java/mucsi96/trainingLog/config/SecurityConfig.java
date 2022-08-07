@@ -30,6 +30,9 @@ public class SecurityConfig {
             AccessTokenResponseClient accessTokenResponseClient
     ) throws Exception {
         http.oauth2Login()
+                .loginPage("/login");
+
+        http.oauth2Login()
                 .defaultSuccessUrl(webConfig.getPublicAppUrl());
 
         http.oauth2Login()

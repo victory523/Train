@@ -61,7 +61,7 @@ public class WithingsControllerTests {
                 .andExpect(status().isUnauthorized())
                 .andExpect(
                         jsonPath("$._links.oauth2Login.href")
-                                .value("/api/logine")
+                                .value("/api/login")
                 );
     }
 

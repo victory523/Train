@@ -1,3 +1,2 @@
-- Change login oage from `/logine` to `/login`
 - Prevent change of principal after withings authentication
 - Use Database for authorized clients

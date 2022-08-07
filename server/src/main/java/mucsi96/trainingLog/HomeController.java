@@ -19,7 +19,7 @@ public class HomeController {
     private final WebConfig webConfig;
     private final OAuth2AuthorizedClientRepository authorizedClientRepository;
 
-    @GetMapping("/logine")
+    @GetMapping("/login")
     public String login(
             HttpServletRequest request,
             OAuth2AuthenticationToken auth2AuthenticationToken
