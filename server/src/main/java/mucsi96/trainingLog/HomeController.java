@@ -24,7 +24,9 @@ public class HomeController {
             HttpServletRequest request,
             OAuth2AuthenticationToken auth2AuthenticationToken
     ) {
-        if (auth2AuthenticationToken == null) {
+        if (auth2AuthenticationToken == null || !GoogleClient.id.equals(
+                auth2AuthenticationToken.getAuthorizedClientRegistrationId()
+        )) {
             throw new ClientAuthorizationRequiredException(GoogleClient.id);
         }
 

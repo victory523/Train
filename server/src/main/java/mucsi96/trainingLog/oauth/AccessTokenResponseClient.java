@@ -23,9 +23,9 @@ public class AccessTokenResponseClient implements OAuth2AccessTokenResponseClien
 
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest) {
-        return getTokenResponseClient(
-                authorizationGrantRequest.getClientRegistration().getRegistrationId()
-        ).getTokenResponse(authorizationGrantRequest);
+        String registrationId = authorizationGrantRequest.getClientRegistration().getRegistrationId();
+        log.info("Requesting {} access token", registrationId);
+        return getTokenResponseClient(registrationId).getTokenResponse(authorizationGrantRequest);
     }
 
     private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> getTokenResponseClient(String registrationId) {

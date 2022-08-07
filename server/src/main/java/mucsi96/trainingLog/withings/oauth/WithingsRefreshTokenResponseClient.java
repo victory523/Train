@@ -40,7 +40,6 @@ public class WithingsRefreshTokenResponseClient implements OAuth2AccessTokenResp
 
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2RefreshTokenGrantRequest authorizationGrantRequest) {
-        log.info("Refreshing Withings access token");
         return tokenResponseClient.getTokenResponse(authorizationGrantRequest);
     }
 }

@@ -23,9 +23,9 @@ public class RefreshTokenResponseClient implements OAuth2AccessTokenResponseClie
 
     @Override
     public OAuth2AccessTokenResponse getTokenResponse(OAuth2RefreshTokenGrantRequest authorizationGrantRequest) {
-        return getTokenResponseClient(
-                authorizationGrantRequest.getClientRegistration().getRegistrationId()
-        ).getTokenResponse(authorizationGrantRequest);
+        String registrationId = authorizationGrantRequest.getClientRegistration().getRegistrationId();
+        log.info("Refreshing {} access token", registrationId);
+        return getTokenResponseClient(registrationId).getTokenResponse(authorizationGrantRequest);
     }
 
     private OAuth2AccessTokenResponseClient<OAuth2RefreshTokenGrantRequest> getTokenResponseClient(String registrationId) {
