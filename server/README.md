@@ -12,6 +12,118 @@ https://github.com/Dendrocopos-kr/ModumE-Spring-boot/blob/91336844f5cc3fe56a0f6c
 
 https://github.com/Saljack/spring-security-9477/blob/fa87deb834cfd30945c5870b4ca4ae37ef2617cc/src/test/java/com/saljack/springsecurity9477/SpringSecurity9477ApplicationTests.java
 
+## Spring Security OAuth Client Flow
+
+### Entry-point
+
+[`RegisteredOAuth2AuthorizedClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/annotation/RegisteredOAuth2AuthorizedClient.java#L51) annotation.
+
+```java
+  @Controller
+  public class MyController {
+      @GetMapping("/authorized-client")
+      public String authorizedClient(@RegisteredOAuth2AuthorizedClient("login-client") OAuth2AuthorizedClient authorizedClient) {
+          // do something with authorizedClient
+      }
+  }
+```
+### AuthorizeRequest -> Manager.authorize
+
+`RegisteredOAuth2AuthorizedClient` triggers [`OAuth2AuthorizedClientArgumentResolver.resolveArgument`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/method/annotation/OAuth2AuthorizedClientArgumentResolver.java#L107).
+
+It creates [`OAuth2AuthorizeRequest`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizeRequest.java#L42) containing:
+- `clientRegistrationId`
+- `OAuth2AuthorizedClient` (is `null` in this case)
+- `Authentication principal` (`SecurityContextHolder.getContext().getAuthentication()`)
+- `HttpServletRequest`
+- `HttpServletResponse`
+
+And passes it to [`OAuth2AuthorizedClientManager.authorize(OAuth2AuthorizeRequest authorizeRequest)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClientManager.java#L66)
+
+Default implementation is [`DefaultOAuth2AuthorizedClientManager`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/DefaultOAuth2AuthorizedClientManager.java#L138)
+
+### Manager.authorize -> Provider(s).authorize
+
+The manager is buidling the [`OAuth2AuthorizationContext`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizationContext.java#L40) containing:
+- `ClientRegistration`
+- `OAuth2AuthorizedClient` is loaded from [`OAuth2AuthorizedClientRepository.loadAuthorizedClient(String clientRegistrationId, Authentication principal,
+			HttpServletRequest request)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L57)
+- `Authentication principal`
+- `HttpServletRequest`
+- `HttpServletResponse`
+
+If the client is not authorized yet it calls the chain of [`OAuth2AuthorizedClientProvider.authorize(OAuth2AuthorizationContext context)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClientProvider.java#L50)
+
+The chain can contain the following providers:
+- [`AuthorizationCodeOAuth2AuthorizedClientProvider`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/AuthorizationCodeOAuth2AuthorizedClientProvider.java#L33). This throws [`ClientAuthorizationRequiredException`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/ClientAuthorizationRequiredException.java#L29) if the client is not authorized.
+- [`RefreshTokenOAuth2AuthorizedClientProvider`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/RefreshTokenOAuth2AuthorizedClientProvider.java#L76). This is responsible for requesting new access token using refresh token after access token has expired (or expires in one minute).
+
+### Succesful client authorization
+
+In case of success [`OAuth2AuthorizationSuccessHandler.onAuthorizationSuccess(OAuth2AuthorizedClient authorizedClient, Authentication principal, Map<String, Object> attributes)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizationSuccessHandler.java#L47) is called.
+
+In default case this calls [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68)
+
+As last step the authorized client is injected to parameter annotated with `@RegisteredOAuth2AuthorizedClient`.
+
+### Failed client authorization
+
+In case [`OAuth2AuthorizationException`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-core/src/main/java/org/springframework/security/oauth2/core/OAuth2AuthorizationException.java#L27) is thrown [`OAuth2AuthorizationFailureHandler.onAuthorizationFailure(OAuth2AuthorizationException  authorizationException, Authentication principal, Map<String, Object> attributes)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizationFailureHandler.java#L47) is called.
+
+In default case this calls [`OAuth2AuthorizedClientRepository.removeAuthorizedClient(String clientRegistrationId, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L79)
+
+The exception is rethrown and catched in [`OAuth2AuthorizationRequestRedirectFilter.doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizationRequestRedirectFilter.java#L158)
+
+### Redirection to the Authorization Server's Authorization Endpoint
+
+In case of `ClientAuthorizationRequiredException` `OAuth2AuthorizationRequestRedirectFilter` calls [`OAuth2AuthorizationRequestResolver.resolve(HttpServletRequest request, String clientRegistrationId)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizationRequestResolver.java#L54).
+
+It creates [`OAuth2AuthorizationRequest`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-core/src/main/java/org/springframework/security/oauth2/core/endpoint/OAuth2AuthorizationRequest.java#L54) responsible for creating the authorization request url for redirection.
+
+As last step the redirection is made.
+
+### Redirection back to client after End-User (Resource Owner) has granted access
+
+[`AbstractAuthenticationProcessingFilter.doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)`](https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/authentication/AbstractAuthenticationProcessingFilter.java#L219) which calls [`OAuth2LoginAuthenticationFilter.attemptAuthentication(HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2LoginAuthenticationFilter.java#L162)
+
+[`OAuth2AuthorizationResponse`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-core/src/main/java/org/springframework/security/oauth2/core/endpoint/OAuth2AuthorizationResponse.java#L34) is created containing
+- `redirectUri`
+- `state`
+- `code`
+- `error`
+
+Based on this [`OAuth2LoginAuthenticationToken`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/authentication/OAuth2LoginAuthenticationToken.java#L47) is created containing
+- `OAuth2User principal`
+- `ClientRegistration clientRegistration`
+- `OAuth2AuthorizationExchange authorizationExchange` which contains authorization request and response
+- `OAuth2AccessToken accessToken` is `null` yet
+- `OAuth2RefreshToken refreshToken` is `null` yet
+
+
+Then [`AuthenticationManager.authenticate(Authentication authentication)`](https://github.com/spring-projects/spring-security/blob/main/core/src/main/java/org/springframework/security/authentication/AuthenticationManager.java#L53) is  called with `OAuth2LoginAuthenticationToken`.
+
+One of the following providers are called
+- `AnonymousAuthenticationProvider` not called
+- `OAuth2LoginAuthenticationProvider` calls [`OAuth2AuthorizationCodeAuthenticationProvider.authenticate(Authentication authentication)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/authentication/OAuth2AuthorizationCodeAuthenticationProvider.java#L72)
+- `OidcAuthorizationCodeAuthenticationProvider` not called
+
+### Requesting access token
+
+`OAuth2AuthorizationCodeAuthenticationProvider` is checking first if the `state` matches in `authorizationResponse` and `authorizationRequest`.
+
+Then using [`OAuth2AccessTokenResponseClient.getTokenResponse(OAuth2AuthorizationCodeGrantRequest authorizationGrantRequest)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/endpoint/OAuth2AccessTokenResponseClient.java#L56) requests access token from Authorization Server.
+
+Default implementation is [`DefaultAuthorizationCodeTokenResponseClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/endpoint/DefaultAuthorizationCodeTokenResponseClient.java#L74)
+
+### Handling succesful authentication
+
+After succesful authentication using `AuthenticationManager` `OAuth2LoginAuthenticationFilter` creates [`OAuth2AuthorizedClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClient.java#L44).
+
+The saves this using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
+
+As last step `AbstractAuthenticationProcessingFilter`
+
+
 ## Spring Security classes
 
 ### @interface RegisteredOAuth2AuthorizedClient
