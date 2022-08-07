@@ -43,25 +43,16 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public OAuth2AuthorizedClientManager authorizedClientManager(
+    @Bean OAuth2AuthorizedClientManager authorizedClientManager(
             ClientRegistrationRepository clientRegistrationRepository,
-            CookieBasedAuthorizedClientRepository cookieBasedAuthorizedClientRepository,
-            AuthorizationFailureHandler authorizationFailureHandler,
-            RefreshTokenResponseClient refreshTokenResponseClient) {
+            CookieBasedAuthorizedClientRepository authorizedClientRepository,
+            RefreshTokenResponseClient refreshTokenResponseClient
+    ) {
+        return new AuthorizedClientManager(
+                clientRegistrationRepository,
+                authorizedClientRepository,
+                refreshTokenResponseClient
 
-        OAuth2AuthorizedClientProvider authorizedClientProvider =
-                OAuth2AuthorizedClientProviderBuilder.builder()
-                        .authorizationCode()
-                        .refreshToken(configurer -> configurer.accessTokenResponseClient(refreshTokenResponseClient))
-                        .build();
-
-        DefaultOAuth2AuthorizedClientManager authorizedClientManager =
-                new DefaultOAuth2AuthorizedClientManager(
-                        clientRegistrationRepository, cookieBasedAuthorizedClientRepository);
-        authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
-        authorizedClientManager.setAuthorizationFailureHandler(authorizationFailureHandler);
-
-        return authorizedClientManager;
+        );
     }
 }

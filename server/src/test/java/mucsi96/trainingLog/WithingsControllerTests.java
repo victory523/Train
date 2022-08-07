@@ -54,11 +54,14 @@ public class WithingsControllerTests {
     @Test
     public void returns_unauthorized_if_bearer_token_is_not_sent() throws Exception {
         mockMvc
-                .perform(get("/withings/weight"))
+                .perform(
+                        get("/withings/weight")
+                                .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isUnauthorized())
                 .andExpect(
                         jsonPath("$._links.oauth2Login.href")
-                                .value("/api/oauth2/authorization/withings-client")
+                                .value("/api/logine")
                 );
     }
 
