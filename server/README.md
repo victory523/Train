@@ -119,10 +119,26 @@ Default implementation is [`DefaultAuthorizationCodeTokenResponseClient`](https:
 
 After succesful authentication using `AuthenticationManager` `OAuth2LoginAuthenticationFilter` creates [`OAuth2AuthorizedClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClient.java#L44).
 
-Then saves it using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
+`OAuth2AuthorizedClient` is saves it using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
 
-As last step `AbstractAuthenticationProcessingFilter`
+Also `OAuth2LoginAuthenticationFilter` creates an [`OAuth2AuthenticationToken`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/authentication/OAuth2AuthenticationToken.java#L44) containing
+- `OAuth2User principal`
+- `String authorizedClientRegistrationId`
 
+Later `AbstractAuthenticationProcessingFilter` sets the new `OAuth2AuthenticationToken` in `SecurityContextHolder`.
+
+```java
+SecurityContext context = SecurityContextHolder.createEmptyContext();
+context.setAuthentication(authResult);
+SecurityContextHolder.setContext(context);
+```
+
+As last step it calls [`SavedRequestAwareAuthenticationSuccessHandler.onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication)`](https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/authentication/SavedRequestAwareAuthenticationSuccessHandler.java#L73) which does a redirection to original request or to predefined `defaultSuccessUrl` configured in `SecurityFilterChain` `@Bean`. 
+
+```java
+http.oauth2Login()
+  .defaultSuccessUrl(webConfig.getPublicAppUrl());
+```
 
 ## Spring Security classes
 
