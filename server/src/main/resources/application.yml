@@ -5,6 +5,8 @@ app:
     publicApiUrl: ${app.web.publicAppUrl}${app.web.baseUrl}
   jwt:
     secret: ${env.JWT_SECRET}
+server:
+  forward-headers-strategy: framework
 spring:
   profiles:
     active: develop
@@ -21,7 +23,7 @@ spring:
             client-id: ${env.WITHINGS_CLIENT_ID}
             client-secret: ${env.WITHINGS_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
+            redirect-uri: ${app.web.publicApiUrl}/authorize/oauth2/code/{registrationId}
             scope: user.metrics
           google-client:
             provider: google

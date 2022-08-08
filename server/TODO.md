@@ -1,2 +1,2 @@
-- Prevent change of principal after withings authentication
 - Use Database for authorized clients
+- Document `OAuth2AuthorizationCodeGrantFilter`

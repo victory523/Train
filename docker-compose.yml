@@ -8,5 +8,11 @@ services:
       - "8080:8080"
   app:
     build: ./client
+    environment:
+      # API_INTERNAL_HOST: host.docker.internal
+      API_INTERNAL_HOST: api
+      API_EXTERNAL_HOST: localhost
+      API_INTERNAL_PORT: 8080
+      API_EXTERNAL_PORT: 3000
     ports:
       - "3000:80"
