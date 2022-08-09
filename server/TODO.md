@@ -1,15 +1,20 @@
 - Use Database for authorized clients
 - Document `OAuth2AuthorizationCodeGrantFilter`
 - Create flow chart of Spring Security
-- Create `/me` unrestricted endpoint which returns:
+- Create `/status` unrestricted endpoint which returns HAL links:
   - Google login url if user is not authenticated
   - All not authorized third party login urls
-  - User details like name, avatar
+- Create `/me` which returns user details like name, avatar
 - Get rid of `/login` endpoint
   - Make default login page the `/`
 - Restrict all other endpoints with
   - User to be authenticated
   - User authorized with third party needed
   - Simply return unauthorized without any body
+- Implement remember me
+- Implement logout
+- Add swagger API
 - Try to simplify redirect and links to not include `/api`
 - Rewrite client code in Angular
+- Create database for stats
+- Sync stats in `/status`
