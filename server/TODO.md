@@ -6,8 +6,10 @@
   - All not authorized third party login urls
   - User details like name, avatar
 - Get rid of `/login` endpoint
+  - Make default login page the `/`
 - Restrict all other endpoints with
   - User to be authenticated
-  - User authorized with third party
+  - User authorized with third party needed
   - Simply return unauthorized without any body
+- Try to simplify redirect and links to not include `/api`
 - Rewrite client code in Angular
