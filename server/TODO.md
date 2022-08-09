@@ -1,5 +1,4 @@
 - Use Database for authorized clients
-- Document `OAuth2AuthorizationCodeGrantFilter`
 - Create flow chart of Spring Security
 - Create `/status` unrestricted endpoint which returns HAL links:
   - Google login url if user is not authenticated

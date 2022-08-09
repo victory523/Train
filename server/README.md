@@ -86,6 +86,8 @@ It creates [`OAuth2AuthorizationRequest`](https://github.com/spring-projects/spr
 
 As last step the redirection is made.
 
+## Spring Security OAuth2 Login Flow (redirect-uri is /login/oauth2/code/{registrationId})
+
 ### Redirection back to client after End-User (Resource Owner) has granted access
 
 [`AbstractAuthenticationProcessingFilter.doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)`](https://github.com/spring-projects/spring-security/blob/main/web/src/main/java/org/springframework/security/web/authentication/AbstractAuthenticationProcessingFilter.java#L219) which calls [`OAuth2LoginAuthenticationFilter.attemptAuthentication(HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2LoginAuthenticationFilter.java#L162)
@@ -123,7 +125,7 @@ Default implementation is [`DefaultAuthorizationCodeTokenResponseClient`](https:
 
 After succesful authentication using `AuthenticationManager` `OAuth2LoginAuthenticationFilter` creates [`OAuth2AuthorizedClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClient.java#L44).
 
-`OAuth2AuthorizedClient` is saves it using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
+`OAuth2AuthorizedClient` is saved using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
 
 Also `OAuth2LoginAuthenticationFilter` creates an [`OAuth2AuthenticationToken`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/authentication/OAuth2AuthenticationToken.java#L44) containing
 - `OAuth2User principal`
@@ -143,3 +145,19 @@ As last step it calls [`SavedRequestAwareAuthenticationSuccessHandler.onAuthenti
 http.oauth2Login()
   .defaultSuccessUrl(webConfig.getPublicAppUrl());
 ```
+
+## Spring Security OAuth2 Client Flow (redirect-uri is /authorize/oauth2/code/{registrationId})
+
+### Redirection back to client after End-User (Resource Owner) has granted access
+
+[`OAuth2AuthorizationCodeGrantFilter.doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizationCodeGrantFilter.java#L162) matches if the incomming request is an authorization request and if it exactly matches the request previously added to [`AuthorizationRequestRepository`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/AuthorizationRequestRepository.java#L40)
+
+In case of match the process continues in similar way as the login flow until succesful authentication.
+
+### Handling succesful authentication
+
+After succesful authentication using `AuthenticationManager` `OAuth2AuthorizationCodeGrantFilter` creates [`OAuth2AuthorizedClient`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/OAuth2AuthorizedClient.java#L44).
+
+`OAuth2AuthorizedClient` is saved using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
+
+As last step it redirects back to previous url.
