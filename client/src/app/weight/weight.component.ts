@@ -1,5 +1,5 @@
-import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { map } from 'rxjs';
 import { WithingsService } from '../withings.service';
 
 @Component({
@@ -7,23 +7,10 @@ import { WithingsService } from '../withings.service';
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],
 })
-export class WeightComponent implements OnInit {
+export class WeightComponent {
   constructor(private withingsService: WithingsService) {}
 
-  weight?: number;
-
-  ngOnInit(): void {
-    this.getWeight();
-  }
-
-  getWeight(): void {
-    this.withingsService
-      .getWeight()
-      .subscribe((weightResponse) => (this.weight = weightResponse.weight), error => {
-        if (error instanceof HttpErrorResponse && error.status === 401) {
-          debugger;
-          window.location.href = error.error._links.oauth2Login.href;
-        }
-      });
-  }
+  $weight = this.withingsService
+    .getWeight()
+    .pipe(map((weight) => weight?.toString() ?? '?'));
 }
