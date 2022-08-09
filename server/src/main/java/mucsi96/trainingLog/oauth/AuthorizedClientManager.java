@@ -6,6 +6,8 @@ import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
+import org.springframework.util.MimeType;
+import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -37,8 +39,9 @@ public class AuthorizedClientManager implements OAuth2AuthorizedClientManager {
         } catch (OAuth2AuthorizationException ex) {
             HttpServletRequest request = authorizeRequest.getAttribute(HttpServletRequest.class.getName());
 
-            if (MediaType.APPLICATION_JSON_VALUE.equals(request.getHeader(HttpHeaders.ACCEPT))) {
-                throw new UnauthorizedException();
+          if (MimeTypeUtils.parseMimeTypes(request.getHeader(HttpHeaders.ACCEPT)).contains(MimeTypeUtils.APPLICATION_JSON)) {
+                throw new
+                  UnauthorizedException();
             }
 
             throw ex;

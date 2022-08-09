@@ -14,6 +14,5 @@
 - Implement logout
 - Add swagger API
 - Try to simplify redirect and links to not include `/api`
-- Rewrite client code in Angular
 - Create database for stats
 - Sync stats in `/status`
