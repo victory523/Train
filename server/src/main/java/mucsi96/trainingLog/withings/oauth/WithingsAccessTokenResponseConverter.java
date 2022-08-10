@@ -11,7 +11,6 @@ import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
