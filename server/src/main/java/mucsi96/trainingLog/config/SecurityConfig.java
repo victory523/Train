@@ -24,8 +24,6 @@ import java.util.Map;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final WebConfig webConfig;
     private final AccessTokenResponseClient accessTokenResponseClient;
     private final ClientRegistrationRepository clientRegistrationRepository;
     private final CookieBasedAuthorizedClientRepository authorizedClientRepository;
@@ -37,7 +35,7 @@ public class SecurityConfig {
                 .loginPage("/login");
 
         http.oauth2Login()
-                .defaultSuccessUrl(webConfig.getPublicAppUrl());
+                .defaultSuccessUrl("/");
 
         http.oauth2Client()
                 .authorizationCodeGrant()

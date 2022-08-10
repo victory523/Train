@@ -1,8 +1,4 @@
 app:
-  web:
-    baseUrl: /api
-    publicAppUrl: http://training-log.com
-    publicApiUrl: ${app.web.publicAppUrl}${app.web.baseUrl}
   jwt:
     secret: test-jwt-secret
 spring:

@@ -1,8 +1,4 @@
 app:
-  web:
-    baseUrl: ${env.BASE_URL}
-    publicAppUrl: ${env.PUBLIC_URL}
-    publicApiUrl: ${app.web.publicAppUrl}${app.web.baseUrl}
   jwt:
     secret: ${env.JWT_SECRET}
 server:
@@ -23,14 +19,14 @@ spring:
             client-id: ${env.WITHINGS_CLIENT_ID}
             client-secret: ${env.WITHINGS_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: ${app.web.publicApiUrl}/authorize/oauth2/code/{registrationId}
+            redirect-uri: "{baseUrl}/authorize/oauth2/code/{registrationId}"
             scope: user.metrics
           google-client:
             provider: google
             client-id: ${env.GOOGLE_CLIENT_ID}
             client-secret: ${env.GOOGLE_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: ${app.web.publicApiUrl}/login/oauth2/code/{registrationId}
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile
 
 #logging:
