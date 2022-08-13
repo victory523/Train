@@ -6,6 +6,7 @@ import mucsi96.trainingLog.withings.data.GetMeasureResponse;
 import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import mucsi96.trainingLog.withings.data.Measure;
 import mucsi96.trainingLog.withings.data.MeasureGroup;
+import mucsi96.trainingLog.withings.oauth.WithingsClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -60,7 +61,7 @@ public class WithingsService {
         }
 
         if (response.getStatus() == 401) {
-            throw new UnauthorizedException();
+            throw new UnauthorizedException(WithingsClient.id);
         }
 
         if (response.getStatus() != 0) {

@@ -1,12 +1,10 @@
 package mucsi96.trainingLog.oauth;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.*;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
-import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -40,8 +38,7 @@ public class AuthorizedClientManager implements OAuth2AuthorizedClientManager {
             HttpServletRequest request = authorizeRequest.getAttribute(HttpServletRequest.class.getName());
 
           if (MimeTypeUtils.parseMimeTypes(request.getHeader(HttpHeaders.ACCEPT)).contains(MimeTypeUtils.APPLICATION_JSON)) {
-                throw new
-                  UnauthorizedException();
+                throw new UnauthorizedException(authorizeRequest.getClientRegistrationId());
             }
 
             throw ex;

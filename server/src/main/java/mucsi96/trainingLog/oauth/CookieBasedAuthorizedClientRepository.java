@@ -62,6 +62,9 @@ public class CookieBasedAuthorizedClientRepository implements OAuth2AuthorizedCl
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         response.addCookie(cookie);
+        if (authorizedClient.getClientRegistration().getRedirectUri().contains("/authorize/oauth2/")) {
+          throw new RedirectToHomeException();
+        }
     }
 
     @Override
