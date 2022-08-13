@@ -1,9 +1,7 @@
 package mucsi96.trainingLog;
 
-import mucsi96.trainingLog.google.oauth.GoogleClient;
-import mucsi96.trainingLog.oauth.UnauthorizedException;
+import mucsi96.trainingLog.oauth.UnauthorizedClientException;
 import mucsi96.trainingLog.withings.WithingsTechnicalException;
-import mucsi96.trainingLog.withings.oauth.WithingsClient;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
@@ -22,8 +20,8 @@ public class GlobalExceptionHandler {
   }
 
   @ResponseStatus(HttpStatus.UNAUTHORIZED)
-  @ExceptionHandler(UnauthorizedException.class)
-  public @ResponseBody RepresentationModel handleUnauthorizedException(UnauthorizedException exception) {
+  @ExceptionHandler(UnauthorizedClientException.class)
+  public @ResponseBody RepresentationModel handleUnauthorizedException(UnauthorizedClientException exception) {
     String oauth2LoginUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().path(
       OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/" + exception.getRegistrationId()
     ).build().toString();

@@ -38,7 +38,7 @@ public class AuthorizedClientManager implements OAuth2AuthorizedClientManager {
             HttpServletRequest request = authorizeRequest.getAttribute(HttpServletRequest.class.getName());
 
           if (MimeTypeUtils.parseMimeTypes(request.getHeader(HttpHeaders.ACCEPT)).contains(MimeTypeUtils.APPLICATION_JSON)) {
-                throw new UnauthorizedException(authorizeRequest.getClientRegistrationId());
+                throw new UnauthorizedClientException(authorizeRequest.getClientRegistrationId());
             }
 
             throw ex;

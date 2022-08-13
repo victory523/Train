@@ -22,6 +22,7 @@ public class SecurityConfig {
   private final CookieBasedAuthorizedClientRepository authorizedClientRepository;
   private final RefreshTokenResponseClient refreshTokenResponseClient;
   private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
+  private final OAuthAuthenticationSuccessHandler authenticationSuccessHandler;
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -35,7 +36,7 @@ public class SecurityConfig {
       );
 
     http.oauth2Login()
-      .defaultSuccessUrl("/");
+        .successHandler(authenticationSuccessHandler);
 
     http.oauth2Client()
       .authorizationCodeGrant()

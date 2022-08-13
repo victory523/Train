@@ -5,6 +5,6 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class UnauthorizedException extends RuntimeException {
+public class UnauthorizedClientException extends RuntimeException {
   private final String registrationId;
 }
