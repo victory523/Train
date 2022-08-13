@@ -4,8 +4,6 @@
   - Google login url if user is not authenticated
   - All not authorized third party login urls
 - Create `/me` which returns user details like name, avatar
-- Implement remember me
-- Implement logout
 - Add swagger API
 - Create database for stats
 - Sync stats in `/status`
