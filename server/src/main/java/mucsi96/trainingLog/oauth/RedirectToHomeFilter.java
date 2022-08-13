@@ -9,6 +9,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * Workaround until https://github.com/spring-projects/spring-security/issues/11678 is resolved
+ */
 public class RedirectToHomeFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
