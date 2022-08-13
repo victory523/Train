@@ -1,5 +1,6 @@
 package mucsi96.trainingLog.oauth;
 
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
@@ -12,6 +13,7 @@ import java.io.IOException;
 /**
  * Workaround until https://github.com/spring-projects/spring-security/issues/11678 is resolved
  */
+@Component
 public class RedirectToHomeFilter extends GenericFilterBean {
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {

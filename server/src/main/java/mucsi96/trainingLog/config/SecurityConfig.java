@@ -23,6 +23,8 @@ public class SecurityConfig {
   private final RefreshTokenResponseClient refreshTokenResponseClient;
   private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
   private final OAuthAuthenticationSuccessHandler authenticationSuccessHandler;
+  private final UnauthorizedClientFilter unauthorizedClientFilter;
+  private final RedirectToHomeFilter redirectToHomeFilter;
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
@@ -42,7 +44,8 @@ public class SecurityConfig {
       .authorizationCodeGrant()
       .accessTokenResponseClient(accessTokenResponseClient);
 
-    http.addFilterBefore(new RedirectToHomeFilter(), OAuth2AuthorizationCodeGrantFilter.class);
+    http.addFilterBefore(redirectToHomeFilter, OAuth2AuthorizationCodeGrantFilter.class);
+    http.addFilterBefore(unauthorizedClientFilter, OAuth2AuthorizationRequestRedirectFilter.class);
 
     return http.build();
   }
