@@ -65,13 +65,12 @@ public class WithingsControllerTests {
     mockMvc
       .perform(
         get("/withings/weight")
-          .header(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE)
           .headers(getForwardHeaders())
       )
       .andExpect(status().isUnauthorized())
       .andExpect(
         jsonPath("$._links.oauth2Login.href")
-          .value("https://training-log.com:3000/api/login")
+          .value("https://training-log.com:3000/api/oauth2/authorization/withings-client")
       );
   }
 
@@ -80,7 +79,7 @@ public class WithingsControllerTests {
   public void redirects_to_withings_request_authorization_page() throws Exception {
       mockMvc
         .perform(
-          get("/login")
+          get("/oauth2/authorization/withings-client")
             .headers(getForwardHeaders())
         )
         .andExpect(status().isFound())
@@ -132,7 +131,7 @@ public class WithingsControllerTests {
 
     MockHttpSession mockHttpSession = new MockHttpSession();
     MvcResult result = mockMvc.perform(
-      get("/login")
+      get("/oauth2/authorization/withings-client")
         .headers(getForwardHeaders())
         .session(mockHttpSession)
     ).andReturn();
@@ -151,7 +150,7 @@ public class WithingsControllerTests {
         .headers(getForwardHeaders())
       )
       .andExpect(status().isFound())
-      .andExpect(header().string(HttpHeaders.LOCATION, "https://training-log.com:3000/api/login"));
+      .andExpect(header().string(HttpHeaders.LOCATION, "https://training-log.com:3000/"));
 
 
     List<LoggedRequest> requests = withingsServer.findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/v2/oauth2")));

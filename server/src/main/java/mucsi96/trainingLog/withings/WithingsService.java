@@ -1,7 +1,6 @@
 package mucsi96.trainingLog.withings;
 
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.trainingLog.oauth.UnauthorizedClientException;
 import mucsi96.trainingLog.withings.data.GetMeasureResponse;
 import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
 import mucsi96.trainingLog.withings.data.Measure;
@@ -9,6 +8,7 @@ import mucsi96.trainingLog.withings.data.MeasureGroup;
 import mucsi96.trainingLog.withings.oauth.WithingsClient;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.oauth2.client.ClientAuthorizationRequiredException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -61,7 +61,7 @@ public class WithingsService {
         }
 
         if (response.getStatus() == 401) {
-            throw new UnauthorizedClientException(WithingsClient.id);
+            throw new ClientAuthorizationRequiredException(WithingsClient.id);
         }
 
         if (response.getStatus() != 0) {

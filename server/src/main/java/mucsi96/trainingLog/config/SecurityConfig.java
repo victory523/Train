@@ -23,7 +23,7 @@ public class SecurityConfig {
   private final RefreshTokenResponseClient refreshTokenResponseClient;
   private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
   private final OAuthAuthenticationSuccessHandler authenticationSuccessHandler;
-  private final UnauthorizedClientFilter unauthorizedClientFilter;
+  private final ClientAuthorizationFilter clientAuthorizationFilter;
   private final RedirectToHomeFilter redirectToHomeFilter;
 
   @Bean
@@ -45,7 +45,7 @@ public class SecurityConfig {
       .accessTokenResponseClient(accessTokenResponseClient);
 
     http.addFilterBefore(redirectToHomeFilter, OAuth2AuthorizationCodeGrantFilter.class);
-    http.addFilterBefore(unauthorizedClientFilter, OAuth2AuthorizationRequestRedirectFilter.class);
+    http.addFilterBefore(clientAuthorizationFilter, OAuth2AuthorizationRequestRedirectFilter.class);
 
     return http.build();
   }

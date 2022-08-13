@@ -1,6 +1,7 @@
 package mucsi96.trainingLog.oauth;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.oauth2.client.ClientAuthorizationRequiredException;
 import org.springframework.security.web.util.ThrowableAnalyzer;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
@@ -14,7 +15,7 @@ import java.io.IOException;
 
 @Component
 @RequiredArgsConstructor
-public class UnauthorizedClientFilter extends GenericFilterBean {
+public class ClientAuthorizationFilter extends GenericFilterBean {
   private final AuthorizationRequestUtil authorizationRequestUtil;
   private final ThrowableAnalyzer throwableAnalyzer = new ThrowableAnalyzer();
 
@@ -24,13 +25,13 @@ public class UnauthorizedClientFilter extends GenericFilterBean {
       chain.doFilter(request, response);
     } catch (Exception exception) {
       Throwable[] causeChain = throwableAnalyzer.determineCauseChain(exception);
-      UnauthorizedClientException unauthorizedClientException = (UnauthorizedClientException) this.throwableAnalyzer
-        .getFirstThrowableOfType(UnauthorizedClientException.class, causeChain);
+      ClientAuthorizationRequiredException authorizationRequiredException = (ClientAuthorizationRequiredException) this.throwableAnalyzer
+        .getFirstThrowableOfType(ClientAuthorizationRequiredException.class, causeChain);
 
-      if (unauthorizedClientException != null) {
+      if (authorizationRequiredException != null) {
         authorizationRequestUtil.sendAuthorizationRequestModel(
           (HttpServletResponse) response,
-          unauthorizedClientException.getRegistrationId()
+          authorizationRequiredException.getClientRegistrationId()
         );
       } else {
         throw exception;
