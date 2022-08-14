@@ -9,7 +9,7 @@ public class AuthorizedClientManager implements OAuth2AuthorizedClientManager {
 
   public AuthorizedClientManager(
     ClientRegistrationRepository clientRegistrationRepository,
-    CookieBasedAuthorizedClientRepository authorizedClientRepository,
+    AuthorizedClientRepository authorizedClientRepository,
     RefreshTokenResponseClient refreshTokenResponseClient
   ) {
     OAuth2AuthorizedClientProvider authorizedClientProvider =

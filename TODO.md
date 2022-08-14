@@ -1,8 +1,4 @@
-- Use Database for authorized clients
 - Create flow chart of Spring Security
-- Create `/status` unrestricted endpoint which returns HAL links:
-  - Google login url if user is not authenticated
-  - All not authorized third party login urls
 - Create `/me` which returns user details like name, avatar
 - Add swagger API
 - Create database for stats

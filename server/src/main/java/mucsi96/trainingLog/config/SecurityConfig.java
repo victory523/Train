@@ -19,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
   private final AccessTokenResponseClient accessTokenResponseClient;
   private final ClientRegistrationRepository clientRegistrationRepository;
-  private final CookieBasedAuthorizedClientRepository authorizedClientRepository;
+  private final AuthorizedClientRepository authorizedClientRepository;
   private final RefreshTokenResponseClient refreshTokenResponseClient;
   private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
   private final OAuthAuthenticationSuccessHandler authenticationSuccessHandler;
@@ -28,7 +28,13 @@ public class SecurityConfig {
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+    http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+
     http.authorizeRequests().anyRequest().authenticated();
+
+    http.csrf().disable();
+
+    http.headers().frameOptions().disable();
 
     http.exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint);
 

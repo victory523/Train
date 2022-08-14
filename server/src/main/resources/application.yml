@@ -28,7 +28,17 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
             scope: https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile
-
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driverClassName: org.h2.Driver
+  h2:
+    console:
+      enabled: true
+  sql:
+    init:
+      platform: h2
+      schema-locations:
+        - classpath:org/springframework/security/oauth2/client/oauth2-client-schema.sql
 #logging:
 #  level:
 #    org:
