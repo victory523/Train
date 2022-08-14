@@ -3,3 +3,5 @@
 - Add swagger API
 - Create database for stats
 - Sync stats in `/status`
+- Setup MySQL
+- Fix docker-compose with MySQL
