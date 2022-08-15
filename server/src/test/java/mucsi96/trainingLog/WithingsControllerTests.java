@@ -3,6 +3,9 @@ package mucsi96.trainingLog;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import mucsi96.trainingLog.model.TestAuthorizedClient;
+import mucsi96.trainingLog.repository.TestAuthorizedClientRepository;
+import mucsi96.trainingLog.withings.oauth.WithingsClient;
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -25,9 +28,11 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -39,8 +44,12 @@ public class WithingsControllerTests {
   static WireMockExtension withingsServer = WireMockExtension.newInstance()
     .options(wireMockConfig().dynamicPort())
     .build();
+
   @Autowired
   private MockMvc mockMvc;
+
+  @Autowired
+  private TestAuthorizedClientRepository authorizedClientRepository;
 
   @DynamicPropertySource
   static void overrideProperties(DynamicPropertyRegistry registry) {
@@ -159,6 +168,13 @@ public class WithingsControllerTests {
       .fromUriString("?" + requests.get(0).getBodyAsString())
       .build()
       .getQueryParams();
+
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsClient.id);
+
+    assertTrue(authorizedClient.isPresent());
+    assertEquals("rob", authorizedClient.get().getPrincipalName());
+    assertEquals("test-access-token", authorizedClient.get().getAccessTokenValue());
+    assertEquals("test-refresh-token", authorizedClient.get().getRefreshTokenValue());
 
     assertEquals("authorization_code", queryParams.getFirst(OAuth2ParameterNames.GRANT_TYPE));
     assertEquals("test-authorization-code", queryParams.getFirst(OAuth2ParameterNames.CODE));
