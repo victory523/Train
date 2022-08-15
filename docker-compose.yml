@@ -22,6 +22,7 @@ services:
   app:
     build: ./client
     environment:
+      NGINX_PORT: 80
       # For debugging server: API_INTERNAL_HOST: host.docker.internal
       API_INTERNAL_HOST: api
       API_EXTERNAL_HOST: localhost
