@@ -3,6 +3,7 @@ package mucsi96.trainingLog;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import lombok.RequiredArgsConstructor;
 import mucsi96.trainingLog.model.TestAuthorizedClient;
 import mucsi96.trainingLog.repository.TestAuthorizedClientRepository;
 import mucsi96.trainingLog.withings.oauth.WithingsClient;
@@ -18,6 +19,7 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.MultiValueMap;
@@ -38,18 +40,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@RequiredArgsConstructor
+@TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class WithingsControllerTests {
+
+  private final MockMvc mockMvc;
+  private final TestAuthorizedClientRepository authorizedClientRepository;
 
   @RegisterExtension
   static WireMockExtension withingsServer = WireMockExtension.newInstance()
     .options(wireMockConfig().dynamicPort())
     .build();
-
-  @Autowired
-  private MockMvc mockMvc;
-
-  @Autowired
-  private TestAuthorizedClientRepository authorizedClientRepository;
 
   @DynamicPropertySource
   static void overrideProperties(DynamicPropertyRegistry registry) {
