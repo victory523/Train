@@ -21,6 +21,8 @@ https://leaks.wanari.com/2017/11/28/how-to-make-custom-usernamepasswordauthentic
 
 ![Spring Security OAuth2 Login Flow](../docs/Spring%20Security%20OAuth2%20Login%20Flow.svg)
 
+![Spring Security OAuth2 Client Flow](../docs/Spring%20Security%20OAuth2%20Client%20Flow.svg)
+
 ### Entry-point
 
 The flow starts opening the following url in browser `/oauth2/authorization/{registrationId}`.
