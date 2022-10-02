@@ -1,0 +1,18 @@
+replicaCount: 1
+
+image:
+  repository: mucsi96/spring-boot-demo-client
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+service:
+  type: ClusterIP
+
+resources:
+  requests:
+    memory: 64Mi
+    cpu: 250m
+  limits:
+    memory: 128Mi
+    cpu: 500m    
