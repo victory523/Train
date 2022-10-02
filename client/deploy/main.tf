@@ -39,6 +39,11 @@ resource "helm_release" "chart" {
   ]
 
   set {
+    name  = "image.repository"
+    value = image_name
+  }
+
+  set {
     name  = "service.port"
     value = var.port
   }
