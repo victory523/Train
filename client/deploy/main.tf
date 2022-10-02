@@ -30,11 +30,10 @@ resource "null_resource" "image" {
 }
 
 resource "helm_release" "chart" {
-  name             = var.host
-  version          = module.chart_version.version
-  namespace        = var.namespace
-  create_namespace = true
-  chart            = "."
+  name      = var.host
+  version   = module.chart_version.version
+  namespace = var.namespace
+  chart     = "."
   depends_on = [
     resource.null_resource.image
   ]
