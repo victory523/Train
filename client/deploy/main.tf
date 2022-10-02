@@ -10,6 +10,7 @@ module "chart_version" {
   app_version = module.image_version.version
   tag_prefix  = "client-chart"
   path        = path.module
+  ignore      = ["*.tf"]
 }
 
 resource "null_resource" "image" {

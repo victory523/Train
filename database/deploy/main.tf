@@ -2,6 +2,7 @@ module "chart_version" {
   source     = "github.com/mucsi96/terraform-modules//helm-chart-version"
   tag_prefix = "database-chart"
   path       = path.module
+  ignore     = ["*.tf"]
 }
 
 resource "random_pet" "username" {}
