@@ -1,0 +1,15 @@
+replicaCount: 1
+
+image:
+  repository: mysql
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+resources:
+  requests:
+    memory: 500Mi
+    cpu: 500m
+  limits:
+    memory: 1Gi
+    cpu: 1000m    

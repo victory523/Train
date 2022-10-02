@@ -1,0 +1,92 @@
+{{- $fullName := include "app.fullname" . -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "app.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "app.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - name: {{ .Chart.Name }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        resources:
+          requests:
+            memory: {{ .Values.resources.requests.memory }}
+            cpu: {{ .Values.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.resources.limits.memory }}
+            cpu: {{ .Values.resources.limits.cpu }}
+        ports:
+        - name: http
+          containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ $fullName }}
+                key: rootPassword
+          - name: MYSQL_DATABASE
+            value: {{ required "Missing name value" .Values.name }}
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ $fullName }}
+                key: userName
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ $fullName }}
+                key: password
+        volumeMounts:
+          - name: ssv
+            mountPath: /var/lib/mysql
+          - name: initdb
+            mountPath: /docker-entrypoint-initdb.d
+      - name: {{ .Chart.Name }}-prometheus-exporter
+        image: "prom/mysqld-exporter:v0.14.0"
+        ports:
+          - name: metrics
+            containerPort: 9104
+        env:
+          - name: MYSQL_DATABASE
+            value: {{ required "Missing name value" .Values.name }}
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: {{ $fullName }}
+                key: userName
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ $fullName }}
+                key: password
+          - name: DATA_SOURCE_NAME
+            value: "$(MYSQL_USER):$(MYSQL_PASSWORD)@(localhost:3306)/$(MYSQL_DATABASE)"
+        livenessProbe:
+          httpGet:
+            path: /
+            port: metrics
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: metrics
+          initialDelaySeconds: 30
+          timeoutSeconds: 10
+      volumes:
+      - name: ssv
+        persistentVolumeClaim:
+          claimName: {{ $fullName }}
+      - name: initdb
+        configMap:
+          name: {{ $fullName }}
