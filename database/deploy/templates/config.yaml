@@ -6,4 +6,5 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data: 
-  initdb.sql: {{- required "Missing initDbSql value" .Values.initDbSql | toYaml | nindent 4 }}
+  initdb.sql: |+
+    {{- required "Missing initDbSql value" .Values.initDbSql | toYaml | nindent 4 }}
