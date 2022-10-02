@@ -1,11 +1,15 @@
+locals {
+  namespace = "workout"
+}
+
 resource "kubernetes_namespace" "workout" {
   metadata {
-    name = "workout"
+    name = local.namespace
   }
 }
 
 module "client" {
   source     = "./client/deploy"
-  namespace  = kubernetes_namespace.workout.id
-  image_name = "mucsi96/${kubernetes_namespace.workout.id}-client"
+  namespace  = local.namespace
+  image_name = "mucsi96/${local.namespace}-client"
 }
