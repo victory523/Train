@@ -1,12 +1,12 @@
 module "image_version" {
-  source     = "../version"
+  source     = "github.com/mucsi96/terraform-modules//version"
   tag_prefix = "client-image"
   path       = ".."
   ignore     = ["deploy/"]
 }
 
 module "chart_version" {
-  source      = "../helm-chart-version"
+  source      = "github.com/mucsi96/terraform-modules//helm-chart-version"
   app_version = module.image_version.version
   tag_prefix  = "client-chart"
   path        = "."
