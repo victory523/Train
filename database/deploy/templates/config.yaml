@@ -6,7 +6,5 @@ metadata:
   labels:
     {{- include "app.labels" . | nindent 4 }}
 data: 
-  initdb.sql: |
-    CREATE TABLE oauth2_authorized_client (
-      access_token_value blob NOT NULL
-    );
+  initdb.sql: |-
+    {{- required "Missing initDbSql value" .Values.initDbSql | nindent 4 }}
