@@ -53,6 +53,6 @@ resource "helm_release" "chart" {
 
   set {
     name  = "initDbSql"
-    value = var.init_db_sql
+    value = replace(var.init_db_sql, ",", "\\,")
   }
 }
