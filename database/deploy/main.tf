@@ -1,5 +1,5 @@
 module "chart_version" {
-  source     = "../helm-chart-version"
+  source     = "github.com/mucsi96/terraform-modules//helm-chart-version"
   tag_prefix = "database-chart"
   path       = path.module
 }
