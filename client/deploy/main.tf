@@ -40,7 +40,7 @@ resource "helm_release" "chart" {
 
   set {
     name  = "image.repository"
-    value = image_name
+    value = var.image_name
   }
 
   set {
