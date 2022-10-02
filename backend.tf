@@ -1,7 +1,6 @@
 terraform {
   backend "kubernetes" {
-    secret_suffix = "state"
+    secret_suffix = "workout-app-state"
     config_path   = "~/.kube/config"
-    namespace     = "workout"
   }
 }
