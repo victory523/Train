@@ -1,3 +1,5 @@
+- Remove filter in favor of /authenticate endpoint
+
 - Create flow chart of Spring Security
 - Create `/me` which returns user details like name, avatar
 - Add swagger API

@@ -1,0 +1,15 @@
+replicaCount: 1
+
+service:
+  type: ClusterIP
+
+resources: 
+  requests:
+    memory: 500Mi
+    cpu: 500m
+  limits:
+    memory: 1Gi
+    cpu: 1000m
+
+config:
+  message: Hello from Spring Boot Demo!

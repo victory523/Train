@@ -20,3 +20,20 @@ module "database" {
   name        = local.namespace
   init_db_sql = file("./server/src/main/resources/schema.sql")
 }
+
+module "server" {
+  source     = "./server/deploy"
+  namespace  = local.namespace
+  image_name = "mucsi96/${local.namespace}-server"
+  database = {
+    host     = module.database.host
+    port     = module.database.port
+    name     = module.database.name
+    username = module.database.username
+    password = module.database.password
+  }
+  admin_server = {
+    host = ""
+    port = 9090
+  }
+}
