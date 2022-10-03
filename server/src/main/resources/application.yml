@@ -1,5 +1,6 @@
 server:
   forward-headers-strategy: framework
+  shutdown: graceful
 spring:
   profiles:
     active: develop
@@ -30,6 +31,28 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     username: ${env.MYSQL_USER}
     password: ${env.MYSQL_PASSWORD}
+  boot:
+    admin:
+      client:
+        url: http://${env.ADMIN_SERVER_HOST}:${env.ADMIN_SERVER_PORT}
+        instance:
+          name: workout
+          service-base-url: http://${env.K8S_POD_IP}:8080
+          management-base-url: http://${env.K8S_POD_IP}:${env.MANAGEMENT_SERVER_PORT}
+        auto-deregistration: true
+management:
+  server:
+    port: ${env.MANAGEMENT_SERVER_PORT}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    probes:
+      enabled: true
 logging:
   level:
     com:
