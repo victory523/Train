@@ -3,6 +3,7 @@ package mucsi96.trainingLog.config;
 import lombok.RequiredArgsConstructor;
 import mucsi96.trainingLog.google.oauth.GoogleClient;
 import mucsi96.trainingLog.oauth.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,10 +25,16 @@ public class SecurityConfig {
   private final RestAuthenticationEntryPoint restAuthenticationEntryPoint;
   private final OAuthAuthenticationSuccessHandler authenticationSuccessHandler;
   private final RedirectToHomeFilter redirectToHomeFilter;
+  @Value("${management.server.port}")
+  private String managementPort;
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-    http.authorizeRequests().antMatchers("/h2-console/**").permitAll();
+    int managementPort = Integer.valueOf(this.managementPort);
+
+    http.authorizeRequests().requestMatchers(
+      request -> request.getLocalPort() == managementPort
+    ).permitAll();
 
     http.authorizeRequests().anyRequest().authenticated();
 

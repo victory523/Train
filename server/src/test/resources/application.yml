@@ -37,3 +37,6 @@ spring:
     properties:
       hibernate:
         format_sql: true
+management:
+  server:
+    port: 8082
