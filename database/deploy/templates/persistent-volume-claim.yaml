@@ -8,6 +8,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
+  # Default path on node: /var/lib/rancher/k3s/storage
   storageClassName: local-path
   resources:
     requests:
