@@ -33,7 +33,7 @@ module "server" {
     password = module.database.password
   }
   admin_server = {
-    host = ""
+    host = "localhost"
     port = 9090
   }
 }
