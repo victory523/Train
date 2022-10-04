@@ -33,7 +33,7 @@ module "server" {
     password = module.database.password
   }
   admin_server = {
-    host = "spring-boot-admin-server"
+    host = "spring-boot-admin-server.monitoring"
     port = 9090
   }
 }
