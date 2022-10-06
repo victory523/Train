@@ -37,3 +37,11 @@ module "server" {
     port = 9090
   }
 }
+
+module "ingress" {
+  source      = "github.com/mucsi96/terraform-modules//ingress"
+  namespace   = local.namespace
+  hostname    = "workout.ibari.ch"
+  client_host = module.client.host
+  server_host = module.server.host
+}
