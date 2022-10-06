@@ -39,9 +39,11 @@ module "server" {
 }
 
 module "ingress" {
-  source      = "github.com/mucsi96/terraform-modules//ingress"
-  namespace   = local.namespace
-  hostname    = "workout.ibari.ch"
-  client_host = module.client.host
-  server_host = module.server.host
+  source          = "github.com/mucsi96/terraform-modules//ingress"
+  namespace       = local.namespace
+  hostname        = "workout.ibari.ch"
+  client_host     = module.client.host
+  server_host     = module.server.host
+  issuer_name     = "tls-issuer"
+  tls_secret_name = "tls-secret"
 }
