@@ -1,9 +1,0 @@
-{{- $fullName := include "app.fullname" . -}}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: {{ $fullName }}
-  labels:
-    {{- include "app.labels" . | nindent 4 }}
-data:
-  message: {{ .Values.config.message }}
