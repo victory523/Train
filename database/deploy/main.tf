@@ -10,15 +10,18 @@ resource "random_pet" "username" {}
 resource "random_pet" "exporter_username" {}
 
 resource "random_password" "password" {
-  length = 16
+  length           = 16
+  override_special = "!@#$%&*-_=+"
 }
 
 resource "random_password" "root_password" {
-  length = 16
+  length           = 16
+  override_special = "!@#$%&*-_=+"
 }
 
 resource "random_password" "exporter_password" {
-  length = 16
+  length           = 16
+  override_special = "!@#$%&*-_=+"
 }
 
 locals {
