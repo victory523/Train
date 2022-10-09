@@ -70,7 +70,7 @@ resource "helm_release" "chart" {
   }
 
   set {
-    name  = "database.userName"
+    name  = "database.username"
     value = var.database.username
   }
 

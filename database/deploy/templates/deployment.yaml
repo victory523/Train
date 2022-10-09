@@ -40,7 +40,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ $fullName }}
-                key: userName
+                key: username
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -63,12 +63,12 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: {{ $fullName }}
-                key: userName
+                key: exporterUsername
           - name: MYSQL_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: {{ $fullName }}
-                key: password
+                key: exporterPassword
           - name: DATA_SOURCE_NAME
             value: "$(MYSQL_USER):$(MYSQL_PASSWORD)@(localhost:3306)/$(MYSQL_DATABASE)"
         livenessProbe:
@@ -88,5 +88,5 @@ spec:
         persistentVolumeClaim:
           claimName: {{ $fullName }}
       - name: initdb
-        configMap:
-          name: {{ $fullName }}
+        secret:
+          secretName: {{ $fullName }}-sql-secret
