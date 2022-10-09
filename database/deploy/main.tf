@@ -1,10 +1,3 @@
-locals {
-  grant_sql = templatefile("${path.module}/exporter-grant.sql", {
-    exporter_username : random_pet.exporter_username.id
-    exporter_password : random_password.exporter_password.result
-  })
-}
-
 module "chart_version" {
   source     = "github.com/mucsi96/terraform-modules//helm-chart-version"
   tag_prefix = "database-chart"
@@ -26,6 +19,13 @@ resource "random_password" "root_password" {
 
 resource "random_password" "exporter_password" {
   length = 16
+}
+
+locals {
+  grant_sql = templatefile("${path.module}/exporter-grant.sql", {
+    exporter_username : random_pet.exporter_username.id
+    exporter_password : random_password.exporter_password.result
+  })
 }
 
 resource "helm_release" "chart" {
@@ -81,6 +81,6 @@ resource "helm_release" "chart" {
 
   set {
     name  = "grantSql"
-    value = replace(var.grant_sql, ",", "\\,")
+    value = replace(locals.grant_sql, ",", "\\,")
   }
 }
