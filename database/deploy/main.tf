@@ -81,6 +81,6 @@ resource "helm_release" "chart" {
 
   set {
     name  = "grantSql"
-    value = replace(locals.grant_sql, ",", "\\,")
+    value = replace(local.grant_sql, ",", "\\,")
   }
 }
