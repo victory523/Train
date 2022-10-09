@@ -60,7 +60,7 @@ resource "helm_release" "chart" {
   }
 
   set {
-    name  = "exporterUserName"
+    name  = "exporterUsername"
     value = random_pet.exporter_username.id
   }
 
