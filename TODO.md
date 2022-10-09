@@ -6,4 +6,3 @@
 - Sync stats in `/status`
 - Create scheduled db backups
 
-- fix issue with mysql scraper error
