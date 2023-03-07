@@ -1,0 +1,10 @@
+---
+argument_specs:
+  main:
+    options:
+      ssh_private_key:
+        type: str
+        required: true
+      ssh_public_key:
+        type: str
+        required: true

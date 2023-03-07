@@ -1,0 +1,10 @@
+- name: Provision
+  gather_facts: false
+  hosts: cluster
+  vars_files:
+    - ../vars/vault.yaml
+    - ../vars/defaults.yaml
+  roles:
+    - role: ssh_auth
+
+    - role: mucsi96.ansible_roles.gather_facts

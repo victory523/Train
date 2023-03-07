@@ -1,0 +1,3 @@
+collections:
+  - name: https://github.com/mucsi96/ansible-roles
+    type: git

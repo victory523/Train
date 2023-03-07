@@ -1,0 +1,4 @@
+auth_middelware_name: auth
+auth_middelware_namespace: authelia
+spring_admin_server_name: spring-boot-admin-server
+spring_admin_server_port: 9090

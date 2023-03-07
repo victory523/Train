@@ -1,0 +1,13 @@
+.vagrant/
+.ssh/
+.kube/
+.ansible/
+lib/
+
+__pycache__
+.pytest_cache
+
+reports/
+
+### dot env ###
+.env
