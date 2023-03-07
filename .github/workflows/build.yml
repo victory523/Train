@@ -39,6 +39,13 @@ jobs:
       - name: Install Python requirements
         run: pip install -r requirements.txt
 
+      - name: Download libs
+        run: |
+          libs=https://raw.githubusercontent.com/mucsi96/ansible-roles/main/lib
+          wget $libs/ansible_utils.py --directory-prefix lib
+          wget $libs/docker_utils.py --directory-prefix lib
+          wget $libs/version_utils.py --directory-prefix lib
+
       - name: Build Docker images
         run: python scripts/build.py
 
