@@ -1,3 +1,5 @@
+- Run mucsi96.ansible_roles.pull_kube_config role only on local machine. Not on CI
+
 - Remove filter in favor of /authenticate endpoint
 
 - Create `/me` which returns user details like name, avatar
