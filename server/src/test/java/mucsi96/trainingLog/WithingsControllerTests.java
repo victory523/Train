@@ -1,13 +1,17 @@
 package mucsi96.trainingLog;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
-import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import lombok.RequiredArgsConstructor;
-import mucsi96.trainingLog.model.TestAuthorizedClient;
-import mucsi96.trainingLog.repository.TestAuthorizedClientRepository;
-import mucsi96.trainingLog.withings.oauth.WithingsClient;
-import org.assertj.core.matcher.AssertionMatcher;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
+import java.net.URI;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,35 +19,32 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URLDecoder;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-import java.util.Optional;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
+import com.github.tomakehurst.wiremock.verification.LoggedRequest;
+import com.jayway.jsonpath.JsonPath;
 
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import lombok.RequiredArgsConstructor;
+import mucsi96.trainingLog.model.TestAuthorizedClient;
+import mucsi96.trainingLog.repository.TestAuthorizedClientRepository;
+import mucsi96.trainingLog.withings.oauth.WithingsClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @RequiredArgsConstructor
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-
 public class WithingsControllerTests {
 
   private final MockMvc mockMvc;
@@ -51,19 +52,22 @@ public class WithingsControllerTests {
 
   @RegisterExtension
   static WireMockExtension withingsServer = WireMockExtension.newInstance()
-    .options(wireMockConfig().dynamicPort())
-    .build();
+      .options(wireMockConfig().dynamicPort())
+      .build();
 
   @DynamicPropertySource
   static void overrideProperties(DynamicPropertyRegistry registry) {
     registry.add(
-      "spring.security.oauth2.client.provider.withings.token-uri",
-      () -> withingsServer.baseUrl() + "/v2/oauth2"
-    );
+        "spring.security.oauth2.client.provider.withings.token-uri",
+        () -> withingsServer.baseUrl() + "/v2/oauth2");
   }
 
-  private HttpHeaders getForwardHeaders() {
+  private HttpHeaders getHeaders() {
     HttpHeaders headers = new HttpHeaders();
+    headers.add("Remote-User", "rob");
+    headers.add("Remote-Group", "user");
+    headers.add("Remote-Name", "Robert White");
+    headers.add("Remote-Email", "robert.white@mockemail.com");
     headers.add("X-Forwarded-Host", "training-log.com");
     headers.add("X-Forwarded-Port", "3000");
     headers.add("X-Forwarded-Proto", "https");
@@ -71,118 +75,96 @@ public class WithingsControllerTests {
     return headers;
   }
 
-  @Test
-  @WithMockGoogleUser
-  public void returns_unauthorized_if_bearer_token_is_not_sent() throws Exception {
-    mockMvc
-      .perform(
-        get("/withings/weight")
-          .headers(getForwardHeaders())
-      )
-      .andExpect(status().isUnauthorized())
-      .andExpect(
-        jsonPath("$._links.oauth2Login.href")
-          .value("https://training-log.com:3000/api/oauth2/authorization/withings-client")
-      );
+  @AfterEach
+  void afterEach() {
+    authorizedClientRepository.deleteAll();
   }
 
   @Test
-  @WithMockGoogleUser
-  public void redirects_to_withings_request_authorization_page() throws Exception {
-      mockMvc
+  public void returns_not_authorized_if_no_preauth_headers_are_sent() throws Exception {
+    MockHttpServletResponse response = mockMvc
         .perform(
-          get("/oauth2/authorization/withings-client")
-            .headers(getForwardHeaders())
-        )
-        .andExpect(status().isFound())
-        .andExpect(header().string(HttpHeaders.LOCATION, new AssertionMatcher<>() {
-          @Override
-          public void assertion(String location) throws AssertionError {
-            UriComponents components = UriComponentsBuilder.fromUriString(location).build();
-            assertEquals("localhost", components.getHost());
-            assertEquals(8080, components.getPort());
-            assertEquals("/oauth2_user/authorize2", components.getPath());
-            assertEquals(
-              "code",
-              components.getQueryParams().getFirst(OAuth2ParameterNames.RESPONSE_TYPE)
-            );
-            assertEquals(
-              "test-withings-client-id",
-              components.getQueryParams().getFirst(OAuth2ParameterNames.CLIENT_ID)
-            );
-            assertEquals(
-              "user.metrics",
-              components.getQueryParams().getFirst(OAuth2ParameterNames.SCOPE)
-            );
-            assertEquals(
-              Base64.getUrlDecoder().decode(
-                URLDecoder.decode(
-                  components.getQueryParams().getFirst(OAuth2ParameterNames.STATE),
-                  StandardCharsets.UTF_8
-                )
-              ).length,
-              32
-            );
-            assertEquals(
-              "https://training-log.com:3000/api/authorize/oauth2/code/withings-client",
-              components.getQueryParams().getFirst(OAuth2ParameterNames.REDIRECT_URI)
-            );
-          }
-        }));
+            get("/withings/weight"))
+        .andReturn().getResponse();
 
+    assertThat(response.getStatus()).isEqualTo(401);
   }
 
   @Test
-  @WithMockGoogleUser
+  public void returns_forbidden_if_bearer_token_is_not_sent() throws Exception {
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            get("/withings/weight")
+                .headers(getHeaders()))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(403);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$._links.oauth2Login.href", String.class))
+        .isEqualTo("https://training-log.com:3000/api/oauth2/authorization/withings-client");
+  }
+
+  @Test
+  public void redirects_to_withings_request_authorization_page() throws Exception {
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            get("/oauth2/authorization/withings-client")
+                .headers(getHeaders()))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(302);
+    URI redirectUrl = new URI(response.getRedirectedUrl());
+    assertThat(redirectUrl).hasHost("localhost");
+    assertThat(redirectUrl).hasPort(8080);
+    assertThat(redirectUrl).hasPath("/oauth2_user/authorize2");
+    assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.RESPONSE_TYPE, "code");
+    assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.CLIENT_ID, "test-withings-client-id");
+    assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.SCOPE, "user.metrics");
+    assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.STATE);
+    assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.REDIRECT_URI, "https://training-log.com:3000/api/authorize/oauth2/code/withings-client");
+  }
+
+  @Test
   public void requests_withings_access_token_after_consent_is_granted() throws Exception {
     withingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
-      WireMock.aResponse()
-        .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
-        .withBodyFile("withings-authorize.json")
-    ));
+        WireMock.aResponse()
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .withBodyFile("withings-authorize.json")));
 
     MockHttpSession mockHttpSession = new MockHttpSession();
-    MvcResult result = mockMvc.perform(
-      get("/oauth2/authorization/withings-client")
-        .headers(getForwardHeaders())
-        .session(mockHttpSession)
-    ).andReturn();
-    UriComponents components = UriComponentsBuilder.fromUriString(
-      result.getResponse().getHeader(HttpHeaders.LOCATION)
-    ).build();
+    MockHttpServletResponse response1 = mockMvc.perform(
+        get("/oauth2/authorization/withings-client")
+            .headers(getHeaders())
+            .session(mockHttpSession))
+        .andReturn().getResponse();
+    UriComponents components = UriComponentsBuilder.fromUriString(response1.getRedirectedUrl()).build();
     String state = URLDecoder.decode(
-      components.getQueryParams().getFirst(OAuth2ParameterNames.STATE),
-      StandardCharsets.UTF_8
-    );
+        components.getQueryParams().getFirst(OAuth2ParameterNames.STATE),
+        StandardCharsets.UTF_8);
 
-    mockMvc.perform(get("/authorize/oauth2/code/withings-client")
-        .session(mockHttpSession)
+    MockHttpServletResponse response2 = mockMvc.perform(get("/authorize/oauth2/code/withings-client")
         .queryParam(OAuth2ParameterNames.STATE, state)
         .queryParam(OAuth2ParameterNames.CODE, "test-authorization-code")
-        .headers(getForwardHeaders())
-      )
-      .andExpect(status().isFound())
-      .andExpect(header().string(HttpHeaders.LOCATION, "https://training-log.com:3000/"));
+        .headers(getHeaders())
+        .session(mockHttpSession))
+        .andReturn().getResponse();
 
+    assertThat(response2.getStatus()).isEqualTo(302);
+    assertThat(response2.getRedirectedUrl()).isEqualTo("https://training-log.com:3000/");
 
     List<LoggedRequest> requests = withingsServer.findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/v2/oauth2")));
-    assertEquals(1, requests.size());
-    MultiValueMap<String, String> queryParams = UriComponentsBuilder
-      .fromUriString("?" + requests.get(0).getBodyAsString())
-      .build()
-      .getQueryParams();
+    assertThat(requests).hasSize(1);
+    URI uri = new URI("?" + requests.get(0).getBodyAsString());
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsClient.id);
 
-    assertTrue(authorizedClient.isPresent());
-    assertEquals("rob", authorizedClient.get().getPrincipalName());
-    assertEquals("test-access-token", authorizedClient.get().getAccessTokenValue());
-    assertEquals("test-refresh-token", authorizedClient.get().getRefreshTokenValue());
-
-    assertEquals("authorization_code", queryParams.getFirst(OAuth2ParameterNames.GRANT_TYPE));
-    assertEquals("test-authorization-code", queryParams.getFirst(OAuth2ParameterNames.CODE));
-    assertEquals("requesttoken", queryParams.getFirst("action"));
-    assertEquals("test-withings-client-id", queryParams.getFirst(OAuth2ParameterNames.CLIENT_ID));
-    assertEquals("test-withings-client-secret", queryParams.getFirst(OAuth2ParameterNames.CLIENT_SECRET));
+    assertThat(authorizedClient.isPresent()).isTrue();
+    assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");
+    assertThat(authorizedClient.get().getAccessTokenValue()).isEqualTo("test-access-token");
+    assertThat(authorizedClient.get().getRefreshTokenValue()).isEqualTo("test-refresh-token");
+    assertThat(uri).hasParameter(OAuth2ParameterNames.GRANT_TYPE, "authorization_code");
+    assertThat(uri).hasParameter(OAuth2ParameterNames.CODE, "test-authorization-code");
+    assertThat(uri).hasParameter("action", "requesttoken");
+    assertThat(uri).hasParameter(OAuth2ParameterNames.CLIENT_ID, "test-withings-client-id");
+    assertThat(uri).hasParameter(OAuth2ParameterNames.CLIENT_SECRET, "test-withings-client-secret");
   }
 }

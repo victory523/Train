@@ -1,11 +1,8 @@
 package mucsi96.trainingLog.withings;
 
-import lombok.extern.slf4j.Slf4j;
-import mucsi96.trainingLog.withings.data.GetMeasureResponse;
-import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
-import mucsi96.trainingLog.withings.data.Measure;
-import mucsi96.trainingLog.withings.data.MeasureGroup;
-import mucsi96.trainingLog.withings.oauth.WithingsClient;
+import java.util.Calendar;
+import java.util.List;
+
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.oauth2.client.ClientAuthorizationRequiredException;
@@ -14,11 +11,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.Calendar;
-import java.util.List;
+import mucsi96.trainingLog.withings.data.GetMeasureResponse;
+import mucsi96.trainingLog.withings.data.GetMeasureResponseBody;
+import mucsi96.trainingLog.withings.data.Measure;
+import mucsi96.trainingLog.withings.data.MeasureGroup;
+import mucsi96.trainingLog.withings.oauth.WithingsClient;
 
 @Service
-@Slf4j
 public class WithingsService {
 
     int getStartDate() {

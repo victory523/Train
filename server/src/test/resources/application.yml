@@ -1,6 +1,8 @@
 server:
   forward-headers-strategy: framework
 spring:
+  autoconfiguration:
+    exclude: SpringApplicationAdminMXBeanRegistrar
   profiles:
     active: test
   security:
@@ -18,19 +20,9 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/authorize/oauth2/code/{registrationId}"
             scope: user.metrics
-          google-client:
-            provider: google
-            client-id: test-google-client-id
-            client-secret: test-google-client-secret
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-            scope: https://www.googleapis.com/auth/userinfo.email,https://www.googleapis.com/auth/userinfo.profile
   datasource:
     url: jdbc:h2:mem:testdb
     driverClassName: org.h2.Driver
-  h2:
-    console:
-      enabled: true
 
   jpa:
     show-sql: true

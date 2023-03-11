@@ -1,8 +1,5 @@
 package mucsi96.trainingLog.withings;
 
-import lombok.RequiredArgsConstructor;
-import mucsi96.trainingLog.withings.data.WeightResponse;
-import mucsi96.trainingLog.withings.oauth.WithingsClient;
 import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.annotation.RegisteredOAuth2AuthorizedClient;
@@ -11,9 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import jakarta.annotation.security.RolesAllowed;
+import lombok.RequiredArgsConstructor;
+import mucsi96.trainingLog.withings.data.WeightResponse;
+import mucsi96.trainingLog.withings.oauth.WithingsClient;
+
 @Controller
 @RequestMapping("/withings")
 @RequiredArgsConstructor
+@RolesAllowed("ROLE_user")
 public class WithingsController {
 
   private final WithingsService withingsService;

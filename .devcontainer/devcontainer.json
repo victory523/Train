@@ -6,14 +6,15 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "redhat.ansible",
-        "EditorConfig.EditorConfig",
-        "esbenp.prettier-vscode",
-        "ms-kubernetes-tools.vscode-kubernetes-tools",
-        "vscjava.vscode-java-pack",
-        "mtxr.sqltools",
-        "mtxr.sqltools-driver-pg"
-      ]
+		"redhat.ansible",
+		"EditorConfig.EditorConfig",
+		"esbenp.prettier-vscode",
+		"ms-kubernetes-tools.vscode-kubernetes-tools",
+		"vscjava.vscode-java-pack",
+		"vscjava.vscode-spring-boot-dashboard",
+		"mtxr.sqltools",
+		"mtxr.sqltools-driver-pg"
+	]
     }
   },
   "remoteUser": "vscode",

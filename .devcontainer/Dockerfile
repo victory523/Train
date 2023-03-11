@@ -28,7 +28,7 @@ RUN curl -fsSL -o get_node.sh https://deb.nodesource.com/setup_18.x \
     && chmod 700 get_node.sh \
     && ./get_node.sh
 
-RUN apt-get -y install --no-install-recommends sshpass chromium chromium-driver temurin-11-jdk docker-ce-cli nodejs python3 python3-pip
+RUN apt-get -y install --no-install-recommends sshpass chromium chromium-driver temurin-17-jdk docker-ce-cli nodejs python3 python3-pip
 
 # Apt cleanup
 RUN apt-get autoremove -y; \

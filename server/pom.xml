@@ -5,7 +5,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.0</version>
+    <version>3.0.4</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
   <groupId>mucsi96</groupId>
@@ -14,7 +14,7 @@
   <name>server</name>
   <description>Training Log Server</description>
   <properties>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
   </properties>
   <dependencies>
     <dependency>
@@ -39,11 +39,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -89,8 +84,8 @@
 		</dependency>
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock-jre8</artifactId>
-      <version>2.33.2</version>
+      <artifactId>wiremock</artifactId>
+      <version>3.0.0-beta-4</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

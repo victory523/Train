@@ -42,16 +42,6 @@ spec:
               secretKeyRef:
                 name: {{ $fullName }}-sealed
                 key: withingsClientSecret
-          - name: GOOGLE_CLIENT_ID
-            valueFrom:
-              secretKeyRef:
-                name: {{ $fullName }}-sealed
-                key: googleClientId
-          - name: GOOGLE_CLIENT_SECRET
-            valueFrom:
-              secretKeyRef:
-                name: {{ $fullName }}-sealed
-                key: googleClientSecret
           - name: MYSQL_DATABASE
             value: {{ required "Missing database.name value" .Values.database.name }}
           - name: MYSQL_HOST
