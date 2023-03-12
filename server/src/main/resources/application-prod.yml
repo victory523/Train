@@ -1,0 +1,10 @@
+spring:
+  boot:
+    admin:
+      client:
+        url: http://${SPRING_ADMIN_SERVER_HOST}:${SPRING_ADMIN_SERVER_PORT}
+        instance:
+          name: training-log
+          service-base-url: http://${K8S_POD_IP}:8080
+          management-base-url: http://${K8S_POD_IP}:${SPRING_ACTUATOR_PORT}
+        auto-deregistration: true

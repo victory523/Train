@@ -1,10 +1,8 @@
-server:
-  forward-headers-strategy: framework
 spring:
-  autoconfiguration:
-    exclude: SpringApplicationAdminMXBeanRegistrar
-  profiles:
-    active: test
+  application:
+    admin:
+      enabled: false
+      jmx-name: my-application:type=SpringApplicationAdmin
   security:
     oauth2:
       client:
@@ -28,7 +26,7 @@ spring:
     show-sql: true
     properties:
       hibernate:
-        format_sql: true
+        format-sql: true
 management:
   server:
     port: 8082

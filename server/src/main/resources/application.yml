@@ -2,8 +2,6 @@ server:
   forward-headers-strategy: framework
   shutdown: graceful
 spring:
-  profiles:
-    active: develop
   security:
     oauth2:
       client:
@@ -14,28 +12,18 @@ spring:
         registration:
           withings-client:
             provider: withings
-            client-id: ${env.WITHINGS_CLIENT_ID}
-            client-secret: ${env.WITHINGS_CLIENT_SECRET}
+            client-id: ${WITHINGS_CLIENT_ID}
+            client-secret: ${WITHINGS_CLIENT_SECRET}
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/authorize/oauth2/code/{registrationId}"
             scope: user.metrics
   datasource:
-    url: jdbc:mysql://${env.MYSQL_HOST}:${env.MYSQL_PORT}/${env.MYSQL_DATABASE}
-    driverClassName: com.mysql.cj.jdbc.Driver
-    username: ${env.MYSQL_USER}
-    password: ${env.MYSQL_PASSWORD}
-  boot:
-    admin:
-      client:
-        url: http://${env.ADMIN_SERVER_HOST}:${env.ADMIN_SERVER_PORT}
-        instance:
-          name: workout
-          service-base-url: http://${env.K8S_POD_IP}:8080
-          management-base-url: http://${env.K8S_POD_IP}:${env.MANAGEMENT_SERVER_PORT}
-        auto-deregistration: true
+    url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
 management:
   server:
-    port: ${env.MANAGEMENT_SERVER_PORT}
+    port: ${SPRING_ACTUATOR_PORT}
   endpoints:
     web:
       exposure:
@@ -43,21 +31,10 @@ management:
   endpoint:
     health:
       show-details: always
-  health:
-    probes:
-      enabled: true
+      probes:
+        enabled: true
 logging:
   level:
     com:
       zaxxer:
         hikari: OFF
-
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        web:
-#          client:
-#            RestTemplate: TRACE
-#            HttpMessageConverterExtractor: TRACE
-#        security: TRACE
