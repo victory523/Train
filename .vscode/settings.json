@@ -6,8 +6,8 @@
         "server": "db",
         "port": 5432,
         "driver": "PostgreSQL",
-        "name": "db",
-        "database": "postgres",
+        "name": "training-log",
+        "database": "training-log",
         "username": "postgres",
         "password": "postgres"
       }
