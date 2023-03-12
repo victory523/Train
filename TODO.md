@@ -2,6 +2,7 @@
 - Add test for metric
 - Create `/me` which returns user details like name, avatar
 - Remove filter in favor of /withings/authenticate endpoint
+- Migrate AuthorizedClientRepository to JPA
 
 - Add swagger API
 - Create database for stats

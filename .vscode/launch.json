@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-TrainingLogApplication<training-log>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "mucsi96.traininglog.TrainingLogApplication",
+            "projectName": "training-log",
+            "args": "--spring.profiles.active=local",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}

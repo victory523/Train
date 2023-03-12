@@ -1,3 +1,15 @@
 {
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "sqltools.connections": [
+      {
+        "previewLimit": 50,
+        "server": "db",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "db",
+        "database": "postgres",
+        "username": "postgres",
+        "password": "postgres"
+      }
+    ],
 }
