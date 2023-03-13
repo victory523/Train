@@ -32,13 +32,9 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   db:
-    container_name: training-log-db
     image: postgres:15.2-bullseye
-    restart: always
-    volumes:
-      - ../.postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
     environment:
-      # NOTE: POSTGRES_DB/USER/PASSWORD should match values in app container
       POSTGRES_DB: training-log
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
