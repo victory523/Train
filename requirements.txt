@@ -3,4 +3,4 @@ ansible-lint == 6.10.2
 selenium == 4.7.2
 pytest == 7.2.1
 docker == 6.0.1
-https://github.com/mucsi96/kubetools/releases/download/python-lib-15/kubetools-0.15.0-py3-none-any.whl
+https://github.com/mucsi96/kubetools/releases/download/python-lib-16/kubetools-0.16.0-py3-none-any.whl
