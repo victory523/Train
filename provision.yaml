@@ -7,11 +7,11 @@
     - ../vars/vault.yaml
     - ../vars/defaults.yaml
   roles:
-    - role: mucsi96.ansible_roles.ssh_auth
-    - role: mucsi96.ansible_roles.gather_facts
-    - role: mucsi96.ansible_roles.pull_kube_config
+    - role: mucsi96.kubetools.ssh_auth
+    - role: mucsi96.kubetools.gather_facts
+    - role: mucsi96.kubetools.pull_kube_config
       vars:
         local_kube_config: "{{ inventory_dir }}/.kube/config"
-    - role: mucsi96.ansible_roles.deploy_postgres_db
+    - role: mucsi96.kubetools.deploy_postgres_db
       vars:
         k8s_name: "{{ db_host }}"

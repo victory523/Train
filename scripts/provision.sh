@@ -1,2 +1,2 @@
 #!/bin/bash
-ansible-playbook playbooks/provision.yaml
+ansible-playbook provision.yaml
