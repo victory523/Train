@@ -1,62 +1,38 @@
 package mucsi96.traininglog.configuration;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.header.HeaderWriterFilter;
 
-import lombok.RequiredArgsConstructor;
-import mucsi96.traininglog.core.FilterChainExceptionHandler;
 import mucsi96.traininglog.oauth.AccessTokenResponseClient;
 import mucsi96.traininglog.oauth.AuthorizedClientManager;
 import mucsi96.traininglog.oauth.AuthorizedClientRepository;
 import mucsi96.traininglog.oauth.RedirectToHomeFilter;
 import mucsi96.traininglog.oauth.RefreshTokenResponseClient;
-import mucsi96.traininglog.security.AutheliaHeaderAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 @EnableMethodSecurity(jsr250Enabled = true)
 public class SecurityConfiguration {
 
-  @Value("${management.server.port}")
-  private String managementPort;
-
   @Bean
-  SecurityFilterChain defaultSecurityFilterChain(
+  SecurityFilterChain securityFilterChain(
       HttpSecurity http,
       AccessTokenResponseClient accessTokenResponseClient,
-      RedirectToHomeFilter redirectToHomeFilter,
-      AutheliaHeaderAuthenticationFilter autheliaHeaderAuthenticationFilter,
-      FilterChainExceptionHandler filterChainExceptionHandler)
+      RedirectToHomeFilter redirectToHomeFilter)
       throws Exception {
 
-    http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-    http.anonymous().disable();
-    http.csrf().disable();
-    http.headers().frameOptions().disable();
-    http.formLogin().disable();
-    http.logout().disable();
-
-    http.oauth2Client()
-        .authorizationCodeGrant()
-        .accessTokenResponseClient(accessTokenResponseClient);
-
-    http.addFilterBefore(redirectToHomeFilter, OAuth2AuthorizationCodeGrantFilter.class);
-    http.addFilterAfter(autheliaHeaderAuthenticationFilter, HeaderWriterFilter.class);
-    http.addFilterBefore(filterChainExceptionHandler, AutheliaHeaderAuthenticationFilter.class);
-
-    return http.build();
+    return http
+        .oauth2Client(configurer -> configurer
+            .authorizationCodeGrant(customizer -> customizer.accessTokenResponseClient(accessTokenResponseClient)))
+        .addFilterBefore(redirectToHomeFilter, OAuth2AuthorizationCodeGrantFilter.class)
+        .build();
   }
 
   @Bean
