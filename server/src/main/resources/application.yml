@@ -21,6 +21,9 @@ spring:
     url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
+  sql:
+    init:
+      mode: always
   jpa:
     properties:
       hibernate:
