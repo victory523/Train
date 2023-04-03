@@ -43,7 +43,7 @@ import mucsi96.traininglog.withings.oauth.WithingsClient;
 @RequiredArgsConstructor
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-public class WithingsControllerTests {
+public class WithingsControllerTests extends BaseIntegrationTest {
 
   private final MockMvc mockMvc;
   private final TestAuthorizedClientRepository authorizedClientRepository;
@@ -62,11 +62,7 @@ public class WithingsControllerTests {
   }
 
   private HttpHeaders getHeaders() {
-    HttpHeaders headers = new HttpHeaders();
-    headers.add("Remote-User", "rob");
-    headers.add("Remote-Group", "user");
-    headers.add("Remote-Name", "Robert White");
-    headers.add("Remote-Email", "robert.white@mockemail.com");
+    HttpHeaders headers = getAuthHeaders("user");
     headers.add("X-Forwarded-Host", "training-log.com");
     headers.add("X-Forwarded-Port", "3000");
     headers.add("X-Forwarded-Proto", "https");
@@ -94,7 +90,7 @@ public class WithingsControllerTests {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/withings/weight")
-                .headers(getHeaders()))
+                .headers(getAuthHeaders("guest")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);

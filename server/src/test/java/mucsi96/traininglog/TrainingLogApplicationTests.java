@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.ANY)
-class TrainingLogApplicationTests {
+class TrainingLogApplicationTests extends BaseIntegrationTest {
 
 	@Test
 	void contextLoads() {
