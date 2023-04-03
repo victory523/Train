@@ -86,16 +86,16 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
-  public void returns_forbidden_if_bearer_token_is_not_sent() throws Exception {
+  public void returns_not_authorized_if_authorized_client_is_not_found() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/withings/weight")
                 .headers(getAuthHeaders("guest")))
         .andReturn().getResponse();
 
-    assertThat(response.getStatus()).isEqualTo(403);
+    assertThat(response.getStatus()).isEqualTo(401);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$._links.oauth2Login.href", String.class))
-        .isEqualTo("https://training-log.com:3000/api/oauth2/authorization/withings-client");
+        .isEqualTo("http://localhost/oauth2/authorization/withings-client");
   }
 
   @Test
