@@ -7,4 +7,5 @@ db_port: 5432
 db_username: "{{ lookup('ansible.builtin.password', '/dev/null length=12 chars=ascii_lowercase', seed='{{ inventory_hostname }}-db-username') }}"
 db_password: "{{ lookup('ansible.builtin.password', '/dev/null length=20', seed='{{ inventory_hostname }}-db-password') }}"
 spring_admin_server_name: spring-boot-admin-server
+spring_admin_server_namespace: monitoring
 spring_admin_server_port: 9090

@@ -15,3 +15,18 @@
     - role: mucsi96.kubetools.deploy_postgres_db
       vars:
         k8s_name: "{{ db_host }}"
+    - role: mucsi96.kubetools.deploy_spring_app
+      vars:
+        k8s_name: spring-app
+        image: mucsi96/training-log-pro-server
+        tag_prefix: server
+        host_prefix: training
+        base_path: /api
+        app_env:
+          POSTGRES_DB: "{{ db_name }}"
+          POSTGRES_HOSTNAME: "{{ db_host }}"
+          POSTGRES_PORT: "{{ db_port }}"
+          POSTGRES_USER: "{{ db_username }}"
+          POSTGRES_PASSWORD: "{{ db_password }}"
+          WITHINGS_CLIENT_ID: "{{ withings_client_id }}"
+          WITHINGS_CLIENT_SECRET: "{{ withings_client_secret }}"
