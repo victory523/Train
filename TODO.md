@@ -1,6 +1,5 @@
 - Run mucsi96.kubetools.pull_kube_config role only on local machine. Not on CI
 - Remove filter in favor of /withings/authenticate endpoint
-- Migrate AuthorizedClientRepository to JPA
 - Create database for stats
 - Sync stats in `/status`
 - Create scheduled db backups
