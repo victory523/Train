@@ -21,7 +21,7 @@ jobs:
           cache: "maven"
       - name: Test
         working-directory: ./server
-        run: ./mvnw --batch-mode --update-snapshots package
+        run: mvn test
 
   build-images:
     needs: test
