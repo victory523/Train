@@ -1,5 +1,11 @@
 server:
   forward-headers-strategy: framework
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
 spring:
   autoconfigure:
     exclude:
@@ -27,7 +33,5 @@ spring:
     show-sql: true
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
         format-sql: true
-management:
-  server:
-    port: 8082

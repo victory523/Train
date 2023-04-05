@@ -1,3 +1,10 @@
+management:
+  server:
+    port: ${SPRING_ACTUATOR_PORT}
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 spring:
   boot:
     admin:

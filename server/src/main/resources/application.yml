@@ -1,6 +1,12 @@
 server:
   forward-headers-strategy: framework
   shutdown: graceful
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
 spring:
   security:
     oauth2:
@@ -28,18 +34,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-management:
-  server:
-    port: ${SPRING_ACTUATOR_PORT}
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  endpoint:
-    health:
-      show-details: always
-      probes:
-        enabled: true
 logging:
   level:
     com:
