@@ -20,7 +20,7 @@
         k8s_name: spring-app
         image: mucsi96/training-log-pro-server
         tag_prefix: server
-        host_prefix: training
+        host_prefix: workout
         base_path: /api
         app_env:
           POSTGRES_DB: "{{ db_name }}"
@@ -30,3 +30,10 @@
           POSTGRES_PASSWORD: "{{ db_password }}"
           WITHINGS_CLIENT_ID: "{{ withings_client_id }}"
           WITHINGS_CLIENT_SECRET: "{{ withings_client_secret }}"
+    - role: mucsi96.kubetools.deploy_client_app
+      vars:
+        k8s_name: client-app
+        image: mucsi96/training-log-pro-client
+        tag_prefix: client
+        host_prefix: workout
+        base_path: /
