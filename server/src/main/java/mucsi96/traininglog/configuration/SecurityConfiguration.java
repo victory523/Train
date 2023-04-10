@@ -12,9 +12,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.savedrequest.CookieRequestCache;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
+import mucsi96.traininglog.core.RedirectToHomeRequestCache;
 import mucsi96.traininglog.oauth.AccessTokenResponseClient;
 import mucsi96.traininglog.oauth.AuthorizedClientManager;
 import mucsi96.traininglog.oauth.RefreshTokenResponseClient;
@@ -30,7 +30,7 @@ public class SecurityConfiguration {
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer,
       AccessTokenResponseClient accessTokenResponseClient) throws Exception {
     return kubetoolsSecurityConfigurer.configure(http)
-        .requestCache(configurer -> configurer.requestCache(new CookieRequestCache()))
+        .requestCache(configurer -> configurer.requestCache(new RedirectToHomeRequestCache()))
         .oauth2Client(configurer -> configurer
             .authorizationCodeGrant(customizer -> customizer
                 .accessTokenResponseClient(accessTokenResponseClient)))

@@ -1,4 +1,3 @@
-- Remove filter in favor of /withings/authenticate endpoint
 - Create database for stats
 - Sync stats in `/status`
 - Create scheduled db backups
