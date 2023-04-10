@@ -6,10 +6,20 @@
         "server": "db",
         "port": 5432,
         "driver": "PostgreSQL",
-        "name": "training-log",
+        "name": "localhost",
         "database": "training-log",
         "username": "postgres",
         "password": "postgres"
+      },
+      {
+        "previewLimit": 50,
+        "server": "localhost",
+        "port": 5433,
+        "askForPassword": true,
+        "driver": "PostgreSQL",
+        "name": "prod",
+        "database": "training-log-pro",
+        "username": "rigvyfqkerar"
       }
     ],
 }
