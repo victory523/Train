@@ -1,15 +1,20 @@
 package mucsi96.traininglog.oauth;
 
-import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 
 public class AuthorizedClientManager implements OAuth2AuthorizedClientManager {
   private final DefaultOAuth2AuthorizedClientManager authorizedClientManager;
 
   public AuthorizedClientManager(
     ClientRegistrationRepository clientRegistrationRepository,
-    AuthorizedClientRepository authorizedClientRepository,
+    OAuth2AuthorizedClientRepository authorizedClientRepository,
     RefreshTokenResponseClient refreshTokenResponseClient
   ) {
     OAuth2AuthorizedClientProvider authorizedClientProvider =
