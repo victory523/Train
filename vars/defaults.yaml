@@ -9,3 +9,7 @@ db_password: "{{ lookup('ansible.builtin.password', '/dev/null length=20', seed=
 spring_admin_server_name: spring-boot-admin-server
 spring_admin_server_namespace: monitoring
 spring_admin_server_port: 9090
+db_backup_bucket: training-log-pro-backup
+db_backup_exclude_tables:
+  - oauth2_authorized_client
+db_backup_region: us-east-1

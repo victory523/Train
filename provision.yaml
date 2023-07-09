@@ -15,6 +15,7 @@
     - role: mucsi96.kubetools.deploy_postgres_db
       vars:
         k8s_name: "{{ db_host }}"
+        host_prefix: workout
     - role: mucsi96.kubetools.deploy_spring_app
       vars:
         k8s_name: spring-app
