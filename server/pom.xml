@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>io.github.mucsi96</groupId>
 			<artifactId>kubetools</artifactId>
-			<version>1.21-SNAPSHOT</version>
+			<version>1.25-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -51,7 +51,16 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 			<version>3.0.2</version>
 		</dependency>
-
+    <dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.0.3</version>
+		</dependency>
+		<!-- Needed for springdoc -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>

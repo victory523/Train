@@ -39,3 +39,6 @@ logging:
     com:
       zaxxer:
         hikari: OFF
+springdoc:
+  swagger-ui:
+    path: /
