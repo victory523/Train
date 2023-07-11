@@ -23,4 +23,10 @@
       }
     ],
     "ansible.python.interpreterPath": "/usr/bin/python3",
+    "maven.terminal.favorites": [
+      {
+        "command": "spring-boot:run",
+        "debug": false
+      }
+    ],
 }

@@ -1,0 +1,81 @@
+openapi: '3.0.2'
+info:
+  title: API
+  version: '1.0'
+
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /me:
+    get:
+      summary: Retuns authenticarted user details
+      tags:
+        - Authentication
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - "username"
+                  - "roles"
+                  - "displayName"
+                  - "email"
+                properties:
+                  username:
+                    type: string
+                  roles:
+                    type: array
+                    items:
+                      type: string
+                  displayName:
+                    type: string
+                  email:
+                    type: string
+
+
+
+  /withings/weight:
+    get:
+      summary: Returns current weight
+      tags:
+        - Withings
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - weight
+                properties:
+                  weight:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - _links
+                properties:
+                  _links:
+                    type: object
+                    required:
+                      - oauth2Login
+                    properties:
+                      oauth2Login:
+                        type: object
+                        required:
+                          - href
+                        properties:
+                          href:
+                            type: string
+
+
+

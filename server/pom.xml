@@ -103,6 +103,25 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+		<id>local</id>
+		<build>
+			<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+				<profiles>
+					<profile>local</profile>
+				</profiles>
+				</configuration>
+			</plugin>
+			</plugins>
+		</build>
+		</profile>
+	</profiles>
+
   <repositories>
 		<repository>
 			<id>ossrh</id>
