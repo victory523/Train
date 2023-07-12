@@ -1,7 +1,12 @@
 package mucsi96.traininglog.model;
 
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.annotations.Type;
+import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -18,10 +23,10 @@ public class TestAuthorizedClient {
   private String clientRegistrationId;
   private String principalName;
   private String accessTokenType;
-  private String accessTokenValue;
+  private byte[] accessTokenValue;
   private String accessTokenIssuedAt;
   private String accessTokenExpiresAt;
   private String accessTokenScopes;
-  private String refreshTokenValue;
+  private byte[] refreshTokenValue;
   private String refreshTokenIssuedAt;
 }
