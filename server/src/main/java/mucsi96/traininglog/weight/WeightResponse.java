@@ -1,4 +1,4 @@
-package mucsi96.traininglog.withings.data;
+package mucsi96.traininglog.weight;
 
 import lombok.Builder;
 import lombok.Data;

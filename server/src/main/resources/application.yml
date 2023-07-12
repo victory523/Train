@@ -31,9 +31,20 @@ spring:
     init:
       mode: always
   jpa:
+    show-sql: true
     properties:
+      # GENERATE SCHEMA
+      # javax:
+      #   persistence:
+      #     schema-generation:
+      #       create-source: metadata
+      #       scripts:
+      #         action: create
+      #         create-target: create.sql
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        format-sql: true
+
 logging:
   level:
     com:

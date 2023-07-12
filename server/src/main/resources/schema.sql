@@ -11,3 +11,10 @@ CREATE TABLE IF NOT EXISTS oauth2_authorized_client (
   created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
   PRIMARY KEY (client_registration_id, principal_name)
 );
+
+CREATE TABLE IF NOT EXISTS weight (
+  id bigserial NOT NULL,
+  created_at timestamp(6) with time zone NOT NULL,
+  value float(53),
+  PRIMARY KEY (id)
+);
