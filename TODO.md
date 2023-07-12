@@ -1,1 +1,3 @@
+- Add test for sync
+- Add test for weight get
 - Adjust the UI
