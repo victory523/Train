@@ -8,6 +8,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +41,8 @@ import com.jayway.jsonpath.JsonPath;
 import lombok.RequiredArgsConstructor;
 import mucsi96.traininglog.model.TestAuthorizedClient;
 import mucsi96.traininglog.repository.TestAuthorizedClientRepository;
+import mucsi96.traininglog.weight.Weight;
+import mucsi96.traininglog.weight.WeightRepository;
 import mucsi96.traininglog.withings.oauth.WithingsClient;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -43,16 +50,15 @@ import mucsi96.traininglog.withings.oauth.WithingsClient;
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
 public class WeightControllerTests extends BaseIntegrationTest {
 
-  // OAuth2AuthorizationCodeAuthenticationProvider
-
   private final MockMvc mockMvc;
   private final TestAuthorizedClientRepository authorizedClientRepository;
+  private final WeightRepository weightRepository;
 
   @LocalServerPort
   private int port;
 
   @RegisterExtension
-  static WireMockExtension withingsServer = WireMockExtension.newInstance()
+  static WireMockExtension mockWithingsServer = WireMockExtension.newInstance()
       .options(wireMockConfig().dynamicPort())
       .build();
 
@@ -60,20 +66,38 @@ public class WeightControllerTests extends BaseIntegrationTest {
   static void overrideProperties(DynamicPropertyRegistry registry) {
 
     registry.add("spring.security.oauth2.client.provider.withings.authorization-uri",
-        () -> withingsServer.baseUrl() + "/oauth2_user/authorize2");
+        () -> mockWithingsServer.baseUrl() + "/oauth2_user/authorize2");
     registry.add(
         "spring.security.oauth2.client.provider.withings.token-uri",
-        () -> withingsServer.baseUrl() + "/v2/oauth2");
+        () -> mockWithingsServer.baseUrl() + "/v2/oauth2");
 
     registry.add("spring.security.oauth2.client.registration.withings-client.client-id",
         () -> "test-withings-client-id");
     registry.add("spring.security.oauth2.client.registration.withings-client.client-secret",
         () -> "test-withings-client-secret");
+    registry.add("withings.api.uri", () -> mockWithingsServer.baseUrl());
   }
 
   @AfterEach
   void afterEach() {
     authorizedClientRepository.deleteAll();
+    weightRepository.deleteAll();
+  }
+
+  private void authorizeWithingsOAuth2Client() {
+    TestAuthorizedClient authorizedClient = TestAuthorizedClient.builder()
+        .clientRegistrationId("withings-client")
+        .principalName("rob")
+        .accessTokenType("Bearer")
+        .accessTokenValue("test-access-token".getBytes(StandardCharsets.UTF_8))
+        .accessTokenIssuedAt(LocalDateTime.now())
+        .accessTokenExpiresAt(LocalDateTime.now().plusDays(1))
+        .accessTokenScopes("user.metrics")
+        .refreshTokenValue("test-refresh-token".getBytes(StandardCharsets.UTF_8))
+        .refreshTokenIssuedAt(LocalDateTime.now())
+        .build();
+
+    authorizedClientRepository.save(authorizedClient);
   }
 
   @Test
@@ -87,11 +111,39 @@ public class WeightControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  public void returns_forbidden_if_user_has_no_user_role() throws Exception {
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            get("/weight")
+                .headers(getAuthHeaders("guest")))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(403);
+  }
+
+  @Test
+  public void returns_weight_from_database() throws Exception {
+    Weight weight = Weight.builder()
+        .value(83.5)
+        .createdAt(Instant.now())
+        .build();
+    weightRepository.save(weight);
+
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            get("/weight")
+                .headers(getAuthHeaders("user")))
+        .andReturn().getResponse();
+
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.weight", Double.class)).isEqualTo(83.5);
+  }
+
+  @Test
   public void returns_not_authorized_if_authorized_client_is_not_found() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/weight/pull-from-withings")
-                .headers(getAuthHeaders("guest")))
+                .headers(getAuthHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(401);
@@ -109,7 +161,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
     assertThat(response.getStatus()).isEqualTo(302);
     URI redirectUrl = new URI(response.getRedirectedUrl());
     assertThat(redirectUrl).hasHost("localhost");
-    assertThat(redirectUrl).hasPort(withingsServer.getPort());
+    assertThat(redirectUrl).hasPort(mockWithingsServer.getPort());
     assertThat(redirectUrl).hasPath("/oauth2_user/authorize2");
     assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.RESPONSE_TYPE, "code");
     assertThat(redirectUrl).hasParameter(OAuth2ParameterNames.CLIENT_ID, "test-withings-client-id");
@@ -121,7 +173,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
 
   @Test
   public void requests_withings_access_token_after_consent_is_granted() throws Exception {
-    withingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
+    mockWithingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
         WireMock.aResponse()
             .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .withBodyFile("withings-authorize.json")));
@@ -147,7 +199,8 @@ public class WeightControllerTests extends BaseIntegrationTest {
     assertThat(response2.getStatus()).isEqualTo(302);
     assertThat(response2.getRedirectedUrl()).isEqualTo("http://localhost/");
 
-    List<LoggedRequest> requests = withingsServer.findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/v2/oauth2")));
+    List<LoggedRequest> requests = mockWithingsServer
+        .findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/v2/oauth2")));
     assertThat(requests).hasSize(1);
     URI uri = new URI("?" + requests.get(0).getBodyAsString());
 
@@ -155,12 +208,39 @@ public class WeightControllerTests extends BaseIntegrationTest {
 
     assertThat(authorizedClient.isPresent()).isTrue();
     assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");
-    assertThat(new String(authorizedClient.get().getAccessTokenValue(), "UTF-8")).isEqualTo("test-access-token");
-    assertThat(new String(authorizedClient.get().getRefreshTokenValue(), "UTF-8")).isEqualTo("test-refresh-token");
+    assertThat(new String(authorizedClient.get().getAccessTokenValue(), StandardCharsets.UTF_8))
+        .isEqualTo("test-access-token");
+    assertThat(new String(authorizedClient.get().getRefreshTokenValue(), StandardCharsets.UTF_8))
+        .isEqualTo("test-refresh-token");
     assertThat(uri).hasParameter(OAuth2ParameterNames.GRANT_TYPE, "authorization_code");
     assertThat(uri).hasParameter(OAuth2ParameterNames.CODE, "test-authorization-code");
     assertThat(uri).hasParameter("action", "requesttoken");
     assertThat(uri).hasParameter(OAuth2ParameterNames.CLIENT_ID, "test-withings-client-id");
     assertThat(uri).hasParameter(OAuth2ParameterNames.CLIENT_SECRET, "test-withings-client-secret");
+  }
+
+  @Test
+  public void pulls_todays_weight_from_withings_to_database() throws Exception {
+    authorizeWithingsOAuth2Client();
+    long startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN).toInstant(ZoneOffset.UTC).getEpochSecond();
+    long endTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toInstant(ZoneOffset.UTC).getEpochSecond();
+    mockWithingsServer.stubFor(WireMock
+        .post(String.format("/measure?action=getmeas&meastype=1&category=1&startdate=%s&enddate=%s",
+            startTime, endTime))
+        .willReturn(
+            WireMock.aResponse()
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .withBodyFile("withings-measure.json")));
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            post("/weight/pull-from-withings")
+                .headers(getAuthHeaders("user")))
+        .andReturn().getResponse();
+
+    assertThat(response.getStatus()).isEqualTo(200);
+    Optional<Weight> weight = weightRepository.findAll().stream().findFirst();
+    assertThat(weight.isPresent()).isTrue();
+    assertThat(weight.get().getValue()).isEqualTo(65.75);
+    assertThat(weight.get().getCreatedAt().getEpochSecond()).isEqualTo(1594245600L);
   }
 }

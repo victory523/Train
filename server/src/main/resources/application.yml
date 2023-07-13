@@ -53,3 +53,6 @@ logging:
 springdoc:
   swagger-ui:
     path: /
+withings:
+  api:
+    uri: https://wbsapi.withings.net

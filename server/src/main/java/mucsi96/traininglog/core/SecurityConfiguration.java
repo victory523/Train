@@ -1,4 +1,4 @@
-package mucsi96.traininglog.configuration;
+package mucsi96.traininglog.core;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,6 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepo
 import org.springframework.security.web.SecurityFilterChain;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
-import mucsi96.traininglog.core.RedirectToHomeRequestCache;
 import mucsi96.traininglog.oauth.AccessTokenResponseClient;
 import mucsi96.traininglog.oauth.AuthorizedClientManager;
 import mucsi96.traininglog.oauth.RefreshTokenResponseClient;

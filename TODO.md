@@ -1,3 +1,4 @@
-- Add test for sync
-- Add test for weight get
+- Add test for access token refresh
+- Add test for sync forbidden
+- Split Weight controller into Weigth controller and withings controller
 - Adjust the UI

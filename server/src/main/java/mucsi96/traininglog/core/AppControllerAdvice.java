@@ -13,7 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @ControllerAdvice
 public class AppControllerAdvice {
   @ExceptionHandler(ClientAuthorizationRequiredException.class)
-  public ResponseEntity<RepresentationModel> handleClientAuthorizationRequired(
+  public ResponseEntity<RepresentationModel<?>> handleClientAuthorizationRequired(
       ClientAuthorizationRequiredException ex) {
     String oauth2LoginUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().path(
         OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/"

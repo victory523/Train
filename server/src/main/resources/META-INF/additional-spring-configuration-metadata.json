@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "withings",
+  "type": "mucsi96.traininglog.withings.WithingsConfiguration",
+  "description": "Configuration for Withings API"
+}]}

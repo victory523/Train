@@ -1,7 +1,10 @@
 package mucsi96.traininglog.withings;
 
 import java.time.Instant;
-import java.util.Calendar;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import lombok.RequiredArgsConstructor;
 import mucsi96.traininglog.weight.Weight;
 import mucsi96.traininglog.withings.data.GetMeasureResponse;
 import mucsi96.traininglog.withings.data.GetMeasureResponseBody;
@@ -21,30 +25,22 @@ import mucsi96.traininglog.withings.data.MeasureGroup;
 import mucsi96.traininglog.withings.oauth.WithingsClient;
 
 @Service
+@RequiredArgsConstructor
 public class WithingsService {
 
-  int getStartDate() {
-    Calendar cal = Calendar.getInstance();
-    cal.set(Calendar.HOUR_OF_DAY, 0);
-    cal.set(Calendar.MINUTE, 0);
-    cal.set(Calendar.SECOND, 0);
-    return (int) (cal.getTimeInMillis() / 1000);
-  }
-
-  int getEndDate() {
-    Calendar cal = Calendar.getInstance();
-    return (int) (cal.getTimeInMillis() / 1000);
-  }
+  private final WithingsConfiguration withingsConfiguration;
 
   private String getMeasureUrl() {
+    long startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN).toInstant(ZoneOffset.UTC).getEpochSecond();
+    long endTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toInstant(ZoneOffset.UTC).getEpochSecond();
     return UriComponentsBuilder
-        .fromHttpUrl("https://wbsapi.withings.net")
+        .fromHttpUrl(withingsConfiguration.getApi().getUri())
         .path("/measure")
         .queryParam("action", "getmeas")
         .queryParam("meastype", 1)
         .queryParam("category", 1)
-        .queryParam("startdate", getStartDate())
-        .queryParam("enddate", getEndDate())
+        .queryParam("startdate", startTime)
+        .queryParam("enddate", endTime)
         .build()
         .encode()
         .toUriString();

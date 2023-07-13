@@ -1,19 +1,18 @@
 package mucsi96.traininglog.model;
 
-import org.hibernate.annotations.JdbcType;
-import org.hibernate.annotations.Type;
-import org.hibernate.type.descriptor.jdbc.VarbinaryJdbcType;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
+@Builder()
 @Entity
 @Table(name = "oauth2_authorized_client")
 @AllArgsConstructor
@@ -24,9 +23,9 @@ public class TestAuthorizedClient {
   private String principalName;
   private String accessTokenType;
   private byte[] accessTokenValue;
-  private String accessTokenIssuedAt;
-  private String accessTokenExpiresAt;
+  private LocalDateTime accessTokenIssuedAt;
+  private LocalDateTime accessTokenExpiresAt;
   private String accessTokenScopes;
   private byte[] refreshTokenValue;
-  private String refreshTokenIssuedAt;
+  private LocalDateTime refreshTokenIssuedAt;
 }
