@@ -29,7 +29,6 @@ public class SecurityConfiguration {
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer,
       AccessTokenResponseClient accessTokenResponseClient) throws Exception {
     return kubetoolsSecurityConfigurer.configure(http)
-        .requestCache(configurer -> configurer.requestCache(new RedirectToHomeRequestCache()))
         .oauth2Client(configurer -> configurer
             .authorizationCodeGrant(customizer -> customizer
                 .accessTokenResponseClient(accessTokenResponseClient)))

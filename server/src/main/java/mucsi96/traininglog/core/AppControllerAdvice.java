@@ -2,27 +2,28 @@ package mucsi96.traininglog.core;
 
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.ClientAuthorizationRequiredException;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import mucsi96.traininglog.withings.WithingsAuthorizationException;
+import mucsi96.traininglog.withings.WithingsController;
 
 @ControllerAdvice
 public class AppControllerAdvice {
-  @ExceptionHandler(ClientAuthorizationRequiredException.class)
+
+  @ExceptionHandler(WithingsAuthorizationException.class)
   public ResponseEntity<RepresentationModel<?>> handleClientAuthorizationRequired(
-      ClientAuthorizationRequiredException ex) {
-    String oauth2LoginUrl = ServletUriComponentsBuilder.fromCurrentServletMapping().path(
-        OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/"
-            + ex.getClientRegistrationId())
-        .build().toString();
-    return ResponseEntity
-        .status(HttpStatus.UNAUTHORIZED)
-        .body(RepresentationModel
-            .of(null)
-            .add(Link.of(oauth2LoginUrl).withRel("oauth2Login")));
+      WithingsAuthorizationException ex) {
+
+    Link oauth2LogLink = WebMvcLinkBuilder
+        .linkTo(WebMvcLinkBuilder.methodOn(WithingsController.class).authorize(null))
+        .withRel("oauth2Login");
+
+    RepresentationModel<?> model = RepresentationModel.of(null).add(oauth2LogLink);
+
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(model);
   }
 }

@@ -1,5 +1,7 @@
 server:
   shutdown: graceful
+  servlet:
+    context-path: /api
 management:
   endpoint:
     health:
@@ -20,7 +22,7 @@ spring:
             client-id: ${WITHINGS_CLIENT_ID}
             client-secret: ${WITHINGS_CLIENT_SECRET}
             authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/authorize/oauth2/code/{registrationId}"
+            redirect-uri: "{baseUrl}/withings/authorize"
             scope: user.metrics
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
