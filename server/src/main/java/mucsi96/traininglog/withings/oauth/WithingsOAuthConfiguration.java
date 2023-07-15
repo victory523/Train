@@ -1,9 +1,7 @@
 package mucsi96.traininglog.withings.oauth;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
@@ -24,7 +22,7 @@ public class WithingsOAuthConfiguration {
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer,
       WithingsAccessTokenResponseClient accessTokenResponseClient) throws Exception {
     return kubetoolsSecurityConfigurer.configure(http)
-        .securityMatcher("/withings/authorize")
+        .securityMatcher("/withings/**")
         .oauth2Client(configurer -> configurer
             .authorizationCodeGrant(customizer -> customizer
                 .accessTokenResponseClient(accessTokenResponseClient)))
