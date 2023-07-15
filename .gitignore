@@ -11,3 +11,6 @@ reports/
 
 ### dot env ###
 .env
+
+
+.attach_*
