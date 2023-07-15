@@ -19,7 +19,7 @@ public class AppControllerAdvice {
       WithingsAuthorizationException ex) {
 
     Link oauth2LogLink = WebMvcLinkBuilder
-        .linkTo(WebMvcLinkBuilder.methodOn(WithingsController.class).authorize(null))
+        .linkTo(WebMvcLinkBuilder.methodOn(WithingsController.class).authorize(null, null, null))
         .withRel("oauth2Login");
 
     RepresentationModel<?> model = RepresentationModel.of(null).add(oauth2LogLink);
