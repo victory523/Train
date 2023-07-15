@@ -12,7 +12,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.web.SecurityFilterChain;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
-import mucsi96.traininglog.oauth.AccessTokenResponseClient;
 
 @Configuration
 @EnableWebSecurity
@@ -22,13 +21,8 @@ public class SecurityConfiguration {
   @Bean
   SecurityFilterChain securityFilterChain(
       HttpSecurity http,
-      KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer,
-      AccessTokenResponseClient accessTokenResponseClient) throws Exception {
-    return kubetoolsSecurityConfigurer.configure(http)
-        .oauth2Client(configurer -> configurer
-            .authorizationCodeGrant(customizer -> customizer
-                .accessTokenResponseClient(accessTokenResponseClient)))
-        .build();
+      KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer) throws Exception {
+    return kubetoolsSecurityConfigurer.configure(http).securityMatcher("/weight/**", "/withings/sync").build();
   }
 
   @Bean
