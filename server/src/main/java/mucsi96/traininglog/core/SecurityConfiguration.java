@@ -7,16 +7,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.web.SecurityFilterChain;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
 import mucsi96.traininglog.oauth.AccessTokenResponseClient;
-import mucsi96.traininglog.oauth.AuthorizedClientManager;
-import mucsi96.traininglog.oauth.RefreshTokenResponseClient;
 
 @Configuration
 @EnableWebSecurity
@@ -39,16 +35,5 @@ public class SecurityConfiguration {
   public OAuth2AuthorizedClientService oAuth2AuthorizedClientService(
       JdbcOperations jdbcOperations, ClientRegistrationRepository clientRegistrationRepository) {
     return new JdbcOAuth2AuthorizedClientService(jdbcOperations, clientRegistrationRepository);
-  }
-
-  @Bean
-  OAuth2AuthorizedClientManager authorizedClientManager(
-      ClientRegistrationRepository clientRegistrationRepository,
-      OAuth2AuthorizedClientRepository authorizedClientRepository,
-      RefreshTokenResponseClient refreshTokenResponseClient) {
-    return new AuthorizedClientManager(
-        clientRegistrationRepository,
-        authorizedClientRepository,
-        refreshTokenResponseClient);
   }
 }

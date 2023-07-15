@@ -28,7 +28,7 @@ public class WithingsController {
 
   private final WithingsService withingsService;
   private final WeightService weightService;
-  private final OAuth2AuthorizedClientManager authorizedClientManager;
+  private final OAuth2AuthorizedClientManager withingsAuthorizedClientManager;
 
   @PostMapping("/sync")
   public void sync(
@@ -43,7 +43,7 @@ public class WithingsController {
         .build();
 
     try {
-      OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(authorizeRequest);
+      OAuth2AuthorizedClient authorizedClient = withingsAuthorizedClientManager.authorize(authorizeRequest);
       if (!weightService.getTodayWeight().isPresent()) {
         withingsService.getTodayWeight(authorizedClient).ifPresent(weightService::saveWeight);
       }
