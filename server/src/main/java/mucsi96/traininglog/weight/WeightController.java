@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.annotation.security.RolesAllowed;
 import lombok.RequiredArgsConstructor;
+import mucsi96.traininglog.api.WeightResponse;
 
 @RestController
 @RequestMapping(value = "/weight", produces = MediaType.APPLICATION_JSON_VALUE)
