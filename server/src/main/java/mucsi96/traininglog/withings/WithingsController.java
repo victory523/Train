@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import mucsi96.traininglog.weight.WeightService;
-import mucsi96.traininglog.withings.oauth.WithingsClient;
 
 @RestController
 @RequestMapping("/withings")
@@ -57,7 +56,7 @@ public class WithingsController {
   private OAuth2AuthorizedClient getAuthorizedClient(Authentication principal, HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
     OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
-        .withClientRegistrationId(WithingsClient.id)
+        .withClientRegistrationId(WithingsConfiguration.registrationId)
         .principal(principal)
         .attribute(HttpServletRequest.class.getName(), servletRequest)
         .attribute(HttpServletResponse.class.getName(), servletResponse)

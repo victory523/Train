@@ -18,11 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
 import mucsi96.traininglog.weight.Weight;
-import mucsi96.traininglog.withings.data.GetMeasureResponse;
-import mucsi96.traininglog.withings.data.GetMeasureResponseBody;
-import mucsi96.traininglog.withings.data.Measure;
-import mucsi96.traininglog.withings.data.MeasureGroup;
-import mucsi96.traininglog.withings.oauth.WithingsClient;
 
 @Service
 @RequiredArgsConstructor
@@ -46,20 +41,20 @@ public class WithingsService {
         .toUriString();
   }
 
-  private GetMeasureResponseBody getMeasure(OAuth2AuthorizedClient authorizedClient) {
+  private WithingsGetMeasureResponseBody getMeasure(OAuth2AuthorizedClient authorizedClient) {
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
     HttpEntity<String> request = new HttpEntity<>("", headers);
     RestTemplate restTemplate = new RestTemplate();
-    GetMeasureResponse response = restTemplate
-        .postForObject(getMeasureUrl(), request, GetMeasureResponse.class);
+    WithingsGetMeasureResponse response = restTemplate
+        .postForObject(getMeasureUrl(), request, WithingsGetMeasureResponse.class);
 
     if (response == null) {
       throw new WithingsTechnicalException();
     }
 
     if (response.getStatus() == 401) {
-      throw new ClientAuthorizationRequiredException(WithingsClient.id);
+      throw new ClientAuthorizationRequiredException(WithingsConfiguration.registrationId);
     }
 
     if (response.getStatus() != 0) {
@@ -69,22 +64,22 @@ public class WithingsService {
     return response.getBody();
   }
 
-  private Optional<Weight> getFirstMeasureValue(GetMeasureResponseBody measureResponseBody) {
-    List<MeasureGroup> measureGroups = measureResponseBody.getMeasureGroups();
+  private Optional<Weight> getFirstMeasureValue(WithingsGetMeasureResponseBody measureResponseBody) {
+    List<WithingsMeasureGroup> measureGroups = measureResponseBody.getMeasuregrps();
 
     if (measureGroups == null || measureGroups.isEmpty()) {
       return Optional.empty();
     }
 
-    MeasureGroup measureGroup = measureGroups.get(0);
+    WithingsMeasureGroup measureGroup = measureGroups.get(0);
 
-    List<Measure> measures = measureGroup.getMeasures();
+    List<WithingsMeasure> measures = measureGroup.getMeasures();
 
     if (measures == null || measures.isEmpty()) {
       return Optional.empty();
     }
 
-    Measure measure = measures.get(0);
+    WithingsMeasure measure = measures.get(0);
     double weight = measure.getValue() * Math.pow(10, measure.getUnit());
 
     return Optional.of(Weight.builder().value(weight).createdAt(Instant.ofEpochSecond(measureGroup.getDate())).build());

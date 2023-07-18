@@ -41,7 +41,7 @@ import mucsi96.traininglog.model.TestAuthorizedClient;
 import mucsi96.traininglog.repository.TestAuthorizedClientRepository;
 import mucsi96.traininglog.weight.Weight;
 import mucsi96.traininglog.weight.WeightRepository;
-import mucsi96.traininglog.withings.oauth.WithingsClient;
+import mucsi96.traininglog.withings.WithingsConfiguration;
 
 @RequiredArgsConstructor
 @TestConstructor(autowireMode = TestConstructor.AutowireMode.ALL)
@@ -175,7 +175,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     assertThat(requests).hasSize(1);
     URI uri = new URI("?" + requests.get(0).getBodyAsString());
 
-    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsClient.id);
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsConfiguration.registrationId);
 
     assertThat(authorizedClient.isPresent()).isTrue();
     assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");
@@ -209,7 +209,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     authorizeWithingsOAuth2Client();
     LocalDateTime expiredAccessTokenIssuedAt = LocalDateTime.now().minusDays(2);
     LocalDateTime expiredAccessTokenExpiresAt = LocalDateTime.now().minusDays(1);
-    authorizedClientRepository.findById(WithingsClient.id).ifPresent(authorizedClient -> {
+    authorizedClientRepository.findById(WithingsConfiguration.registrationId).ifPresent(authorizedClient -> {
       authorizedClient.setAccessTokenValue("expired-access-token".getBytes(StandardCharsets.UTF_8));
       authorizedClient.setAccessTokenIssuedAt(expiredAccessTokenIssuedAt);
       authorizedClient.setAccessTokenExpiresAt(expiredAccessTokenExpiresAt);
@@ -222,7 +222,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
                 .headers(getAuthHeaders("user")))
         .andReturn().getResponse();
 
-    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsClient.id);
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsConfiguration.registrationId);
 
     assertThat(authorizedClient.isPresent()).isTrue();
     assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");

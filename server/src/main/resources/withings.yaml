@@ -1,0 +1,123 @@
+openapi: '3.0.2'
+info:
+  title: API
+  version: '1.0'
+
+servers:
+  - url: https://wbsapi.withings.net
+
+paths:
+  /v2/oauth2:
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: WithingsGetAccessTokenResponse
+                type: object
+                required:
+                  - "status"
+                  - "body"
+                properties:
+                  status:
+                    type: integer
+                  body:
+                    type: object
+                    required:
+                      - "userid"
+                      - "access_token"
+                      - "refresh_token"
+                      - "expires_in"
+                      - "scope"
+                      - "csrf_token"
+                      - "token_type"
+                    properties:
+                      userid:
+                        type: string
+                      access_token:
+                        type: string
+                      refresh_token:
+                        type: string
+                      expires_in:
+                        type: integer
+                      scope:
+                        type: string
+                      csrf_token:
+                        type: string
+                      token_type:
+                        type: string
+
+  /measure:
+    post:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: WithingsGetMeasureResponse
+                type: object
+                required:
+                  - "status"
+                  - "body"
+                properties:
+                  status:
+                    type: integer
+                  body:
+                    type: object
+                    properties:
+                      updatetime:
+                        type: string
+                      timezone:
+                        type: string
+                      measuregrps:
+                        type: array
+                        items:
+                          title: WithingsMeasureGroup
+                          type: object
+                          properties:
+                            grpid:
+                              type: integer
+                            attrib:
+                              type: integer
+                            date:
+                              type: integer
+                            created:
+                              type: integer
+                            modified:
+                              type: integer
+                            category:
+                              type: integer
+                            deviceid:
+                              type: string
+                            measures:
+                              type: array
+                              items:
+                                title: WithingsMeasure
+                                type: object
+                                properties:
+                                  value:
+                                    type: integer
+                                  type:
+                                    type: integer
+                                  unit:
+                                    type: integer
+                                  algo:
+                                    type: integer
+                                  fm:
+                                    type: integer
+                                  fw:
+                                    type: integer
+                            comment:
+                              type: string
+                            timezone:
+                              type: string
+                      more:
+                        type: integer
+                      offset:
+                        type: integer
+
+
+
