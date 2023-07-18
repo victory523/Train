@@ -1,4 +1,3 @@
 - Adjust the UI
 - Create separate E2E test project which locally tests agains running angular + Spring API using Selnium. On CI it uses test containers of both images. Adding authontication headers with own server.
-- Create dedicated AuthorizedClientManager for withings and get rid of AccessTokenResponseClient, RefreshTokenResponseClient
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
