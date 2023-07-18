@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { map } from 'rxjs';
-import { WithingsService } from '../withings.service';
+import { WeightService } from '../weight.service';
 
 @Component({
   selector: 'app-weight',
@@ -8,9 +8,9 @@ import { WithingsService } from '../withings.service';
   styleUrls: ['./weight.component.css'],
 })
 export class WeightComponent {
-  constructor(private withingsService: WithingsService) {}
+  constructor(private weightService: WeightService) {}
 
-  $weight = this.withingsService
+  $weight = this.weightService
     .getWeight()
     .pipe(map((weight) => weight?.toString() ?? '?'));
 }

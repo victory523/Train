@@ -1,7 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
-import { WeightResponse } from './types';
+import { Injectable } from '@angular/core';
+import { Observable, catchError, map, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -9,16 +8,16 @@ import { WeightResponse } from './types';
 export class WithingsService {
   constructor(private http: HttpClient) {}
 
-  getWeight(): Observable<number | undefined> {
-    return this.http.get<WeightResponse>('/api/withings/weight').pipe(
-      map((weightResponse) => weightResponse.weight),
+  sync(): Observable<boolean> {
+    return this.http.post<void>('/api/withings/sync', undefined).pipe(
+      map(() => true),
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
           debugger;
           window.location.href = error.error._links.oauth2Login.href;
         }
-        
-        return of(undefined);
+
+        return of();
       })
     );
   }

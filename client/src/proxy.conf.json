@@ -2,13 +2,6 @@
   "/api": {
     "target": "http://localhost:8080",
     "secure": false,
-    "pathRewrite": {
-      "^/api": ""
-    },
-    "changeOrigin": true,
-    "xfwd": true,
-    "headers": {
-      "X-Forwarded-Prefix": "/api"
-    }
+    "changeOrigin": true
   }
 }
