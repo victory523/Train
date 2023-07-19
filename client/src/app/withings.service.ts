@@ -8,16 +8,15 @@ import { Observable, catchError, map, of } from 'rxjs';
 export class WithingsService {
   constructor(private http: HttpClient) {}
 
-  sync(): Observable<boolean> {
+  sync(): Observable<void> {
     return this.http.post<void>('/api/withings/sync', undefined).pipe(
-      map(() => true),
       catchError((error) => {
         if (error instanceof HttpErrorResponse && error.status === 401) {
-          debugger;
           window.location.href = error.error._links.oauth2Login.href;
+          return of();
         }
 
-        return of();
+        throw error;
       })
     );
   }

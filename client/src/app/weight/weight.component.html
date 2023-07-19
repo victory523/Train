@@ -1,1 +1,5 @@
-<p>{{$weight | async}}</p>
+<p *ngIf="weightState.isReady">{{ weightState.value || '?' }}</p>
+
+<h1 *ngIf="weightState.hasFailed">Error occured</h1>
+
+<p *ngIf="weightState.isLoading">Loading....</p>

@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { map } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { HttpRequestState } from '../types';
+import { initialHttpRequestState, subscribeToRequestState } from '../utils';
 import { WeightService } from '../weight.service';
 
 @Component({
@@ -7,10 +8,14 @@ import { WeightService } from '../weight.service';
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],
 })
-export class WeightComponent {
+export class WeightComponent implements OnInit {
   constructor(private weightService: WeightService) {}
 
-  $weight = this.weightService
-    .getWeight()
-    .pipe(map((weight) => weight?.toString() ?? '?'));
+  weightState: HttpRequestState<number | undefined> = initialHttpRequestState;
+
+  ngOnInit(): void {
+    subscribeToRequestState(this.weightService.getWeight(), newState => {
+      this.weightState = newState
+    })
+  }
 }
