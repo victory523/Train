@@ -25,12 +25,14 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mucsi96.traininglog.weight.WeightService;
 
 @RestController
 @RequestMapping("/withings")
 @RequiredArgsConstructor
 @RolesAllowed("user")
+@Slf4j
 public class WithingsController {
 
   private final WithingsService withingsService;
@@ -45,6 +47,8 @@ public class WithingsController {
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
+
+    log.info("syncing from Withings");
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
@@ -70,6 +74,7 @@ public class WithingsController {
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
+        log.info("authorizing Withings client");
     getAuthorizedClient(principal, servletRequest, servletResponse);
     return new RedirectView("/");
   }

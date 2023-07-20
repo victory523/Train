@@ -17,10 +17,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import mucsi96.traininglog.weight.Weight;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class WithingsService {
 
   private final WithingsConfiguration withingsConfiguration;
@@ -86,6 +88,9 @@ public class WithingsService {
   }
 
   public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient) {
-    return getFirstMeasureValue(getMeasure(authorizedClient));
+    log.info("Getting today first weight measure");
+    Optional<Weight> result = getFirstMeasureValue(getMeasure(authorizedClient));
+    log.info("Got {}", result.isPresent() ? result.get().getValue() : '?');
+    return result;
   }
 }
