@@ -16,7 +16,10 @@ import { WeightComponent } from './weight/weight.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: Location,
+    useValue: window.location
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
