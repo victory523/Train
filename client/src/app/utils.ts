@@ -20,7 +20,6 @@ export function subscribeToRequestState<T>(
         value,
       })),
       catchError((error) => {
-        console.log(error);
         return of({ isLoading: false, isReady: false, hasFailed: true, error });
       }),
       startWith({ isLoading: true, isReady: false, hasFailed: false })

@@ -13,7 +13,6 @@ async function setup() {
 
   return {
     service,
-    mockHttpClient,
   };
 }
 
