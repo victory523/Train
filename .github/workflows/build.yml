@@ -10,21 +10,39 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  test-server:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
-          distribution: "temurin" # See 'Supported distributions' for available options
+          distribution: "temurin"
           java-version: "17"
           cache: "maven"
-      - name: Test
-        working-directory: ./server
-        run: mvn test
+      - run: mvn test
+
+  test-client:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: client/yarn.lock
+      - run: yarn --frozen-lockfile
+      - run: yarn test:ci
 
   build-images:
-    needs: test
+    needs:
+      - test-server
+      - test-client
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3

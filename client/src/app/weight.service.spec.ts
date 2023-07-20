@@ -1,20 +1,21 @@
 
 import { of } from 'rxjs';
-import { WithingsService } from './withings.service';
+import { WeightService } from './weight.service';
+import { WeightResponse } from './types';
 
 async function setup() {
   const mockHttpClient = jasmine.createSpyObj('HttpClient', {
-    post: of(),
+    get: of({ weight: 89.6 } as WeightResponse ),
   });
 
-  const service = new WithingsService(mockHttpClient);
+  const service = new WeightService(mockHttpClient);
 
   return {
     service,
   };
 }
 
-describe('WithingsService', () => {
+describe('WeightService', () => {
   it('should be created', async () => {
     const { service } = await setup()
     expect(service).toBeTruthy();
