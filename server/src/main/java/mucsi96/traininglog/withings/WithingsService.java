@@ -90,7 +90,7 @@ public class WithingsService {
   public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient) {
     log.info("Getting today first weight measure");
     Optional<Weight> result = getFirstMeasureValue(getMeasure(authorizedClient));
-    log.info("Got {}", result.isPresent() ? result.get().getValue() : '?');
+    log.info("Got {}", result.isPresent() ? result.get().getValue() : "null");
     return result;
   }
 }

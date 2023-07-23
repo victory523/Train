@@ -30,7 +30,7 @@ private final WeightRepository weightRepository;
     log.info("Getting today weight from {} to {}", startTime, endTime);
     List<Weight> weights = weightRepository.findAllByCreatedAtBetween(startTime, endTime);
     Optional<Weight> result = weights.stream().findFirst();
-    log.info("Got {}", result.isPresent() ? result.get().getValue() : '?');
+    log.info("Got {}", result.isPresent() ? result.get().getValue() : "null");
     return result;
   }
 }
