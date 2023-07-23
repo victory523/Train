@@ -14,7 +14,7 @@ import { NotificationType } from '../notification.service';
   styleUrls: ['./notification.component.css'],
   animations: [
     trigger('toast', [
-      transition('before => void', [
+      transition(':enter', [
         sequence([
           style({
             opacity: 0,
@@ -44,7 +44,6 @@ import { NotificationType } from '../notification.service';
   },
 })
 export class NotificationComponent {
-  toastState = 'before';
   @Input() type: NotificationType = 'success';
   @Output() settled = new EventEmitter();
 

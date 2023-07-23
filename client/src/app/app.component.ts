@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
   syncState: HttpRequestState<void> = initialHttpRequestState;
 
   ngOnInit(): void {
+    // setInterval(() => this.notificationService.showNotification('hello'), 1000);
     subscribeToRequestState(this.withingsService.sync(), (newState) => {
       this.syncState = newState;
 
