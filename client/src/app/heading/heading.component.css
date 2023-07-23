@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  color: white;
+}
+
+:host.level1 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host.level2 {
+  font-size: 21px;
+  font-weight: 700;
+}
+
+:host.level3 {
+  font-size: 16px;
+  font-weight: 700;
+}
