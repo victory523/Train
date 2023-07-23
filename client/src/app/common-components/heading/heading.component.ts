@@ -3,14 +3,11 @@ import { Component, HostBinding, Input } from '@angular/core';
 @Component({
   selector: 'app-heading',
   templateUrl: './heading.component.html',
-  styleUrls: ['./heading.component.css']
+  styleUrls: ['./heading.component.css'],
+  host: {
+    '[class]': "'level' + level",
+  },
 })
 export class HeadingComponent {
-
   @Input() level = 1;
-
-  @HostBinding('class')
-  get class() {
-    return `level${this.level}`
-  }
 }

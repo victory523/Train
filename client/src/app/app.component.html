@@ -2,7 +2,7 @@
 <app-main>
   <div id="main">
     <app-weight *ngIf="syncState.isReady"></app-weight>
-    <h1 *ngIf="syncState.hasFailed">Error occured</h1>
     <p *ngIf="syncState.isLoading">Loading...</p>
   </div>
 </app-main>
+<app-notifications></app-notifications>

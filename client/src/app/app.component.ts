@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { subscribeToRequestState, initialHttpRequestState } from './utils';
-import { WithingsService } from './withings.service';
+import { NotificationService } from './common-components/notification.service';
 import { HttpRequestState } from './types';
-import { CommonComponentsModule } from './common-components/common-components.module';
+import { initialHttpRequestState, subscribeToRequestState } from './utils';
+import { WithingsService } from './withings.service';
 
 @Component({
   selector: 'app-root',
@@ -10,13 +10,23 @@ import { CommonComponentsModule } from './common-components/common-components.mo
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent implements OnInit {
-  constructor(private withingsService: WithingsService) {}
+  constructor(
+    private withingsService: WithingsService,
+    private notificationService: NotificationService
+  ) {}
 
   syncState: HttpRequestState<void> = initialHttpRequestState;
 
   ngOnInit(): void {
     subscribeToRequestState(this.withingsService.sync(), (newState) => {
       this.syncState = newState;
+
+      if (newState.hasFailed) {
+        this.notificationService.showNotification(
+          'Unable to sync with Withings',
+          'error'
+        );
+      }
     });
   }
 }

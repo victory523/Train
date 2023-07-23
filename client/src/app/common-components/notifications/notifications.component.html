@@ -1,0 +1,6 @@
+<app-notification
+  *ngFor="let notification of notifications"
+  [type]="notification.type"
+  (settled)="removeNotification(notification)"
+  >{{ notification.message }}</app-notification
+>
