@@ -1,4 +1,8 @@
-<p *ngIf="weightState.isReady">{{ weightState.value || '?' }}</p>
+<app-heading>
+  Weight<app-badge *ngIf="weightState.isReady">{{
+    weightState.value || "?"
+  }}</app-badge>
+</app-heading>
 
 <h1 *ngIf="weightState.hasFailed">Error occured</h1>
 

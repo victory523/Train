@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { subscribeToRequestState, initialHttpRequestState } from './utils';
 import { WithingsService } from './withings.service';
 import { HttpRequestState } from './types';
+import { CommonComponentsModule } from './common-components/common-components.module';
 
 @Component({
   selector: 'app-root',
