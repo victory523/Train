@@ -48,6 +48,8 @@ paths:
                         type: string
                       token_type:
                         type: string
+                      wait_seconds:
+                        type: integer
                   error:
                     type: string
 
