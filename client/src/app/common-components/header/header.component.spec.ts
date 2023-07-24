@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
+import { HeadingComponent } from '../heading/heading.component';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -8,7 +9,7 @@ describe('HeaderComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent ]
+      declarations: [ HeaderComponent, HeadingComponent ]
     })
     .compileComponents();
 

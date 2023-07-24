@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationComponent } from './notification.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('NotificationComponent', () => {
   let component: NotificationComponent;
@@ -8,7 +9,8 @@ describe('NotificationComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ NotificationComponent ]
+      declarations: [ NotificationComponent ],
+      imports: [NoopAnimationsModule]
     })
     .compileComponents();
 
