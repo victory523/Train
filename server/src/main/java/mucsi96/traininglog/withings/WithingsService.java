@@ -60,7 +60,7 @@ public class WithingsService {
     }
 
     if (response.getStatus() != 0) {
-      log.error(response.getError();
+      log.error(response.getError());
       throw new WithingsTechnicalException();
     }
 
