@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
+import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
@@ -136,7 +138,7 @@ public class WithingsConfiguration {
 
       if (response.getStatus() != 0) {
         log.error(response.getError());
-        throw new WithingsTechnicalException();
+        throw new OAuth2AuthorizationException(new OAuth2Error("1"), response.getError());
       }
 
       WithingsGetAccessTokenResponseBody body = response.getBody();

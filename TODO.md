@@ -1,3 +1,4 @@
 - Create separate E2E test project which locally tests agains running angular + Spring API using Selnium. On CI it uses test containers of both images. Adding authontication headers with own server.
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
 - Add pgAdmin to dev container https://www.pgadmin.org/download/pgadmin-4-container/s
+- add p0 deployment as manual action step
