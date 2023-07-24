@@ -48,6 +48,8 @@ paths:
                         type: string
                       token_type:
                         type: string
+                  error:
+                    type: string
 
   /measure:
     post:
@@ -118,6 +120,7 @@ paths:
                         type: integer
                       offset:
                         type: integer
-
+                  error:
+                    type: string
 
 
