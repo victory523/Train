@@ -2,7 +2,7 @@
 <app-main>
   <div id="main">
     <app-weight *ngIf="syncState.isReady"></app-weight>
-    <p *ngIf="syncState.isLoading">Loading...</p>
+    <app-loader *ngIf="syncState.isLoading"></app-loader>
   </div>
 </app-main>
 <app-notifications></app-notifications>

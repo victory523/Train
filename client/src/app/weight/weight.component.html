@@ -2,4 +2,4 @@
   Weight<app-badge>{{ weightState.value || "?" }}</app-badge>
 </app-heading>
 
-<p *ngIf="weightState.isLoading">Loading...</p>
+<app-loader *ngIf="weightState.isLoading"></app-loader>

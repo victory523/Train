@@ -8,6 +8,7 @@ import { NotificationComponent } from './notification/notification.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BadgeComponent,
     NotificationComponent,
     NotificationsComponent,
+    LoaderComponent,
   ],
   imports: [CommonModule, BrowserModule, BrowserAnimationsModule],
   exports: [
@@ -26,6 +28,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BadgeComponent,
     NotificationComponent,
     NotificationsComponent,
+    LoaderComponent
   ],
 })
 export class CommonComponentsModule {}
