@@ -38,10 +38,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 @Data
 @Configuration
 @ConfigurationProperties(prefix = "withings")
+@Slf4j
 public class WithingsConfiguration {
   public static final String registrationId = "withings-client";
 
@@ -117,6 +119,7 @@ public class WithingsConfiguration {
 
   Converter<OAuth2AuthorizationCodeGrantRequest, MultiValueMap<String, String>> withingsAccessTokenRequestParametersConverter() {
     return request -> {
+      log.info("Requesting new Withings access token");
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
       parameters.add("action", "requesttoken");
       parameters.add(OAuth2ParameterNames.CLIENT_ID, request.getClientRegistration().getClientId());
@@ -132,6 +135,7 @@ public class WithingsConfiguration {
       });
 
       if (response.getStatus() != 0) {
+        log.error(response.getError());
         throw new WithingsTechnicalException();
       }
 
@@ -150,6 +154,7 @@ public class WithingsConfiguration {
 
   Converter<OAuth2RefreshTokenGrantRequest, MultiValueMap<String, String>> withingsRefreshTokenRequestParametersConverter() {
     return request -> {
+      log.info("Refreshing expired Withings access token");
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
       parameters.add("action", "requesttoken");
       parameters.add(OAuth2ParameterNames.CLIENT_ID, request.getClientRegistration().getClientId());
