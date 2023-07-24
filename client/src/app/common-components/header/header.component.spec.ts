@@ -1,24 +1,29 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed } from '@angular/core/testing';
 
-import { HeaderComponent } from './header.component';
 import { HeadingComponent } from '../heading/heading.component';
+import { HeaderComponent } from './header.component';
+
+async function setup() {
+  await TestBed.configureTestingModule({
+    declarations: [HeaderComponent, HeadingComponent],
+  }).compileComponents();
+
+  const fixture = TestBed.createComponent(HeaderComponent);
+
+  return {
+    fixture,
+    component: fixture.componentInstance,
+    element: fixture.nativeElement as HTMLElement,
+  };
+}
 
 describe('HeaderComponent', () => {
-  let component: HeaderComponent;
-  let fixture: ComponentFixture<HeaderComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ HeaderComponent, HeadingComponent ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(HeaderComponent);
-    component = fixture.componentInstance;
+  it('render title', async () => {
+    const { fixture, component, element } = await setup();
+    component.title = 'test title';
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    expect(element.querySelector('app-heading')?.textContent).toBe(
+      'test title'
+    );
   });
 });
