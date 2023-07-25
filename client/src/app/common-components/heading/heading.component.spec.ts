@@ -1,34 +1,46 @@
 import { TestBed } from '@angular/core/testing';
-
+import { Component } from '@angular/core';
 import { HeadingComponent } from './heading.component';
 
-async function setup() {
+async function setup({
+  template,
+}: {
+  template?: string;
+} = {}) {
+  @Component({
+    template,
+  })
+  class TestComponent {}
+
   await TestBed.configureTestingModule({
-    declarations: [HeadingComponent],
+    declarations: [TestComponent, HeadingComponent],
   }).compileComponents();
 
-  const fixture = TestBed.createComponent(HeadingComponent);
+  const fixture = TestBed.createComponent(TestComponent);
+  const debugElement = fixture.debugElement.children[0];
+  fixture.detectChanges();
 
   return {
     fixture,
-    component: fixture.componentInstance,
-    element: fixture.nativeElement as HTMLElement,
+    nativeElement: debugElement.nativeElement as HTMLElement,
   };
 }
 
 describe('HeadingComponent', () => {
+  it('renders content', async () => {
+    const { nativeElement } = await setup({ template: '<app-heading>test text</app-heading>'});
+    expect(nativeElement.textContent).toContain('test text');
+  });
+
   it('defaults to level 1', async () => {
-    const { element, fixture } = await setup();
-    fixture.detectChanges();
-    expect(element.className).toContain('level1');
+    const { nativeElement } = await setup({ template: '<app-heading></app-heading>'});
+    expect(nativeElement.className).toContain('level1');
   });
 
   [1, 2, 3, 4, 5, 6].forEach((level) => {
     it(`renderes level ${level}`, async () => {
-      const { component, element, fixture } = await setup();
-      component.level = level;
-      fixture.detectChanges();
-      expect(element.className).toContain(`level${level}`);
+      const { nativeElement } = await setup({ template: `<app-heading level="${level}"></app-heading>`});
+      expect(nativeElement.className).toContain(`level${level}`);
     });
   });
 });

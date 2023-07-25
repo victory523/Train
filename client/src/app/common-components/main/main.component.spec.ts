@@ -1,8 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HeadingComponent } from '../heading/heading.component';
-import { HeaderComponent } from './header.component';
 import { Component } from '@angular/core';
+import { MainComponent } from './main.component';
 
 async function setup({
   template,
@@ -15,7 +14,7 @@ async function setup({
   class TestComponent {}
 
   await TestBed.configureTestingModule({
-    declarations: [HeaderComponent, TestComponent, HeadingComponent],
+    declarations: [MainComponent, TestComponent],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);
@@ -28,20 +27,11 @@ async function setup({
   };
 }
 
-describe('HeaderComponent', () => {
-  it('render content', async () => {
+describe('MainComponent', () => {
+  it('renders content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-header>test text</app-header>',
+      template: '<app-main>test text</app-main>',
     });
     expect(nativeElement.textContent).toBe('test text');
-  });
-
-  it('render title', async () => {
-    const { nativeElement } = await setup({
-      template: '<app-header title="test title"></app-header>',
-    });
-    expect(nativeElement.querySelector('app-heading')?.textContent).toBe(
-      'test title'
-    );
   });
 });

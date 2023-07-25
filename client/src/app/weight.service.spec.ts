@@ -1,29 +1,26 @@
-import { of } from 'rxjs';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
 import { WeightResponse } from './types';
 import { WeightService } from './weight.service';
 
-async function setup() {
-  const mockHttpClient = jasmine.createSpyObj('HttpClient', ['get']);
-
-  mockHttpClient.get.and.callFake((url: string) =>
-    url === '/api/weight' ? of({ weight: 89.6 } as WeightResponse) : of()
-  );
-
-  const service = new WeightService(mockHttpClient);
-
-  return {
-    service,
-  };
+function setup() {
+  TestBed.configureTestingModule({
+    imports: [HttpClientTestingModule]
+  });
+  const service = TestBed.inject(WeightService);
+  const httpTestingController = TestBed.inject(HttpTestingController)
+  return {service, httpTestingController}
 }
 
 describe('WeightService', () => {
   describe('getWeight', () => {
-    it('should return weight', async () => {
-      const { service } = await setup();
-      const weight = await new Promise((resolve) =>
-        service.getWeight().subscribe(resolve)
-      );
-      expect(weight).toEqual(89.6);
+    it('should return weight',  () => {
+      const { service, httpTestingController } = setup();
+      service.getWeight().subscribe(weight => {
+        expect(weight).toEqual(89.6);
+      })
+      httpTestingController.expectOne('/api/weight').flush({ weight: 89.6 } as WeightResponse)
+      httpTestingController.verify();
     });
   });
 });

@@ -1,23 +1,78 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NotificationsComponent } from './notifications.component';
+import { Component } from '@angular/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { NotificationService } from '../notification.service';
+import { NotificationComponent } from '../notification/notification.component';
+
+async function setup({
+  template,
+}: {
+  template?: string;
+} = {}) {
+  @Component({
+    template,
+  })
+  class TestComponent {}
+
+  await TestBed.configureTestingModule({
+    declarations: [
+      NotificationsComponent,
+      TestComponent,
+      NotificationComponent,
+    ],
+    imports: [NoopAnimationsModule],
+    providers: [NotificationService],
+  }).compileComponents();
+
+  const fixture = TestBed.createComponent(TestComponent);
+  const debugElement = fixture.debugElement.children[0];
+  fixture.detectChanges();
+
+  const notificationService = TestBed.inject(NotificationService);
+
+  return {
+    fixture,
+    nativeElement: debugElement.nativeElement as HTMLElement,
+    notificationService,
+  };
+}
 
 describe('NotificationsComponent', () => {
-  let component: NotificationsComponent;
-  let fixture: ComponentFixture<NotificationsComponent>;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ NotificationsComponent ]
-    })
-    .compileComponents();
-
-    fixture = TestBed.createComponent(NotificationsComponent);
-    component = fixture.componentInstance;
+  it('should render notifications added by notification service', async () => {
+    const { nativeElement, fixture, notificationService } = await setup({
+      template: '<app-notifications></app-notifications>',
+    });
+    notificationService.showNotification('test notification');
     fixture.detectChanges();
+    const notifications = Array.from(
+      nativeElement.querySelectorAll('app-notification')
+    );
+    expect(notifications).toHaveSize(1);
+    expect(notifications[0].textContent).toBe('test notification');
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should render multiple notifications added by notification service', async () => {
+    const { nativeElement, fixture, notificationService } = await setup({
+      template: '<app-notifications></app-notifications>',
+    });
+    notificationService.showNotification('test notification 1');
+    notificationService.showNotification('test notification 2', 'error');
+    notificationService.showNotification('test notification 3', 'success');
+    notificationService.showNotification('test notification 4', 'error');
+    fixture.detectChanges();
+    const notifications = Array.from(
+      nativeElement.querySelectorAll('app-notification')
+    );
+    expect(notifications).toHaveSize(4);
+    expect(notifications[0].textContent).toBe('test notification 1');
+    expect(notifications[0].classList.contains('success')).toBe(true);
+    expect(notifications[1].textContent).toBe('test notification 2');
+    expect(notifications[1].classList.contains('error')).toBe(true);
+    expect(notifications[2].textContent).toBe('test notification 3');
+    expect(notifications[2].classList.contains('success')).toBe(true);
+    expect(notifications[3].textContent).toBe('test notification 4');
+    expect(notifications[3].classList.contains('error')).toBe(true);
   });
 });

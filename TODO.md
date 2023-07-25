@@ -8,4 +8,3 @@
 - create weight graph
 - create weight endpoints which retuns weight in last day, week, month, year
 - fix pgexporter logs about missing role
-- fix test for notification, notifications + service
