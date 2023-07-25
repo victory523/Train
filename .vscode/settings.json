@@ -33,5 +33,9 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "[java]": {
       "editor.defaultFormatter": "redhat.java"
+    },
+    "vs-kubernetes": {
+      "vs-kubernetes.kubeconfig": ".kube/config",
+      "vs-kubernetes.knownKubeconfigs": [".kube/config"],
     }
 }

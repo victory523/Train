@@ -2,3 +2,10 @@
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
 - Add pgAdmin to dev container https://www.pgadmin.org/download/pgadmin-4-container/s
 - add p0 deployment as manual action step
+- create backup service in 
+- create test which deletes authorized client and returns auth url on error during renewval of access token
+- populate db with some data for local
+- create weight graph
+- create weight endpoints which retuns weight in last day, week, month, year
+- fix pgexporter logs about missing role
+- fix test for notification, notifications + service
