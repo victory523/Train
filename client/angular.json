@@ -68,7 +68,7 @@
             },
             "development": {
               "browserTarget": "client:build:development",
-              "proxyConfig": "src/proxy.conf.json",
+              "proxyConfig": "src/proxy.conf.mjs",
               "port": 3000
             }
           },
