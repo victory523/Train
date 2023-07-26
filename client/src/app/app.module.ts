@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { WeightComponent } from './weight/weight.component';
 import { CommonComponentsModule } from './common-components/common-components.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { CommonComponentsModule } from './common-components/common-components.mo
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    CommonComponentsModule
+    CommonComponentsModule,
+    BrowserAnimationsModule
   ],
   providers: [{
     provide: Location,

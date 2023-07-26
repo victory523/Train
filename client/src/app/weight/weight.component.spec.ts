@@ -1,36 +1,26 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Observable, of, throwError } from 'rxjs';
-import { BadgeComponent } from '../common-components/badge/badge.component';
-import { HeadingComponent } from '../common-components/heading/heading.component';
-import { LoaderComponent } from '../common-components/loader/loader.component';
+import { Subject } from 'rxjs';
+import { CommonComponentsModule } from '../common-components/common-components.module';
 import { NotificationService } from '../common-components/notification.service';
 import { WeightService } from '../weight.service';
 import { WeightComponent } from './weight.component';
 
-async function setup(
-  { $getWeight }: { $getWeight?: Observable<number | undefined> } = {
-    $getWeight: of(),
-  }
-) {
-  const mockWeightService = jasmine.createSpyObj('WeightService', {
-    getWeight: $getWeight,
-  });
-  const showNotification = jasmine.createSpy();
-  const mockNotificationService = jasmine.createSpyObj('NotificationService', {
-    showNotification,
-  });
+async function setup() {
+  const weightSubject = new Subject<number | undefined>();
+  const mockWeightService: jasmine.SpyObj<WeightService> = jasmine.createSpyObj(
+    ['getWeight']
+  );
+  mockWeightService.getWeight.and.returnValue(weightSubject.asObservable());
+  const mockNotificationService: jasmine.SpyObj<NotificationService> =
+    jasmine.createSpyObj(['showNotification']);
   await TestBed.configureTestingModule({
-    declarations: [
-      WeightComponent,
-      LoaderComponent,
-      HeadingComponent,
-      BadgeComponent,
-    ],
+    declarations: [WeightComponent],
     providers: [
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
     ],
+    imports: [CommonComponentsModule],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(WeightComponent);
@@ -40,6 +30,7 @@ async function setup(
     fixture,
     element: fixture.nativeElement as HTMLElement,
     mockNotificationService,
+    weightSubject,
   };
 }
 
@@ -50,19 +41,23 @@ describe('WeightComponent', () => {
   });
 
   it('renders weight', async () => {
-    const { element } = await setup({ $getWeight: of(87.6) });
+    const { element, fixture, weightSubject } = await setup();
+    weightSubject.next(87.6);
+    fixture.detectChanges();
     expect(element.textContent).toEqual(' Weight87.6');
   });
 
   it('renders question mark if no weight is returned', async () => {
-    const { element } = await setup({ $getWeight: of(undefined) });
+    const { element, fixture, weightSubject } = await setup();
+    weightSubject.next(undefined);
+    fixture.detectChanges();
     expect(element.textContent).toEqual(' Weight?');
   });
 
   it('renders error state', async () => {
-    const { mockNotificationService } = await setup({
-      $getWeight: throwError(() => {}),
-    });
+    const { mockNotificationService, fixture, weightSubject } = await setup();
+    weightSubject.error({});
+    fixture.detectChanges();
     expect(mockNotificationService.showNotification).toHaveBeenCalledWith(
       'Unable to fetch weight',
       'error'

@@ -1,14 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { BadgeComponent } from './badge/badge.component';
 import { HeaderComponent } from './header/header.component';
 import { HeadingComponent } from './heading/heading.component';
+import { LoaderComponent } from './loader/loader.component';
 import { MainComponent } from './main/main.component';
-import { BadgeComponent } from './badge/badge.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NotificationsComponent } from './notifications/notifications.component';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LoaderComponent } from './loader/loader.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +18,7 @@ import { LoaderComponent } from './loader/loader.component';
     NotificationsComponent,
     LoaderComponent,
   ],
-  imports: [CommonModule, BrowserModule, BrowserAnimationsModule],
+  imports: [CommonModule],
   exports: [
     HeaderComponent,
     HeadingComponent,
