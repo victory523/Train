@@ -81,7 +81,7 @@ public class WithingsConfiguration {
     authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
     Set<String> removeAuthorizedClientErrorCodes = Set.of(
         OAuth2ErrorCodes.INVALID_GRANT,
-        OAuth2ErrorCodes.INVALID_TOKEN /* ,"invalid_token_response" */);
+        OAuth2ErrorCodes.INVALID_TOKEN, "invalid_token_response");
 
     authorizedClientManager.setAuthorizationFailureHandler(new RemoveAuthorizedClientOAuth2AuthorizationFailureHandler(
         (clientRegistrationId, principal, attributes) -> authorizedClientRepository.removeAuthorizedClient(
