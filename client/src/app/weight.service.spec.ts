@@ -1,7 +1,6 @@
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { WeightResponse } from './types';
-import { WeightService } from './weight.service';
+import { WeightResponse, WeightService } from './weight.service';
 
 function setup() {
   TestBed.configureTestingModule({

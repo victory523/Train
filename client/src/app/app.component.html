@@ -1,4 +1,9 @@
-<app-header title="Workout"></app-header>
+<app-header title="Workout"
+  ><app-heading *ngIf="lastNackupState.isReady" level="3" class="lastBackup"
+    >Last backup
+    <app-badge >{{ lastNackupState.value.time | relativeTime }}</app-badge></app-heading
+  ></app-header
+>
 <app-main>
   <div id="main">
     <app-weight *ngIf="syncState.isReady"></app-weight>

@@ -1,7 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { WeightResponse } from './types';
+
+export interface WeightResponse {
+  weight?: number;
+}
 
 @Injectable({
   providedIn: 'root',

@@ -44,14 +44,14 @@ describe('WeightComponent', () => {
     const { element, fixture, weightSubject } = await setup();
     weightSubject.next(87.6);
     fixture.detectChanges();
-    expect(element.textContent).toEqual(' Weight87.6');
+    expect(element.querySelector('app-badge')?.textContent).toEqual('87.6');
   });
 
   it('renders question mark if no weight is returned', async () => {
     const { element, fixture, weightSubject } = await setup();
     weightSubject.next(undefined);
     fixture.detectChanges();
-    expect(element.textContent).toEqual(' Weight?');
+    expect(element.querySelector('app-badge')?.textContent).toEqual('-');
   });
 
   it('renders error state', async () => {

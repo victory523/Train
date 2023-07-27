@@ -7,11 +7,13 @@ import { AppComponent } from './app.component';
 import { WeightComponent } from './weight/weight.component';
 import { CommonComponentsModule } from './common-components/common-components.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RelativeTimePipe } from './utils/relative-time.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     WeightComponent,
+    RelativeTimePipe,
   ],
   imports: [
     BrowserModule,

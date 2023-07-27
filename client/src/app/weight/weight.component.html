@@ -1,5 +1,5 @@
-<app-heading *ngIf="weightState.isReady">
-  Weight<app-badge>{{ weightState.value || "?" }}</app-badge>
+<app-heading *ngIf="weightState.isReady" class="weight">
+  Weight<app-badge>{{ weightState.value || "-" }}</app-badge>
 </app-heading>
 
 <app-loader *ngIf="weightState.isLoading"></app-loader>

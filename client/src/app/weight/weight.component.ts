@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpRequestState } from '../types';
-import { initialHttpRequestState, subscribeToRequestState } from '../utils';
 import { WeightService } from '../weight.service';
 import { NotificationService } from '../common-components/notification.service';
+import { HttpRequestState, initialHttpRequestState, requestState } from '../utils/request-state';
 
 @Component({
   selector: 'app-weight',
@@ -18,7 +17,7 @@ export class WeightComponent implements OnInit {
   weightState: HttpRequestState<number | undefined> = initialHttpRequestState;
 
   ngOnInit(): void {
-    subscribeToRequestState(this.weightService.getWeight(), (newState) => {
+    requestState(this.weightService.getWeight(), (newState) => {
       this.weightState = newState;
 
       if (newState.hasFailed) {

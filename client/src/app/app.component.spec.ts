@@ -6,6 +6,7 @@ import { AppComponent } from './app.component';
 import { CommonComponentsModule } from './common-components/common-components.module';
 import { NotificationService } from './common-components/notification.service';
 import { WithingsService } from './withings.service';
+import { BackupService, LastBackup } from './backup.service';
 
 @Component({
   selector: 'app-weight',
@@ -19,11 +20,16 @@ async function setup() {
     jasmine.createSpyObj(['sync']);
   mockWithingsService.sync.and.returnValue(syncSubject.asObservable());
 
+  const lastBackupSubject = new Subject<LastBackup>();
+  const mockBackupService: jasmine.SpyObj<BackupService> = jasmine.createSpyObj(['getLastBackupTime'])
+  mockBackupService.getLastBackupTime.and.returnValue(lastBackupSubject)
+
   await TestBed.configureTestingModule({
     declarations: [AppComponent, MockWeightComponent],
     providers: [
       { provide: WithingsService, useValue: mockWithingsService },
       NotificationService,
+      { provide: BackupService, useValue: mockBackupService },
     ],
     imports: [CommonComponentsModule, NoopAnimationsModule],
   }).compileComponents();
@@ -34,7 +40,8 @@ async function setup() {
   return {
     fixture,
     element: fixture.nativeElement as HTMLElement,
-    syncSubject
+    syncSubject,
+    lastBackupSubject
   };
 }
 

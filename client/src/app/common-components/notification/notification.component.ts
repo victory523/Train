@@ -3,9 +3,17 @@ import {
   sequence,
   style,
   transition,
-  trigger
+  trigger,
 } from '@angular/animations';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  Attribute,
+  Component,
+  EventEmitter,
+  HostBinding,
+  HostListener,
+  Input,
+  Output,
+} from '@angular/core';
 import { NotificationType } from '../notification.service';
 
 @Component({
@@ -37,16 +45,18 @@ import { NotificationType } from '../notification.service';
       ]),
     ]),
   ],
-  host: {
-    '[class]': 'type',
-    '[@toast]': 'toastState',
-    '(@toast.done)': 'animationEnd($event)',
-  },
 })
 export class NotificationComponent {
   @Input() type: NotificationType = 'success';
   @Output() settled = new EventEmitter();
+  @HostBinding('@toast') toastState = null;
 
+  @HostBinding('class')
+  get class() {
+    return this.type;
+  }
+
+  @HostListener('@toast.done')
   animationEnd(_event: AnimationEvent) {
     this.settled.emit();
   }

@@ -1,5 +1,29 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, map, of, startWith } from 'rxjs';
-import { HttpRequestState } from './types';
+
+export type HttpRequestState<T> =
+  | {
+      isLoading: false;
+      isReady: false;
+      hasFailed: false;
+    }
+  | {
+      isLoading: true;
+      isReady: false;
+      hasFailed: false;
+    }
+  | {
+      isLoading: false;
+      isReady: true;
+      hasFailed: false;
+      value: T;
+    }
+  | {
+      isLoading: false;
+      isReady: false;
+      hasFailed: true;
+      error: HttpErrorResponse | Error;
+    };
 
 export const initialHttpRequestState: HttpRequestState<any> = {
   isLoading: false,
@@ -7,7 +31,7 @@ export const initialHttpRequestState: HttpRequestState<any> = {
   hasFailed: false,
 };
 
-export function subscribeToRequestState<T>(
+export function requestState<T>(
   $target: Observable<T>,
   setState: (newState: HttpRequestState<T>) => void
 ): void {
@@ -24,5 +48,5 @@ export function subscribeToRequestState<T>(
       }),
       startWith({ isLoading: true, isReady: false, hasFailed: false })
     )
-    .subscribe(setState);
+    .subscribe((newState) => setState(newState as HttpRequestState<T>));
 }

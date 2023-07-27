@@ -4,3 +4,9 @@
   justify-content: center;
   height: 90vh;
 }
+
+.lastBackup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
