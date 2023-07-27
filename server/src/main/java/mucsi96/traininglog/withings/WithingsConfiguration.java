@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
+import org.springframework.security.oauth2.client.RemoveAuthorizedClientOAuth2AuthorizationFailureHandler;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.DefaultRefreshTokenTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
@@ -25,8 +26,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
-import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
-import org.springframework.security.oauth2.core.OAuth2Error;
+import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
@@ -39,6 +39,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -77,6 +79,16 @@ public class WithingsConfiguration {
         .build();
 
     authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
+    Set<String> removeAuthorizedClientErrorCodes = Set.of(
+        OAuth2ErrorCodes.INVALID_GRANT,
+        OAuth2ErrorCodes.INVALID_TOKEN /* ,"invalid_token_response" */);
+
+    authorizedClientManager.setAuthorizationFailureHandler(new RemoveAuthorizedClientOAuth2AuthorizationFailureHandler(
+        (clientRegistrationId, principal, attributes) -> authorizedClientRepository.removeAuthorizedClient(
+            clientRegistrationId, principal,
+            (HttpServletRequest) attributes.get(HttpServletRequest.class.getName()),
+            (HttpServletResponse) attributes.get(HttpServletResponse.class.getName())),
+        removeAuthorizedClientErrorCodes));
 
     return authorizedClientManager;
   }
@@ -138,7 +150,7 @@ public class WithingsConfiguration {
 
       if (response.getStatus() != 0) {
         log.error(response.getError());
-        throw new OAuth2AuthorizationException(new OAuth2Error("1"), response.getError());
+        throw new RuntimeException(response.getError());
       }
 
       WithingsGetAccessTokenResponseBody body = response.getBody();

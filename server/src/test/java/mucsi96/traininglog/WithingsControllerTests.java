@@ -175,7 +175,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     assertThat(requests).hasSize(1);
     URI uri = new URI("?" + requests.get(0).getBodyAsString());
 
-    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsConfiguration.registrationId);
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
+        .findById(WithingsConfiguration.registrationId);
 
     assertThat(authorizedClient.isPresent()).isTrue();
     assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");
@@ -222,7 +223,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
                 .headers(getAuthHeaders("user")))
         .andReturn().getResponse();
 
-    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository.findById(WithingsConfiguration.registrationId);
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
+        .findById(WithingsConfiguration.registrationId);
 
     assertThat(authorizedClient.isPresent()).isTrue();
     assertThat(authorizedClient.get().getPrincipalName()).isEqualTo("rob");
@@ -230,6 +232,38 @@ public class WithingsControllerTests extends BaseIntegrationTest {
         .isEqualTo("test-access-token");
     assertThat(authorizedClient.get().getAccessTokenIssuedAt()).isAfter(expiredAccessTokenIssuedAt);
     assertThat(authorizedClient.get().getAccessTokenExpiresAt()).isAfter(expiredAccessTokenExpiresAt);
+  }
+
+  @Test
+  public void returns_not_authorized_if_refresh_token_is_invalid() throws Exception {
+    mockWithingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
+        WireMock.aResponse()
+            .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+            .withBody("{\"status\": 1}")));
+
+    authorizeWithingsOAuth2Client();
+    LocalDateTime expiredAccessTokenIssuedAt = LocalDateTime.now().minusDays(2);
+    LocalDateTime expiredAccessTokenExpiresAt = LocalDateTime.now().minusDays(1);
+    authorizedClientRepository.findById(WithingsConfiguration.registrationId).ifPresent(authorizedClient -> {
+      authorizedClient.setAccessTokenValue("expired-access-token".getBytes(StandardCharsets.UTF_8));
+      authorizedClient.setAccessTokenIssuedAt(expiredAccessTokenIssuedAt);
+      authorizedClient.setAccessTokenExpiresAt(expiredAccessTokenExpiresAt);
+      authorizedClientRepository.save(authorizedClient);
+    });
+
+    MockHttpServletResponse response = mockMvc
+        .perform(
+            post("/withings/sync")
+                .headers(getAuthHeaders("user")))
+        .andReturn().getResponse();
+
+    Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
+        .findById(WithingsConfiguration.registrationId);
+
+    assertThat(authorizedClient.isPresent()).isFalse();
+    assertThat(response.getStatus()).isEqualTo(401);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$._links.oauth2Login.href", String.class))
+        .isEqualTo("http://localhost/withings/authorize");
   }
 
   @Test

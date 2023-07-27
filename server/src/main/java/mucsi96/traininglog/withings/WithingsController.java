@@ -8,10 +8,10 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.ClientAuthorizationRequiredException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -55,7 +55,7 @@ public class WithingsController {
       if (!weightService.getTodayWeight().isPresent()) {
         withingsService.getTodayWeight(authorizedClient).ifPresent(weightService::saveWeight);
       }
-    } catch (ClientAuthorizationRequiredException ex) {
+    } catch (OAuth2AuthorizationException ex) {
       Link oauth2LogLink = linkTo(methodOn(WithingsController.class).authorize(null, null, null))
           .withRel("oauth2Login");
 
