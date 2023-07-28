@@ -66,8 +66,7 @@ public class ContainersConfig {
   @Bean
   GenericContainer<?> server(PostgreSQLContainer<?> db) {
     return new GenericContainer<>(SERVER_IMAGE).withLogConsumer(logConsumer("server", ConsoleColors.BLUE))
-        .withExposedPorts(8080)
-        .withExposedPorts(8082)
+        .withExposedPorts(8080, 8082)
         .withNetwork(network())
         .withEnv("SERVER_SERVLET_CONTEXT_PATH", "/api")
         .withEnv("SPRING_ACTUATOR_PORT", "8082")

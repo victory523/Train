@@ -29,6 +29,7 @@
           POSTGRES_PORT: "{{ db_port }}"
           POSTGRES_USER: "{{ db_username }}"
           POSTGRES_PASSWORD: "{{ db_password }}"
+          WITHINGS_API_URI: "{{ withings_api_uri }}"
           WITHINGS_CLIENT_ID: "{{ withings_client_id }}"
           WITHINGS_CLIENT_SECRET: "{{ withings_client_secret }}"
     - role: mucsi96.kubetools.deploy_client_app

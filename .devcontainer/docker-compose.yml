@@ -21,6 +21,7 @@ services:
       SPRING_ACTUATOR_PORT: 8081
       SPRING_ADMIN_SERVER_HOST: localhost
       SPRING_ADMIN_SERVER_PORT: 9090
+      WITHINGS_API_URI: https://wbsapi.withings.net
     env_file:
       - .env
 

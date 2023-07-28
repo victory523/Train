@@ -56,4 +56,4 @@ springdoc:
     path: /
 withings:
   api:
-    uri: https://wbsapi.withings.net
+    uri: ${WITHINGS_API_URI}

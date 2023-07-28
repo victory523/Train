@@ -13,3 +13,4 @@ db_backup_bucket: training-log-pro-backup
 db_backup_exclude_tables:
   - oauth2_authorized_client
 db_backup_region: us-east-1
+withings_api_uri: https://wbsapi.withings.net
