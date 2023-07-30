@@ -144,6 +144,7 @@ public class WithingsConfiguration {
 
   Converter<Map<String, Object>, OAuth2AccessTokenResponse> withingsAccessTokenResponseConverter() {
     return rawResponse -> {
+      log.info("Converting Withings access token response");
       ObjectMapper mapper = new ObjectMapper();
       WithingsGetAccessTokenResponse response = mapper.convertValue(rawResponse, new TypeReference<>() {
       });

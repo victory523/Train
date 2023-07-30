@@ -35,3 +35,7 @@ services:
     volumes:
       - ${WORKSPACE_ROOT}/test/reverse_proxy/traefik_static_conf.yml:/etc/traefik/traefik.yml
       - ${WORKSPACE_ROOT}/test/reverse_proxy/traefik_dynamic_conf.yml:/etc/traefik/traefik_dynamic_conf.yml
+networks:
+  default:
+    name: ${DOCKER_NETWORK}
+    external: true

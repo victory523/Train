@@ -29,6 +29,7 @@ server.on("request", (request, response) => {
     });
     return response.end();
   } else if (request.url.startsWith("/withings/v2/oauth2")) {
+    response.setHeader("Content-Type", "application/json");
     return response.end(
       JSON.stringify({
         status: 0,
@@ -44,6 +45,7 @@ server.on("request", (request, response) => {
       })
     );
   } else if (request.url.startsWith("/measure")) {
+    response.setHeader("Content-Type", "application/json");
     return response.end(
       JSON.stringify({
         status: 0,
