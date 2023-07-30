@@ -1,0 +1,6 @@
+entryPoints:
+  web:
+   address: ":80"
+providers:
+  file:
+    filename: /etc/traefik/traefik_dynamic_conf.yml

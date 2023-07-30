@@ -28,7 +28,7 @@ RUN curl -fsSL -o get_node.sh https://deb.nodesource.com/setup_18.x \
     && chmod 700 get_node.sh \
     && ./get_node.sh
 
-RUN apt-get -y install --no-install-recommends \
+RUN apt-get update && apt-get -y install --no-install-recommends \
     sshpass \
     chromium \
     chromium-sandbox \
@@ -36,6 +36,7 @@ RUN apt-get -y install --no-install-recommends \
     temurin-17-jdk \
     maven \
     docker-ce-cli \
+    docker-compose-plugin \
     nodejs \
     python3 \
     python3-pip

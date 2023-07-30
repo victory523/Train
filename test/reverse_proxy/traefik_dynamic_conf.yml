@@ -1,0 +1,22 @@
+http:
+  routers:
+    client:
+      entryPoints:
+      - web
+      service: client
+      rule: PathPrefix(`/`)
+    servers:
+      entryPoints:
+      - web
+      service: server
+      rule: PathPrefix(`/api`)
+
+  services:
+    client:
+      loadBalancer:
+        servers:
+        - url: http://client:80
+    server:
+      loadBalancer:
+        servers:
+        - url: http://server:8080

@@ -5,3 +5,6 @@ alias avv='ansible-vault view vars/vault.yaml '
 alias avvi='ansible-vault view inventory.yaml'
 alias mt='mvn test'
 alias mr='mvn spring-boot:run -P local'
+alias dc='docker compose up --build'
+
+export WORKSPACE_ROOT=$(docker container inspect "$(hostname)" --format='{{range .Mounts}}{{if eq .Destination "/workspaces"}}{{.Source}}{{end}}{{end}}')/training-log-pro
