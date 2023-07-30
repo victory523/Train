@@ -5,7 +5,7 @@ alias avv='ansible-vault view vars/vault.yaml '
 alias avvi='ansible-vault view inventory.yaml'
 alias mt='mvn test'
 alias mr='mvn spring-boot:run -P local'
-alias dc='docker compose up --build --pull always'
+alias dc='docker compose up --build --pull always --force-recreate'
 
 export WORKSPACE_ROOT=$(docker container inspect "$(hostname)" --format='{{range .Mounts}}{{if eq .Destination "/workspaces"}}{{.Source}}{{end}}{{end}}')/training-log-pro
 export DOCKER_NETWORK=$(docker container inspect "$(hostname)" --format='{{range $key,$value := .NetworkSettings.Networks}}{{$key}}{{end}}')
