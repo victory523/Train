@@ -17,6 +17,11 @@ http:
         - web
       service: mock-backup-tool
       rule: Path(`/db/last-backup-time`)
+    mock-withings:
+      entryPoints:
+        - web
+      service: mock-withings
+      rule: PathPrefix(`/withings`)
 
   middlewares:
     authHeaders:
@@ -40,3 +45,7 @@ http:
       loadBalancer:
         servers:
           - url: http://mock-backup-tool:8080
+    mock-withings:
+      loadBalancer:
+        servers:
+          - url: http://mock-withings:8080

@@ -24,8 +24,8 @@ services:
       SPRING_ACTUATOR_PORT: 8081
       SPRING_ADMIN_SERVER_HOST: localhost
       SPRING_ADMIN_SERVER_PORT: 9090
-      WITHINGS_ACCOUNTS_URI: http://mock-withings:8080
-      WITHINGS_API_URI: http://mock-withings:8080
+      WITHINGS_ACCOUNTS_URI: http://localhost:8080/withings
+      WITHINGS_API_URI: http://localhost:8080/withings
       WITHINGS_CLIENT_ID: withings-client-id
       WITHINGS_CLIENT_SECRET: withings-client-secret
   reverse-proxy:
