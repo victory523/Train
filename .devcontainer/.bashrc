@@ -8,3 +8,5 @@ alias mr='mvn spring-boot:run -P local'
 alias dc='docker compose up --build --pull always'
 
 export WORKSPACE_ROOT=$(docker container inspect "$(hostname)" --format='{{range .Mounts}}{{if eq .Destination "/workspaces"}}{{.Source}}{{end}}{{end}}')/training-log-pro
+export DOCKER_NETWORK=$(docker container inspect "$(hostname)" --format='{{range $key,$value := .NetworkSettings.Networks}}{{$key}}{{end}}')
+export TESTCONTAINERS_RYUK_DISABLED=true
