@@ -2,21 +2,41 @@ http:
   routers:
     client:
       entryPoints:
-      - web
+        - web
       service: client
       rule: PathPrefix(`/`)
     servers:
       entryPoints:
-      - web
+        - web
+      middlewares:
+        - authHeaders
       service: server
       rule: PathPrefix(`/api`)
+    mock-backup-tool:
+      entryPoints:
+        - web
+      service: mock-backup-tool
+      rule: Path(`/db/last-backup-time`)
+
+  middlewares:
+    authHeaders:
+      headers:
+        customRequestHeaders:
+          Remote-User: rob
+          Remote-Groups: user
+          Remote-Name: Robert White
+          Remote-Email: robert.white@mockemail.com
 
   services:
     client:
       loadBalancer:
         servers:
-        - url: http://client:80
+          - url: http://client:80
     server:
       loadBalancer:
         servers:
-        - url: http://server:8080
+          - url: http://server:8080
+    mock-backup-tool:
+      loadBalancer:
+        servers:
+          - url: http://mock-backup-tool:8080

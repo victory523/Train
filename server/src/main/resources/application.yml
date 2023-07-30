@@ -14,8 +14,8 @@ spring:
       client:
         provider:
           withings:
-           authorization-uri: https://account.withings.com/oauth2_user/authorize2
-           token-uri: https://wbsapi.withings.net/v2/oauth2
+           authorization-uri: ${WITHINGS_ACCOUNTS_URI}/oauth2_user/authorize2
+           token-uri: ${WITHINGS_API_URI}/v2/oauth2
         registration:
           withings-client:
             provider: withings

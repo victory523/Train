@@ -1,6 +1,10 @@
 version: '3.8'
 
 services:
+  mock-backup-tool:
+    build: ./mock_backup_tool
+  mock-withings:
+    build: ./mock_withings
   db:
     image: postgres:15.2-bullseye
     environment:
@@ -20,7 +24,8 @@ services:
       SPRING_ACTUATOR_PORT: 8081
       SPRING_ADMIN_SERVER_HOST: localhost
       SPRING_ADMIN_SERVER_PORT: 9090
-      WITHINGS_API_URI: https://wbsapi.withings.net
+      WITHINGS_ACCOUNTS_URI: http://mock-withings:8080
+      WITHINGS_API_URI: http://mock-withings:8080
       WITHINGS_CLIENT_ID: withings-client-id
       WITHINGS_CLIENT_SECRET: withings-client-secret
   reverse-proxy:
