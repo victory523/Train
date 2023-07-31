@@ -13,6 +13,12 @@ services:
       POSTGRES_USER: postgres
   client:
     image: mucsi96/training-log-pro-client
+    healthcheck:
+      test: ["CMD", "health-check"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 1s
   server:
     image: mucsi96/training-log-pro-server
     environment:
@@ -29,8 +35,8 @@ services:
       WITHINGS_CLIENT_ID: withings-client-id
       WITHINGS_CLIENT_SECRET: withings-client-secret
     healthcheck:
-      test: ["CMD", "thc"]
-      interval: 1m30s
+      test: ["CMD", "health-check"]
+      interval: 10s
       timeout: 30s
       retries: 5
       start_period: 15s
