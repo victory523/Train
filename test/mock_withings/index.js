@@ -15,7 +15,7 @@ server.on("request", async (request, response) => {
     const redirectURI = searchParams.get("redirect_uri");
 
     if (responseType !== "code" || scope !== "user.metrics") {
-      console.log('validation error');
+      console.log("validation error");
       response.writeHead(500);
       response.end();
       return;
@@ -32,20 +32,20 @@ server.on("request", async (request, response) => {
   } else if (request.url.startsWith("/v2/oauth2")) {
     const body = new URLSearchParams(`?${await readBody(request)}`);
     const grantType = body.get("grant_type");
-    const code = body.get('code')
-    const action = body.get('action');
-    const clientId = body.get('client_id');
-    const clientSecret = body.get('client_secret');
+    const code = body.get("code");
+    const action = body.get("action");
+    const clientId = body.get("client_id");
+    const clientSecret = body.get("client_secret");
     console.log({ grantType, code, action, clientId, clientSecret });
 
     if (
-      grantType !== "authorization_code" ||
-      code !== "authorization-code" ||
+      (grantType !== "refresh_token" && grantType !== "authorization_code") ||
+      (grantType === "authorization_code" && code !== "authorization-code") ||
       action !== "requesttoken" ||
       clientId !== "withings-client-id" ||
       clientSecret !== "withings-client-secret"
     ) {
-      console.log('validation error');
+      console.log("validation error");
       response.writeHead(500);
       response.end();
       return;
@@ -66,8 +66,8 @@ server.on("request", async (request, response) => {
       })
     );
   } else if (request.url.startsWith("/measure")) {
-    const startDate = searchParams.get('startdate');
-    const endDate = searchParams.get('enddate');
+    const startDate = searchParams.get("startdate");
+    const endDate = searchParams.get("enddate");
     response.setHeader("Content-Type", "application/json");
     return response.end(
       JSON.stringify({
