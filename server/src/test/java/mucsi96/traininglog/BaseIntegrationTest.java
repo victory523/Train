@@ -29,7 +29,6 @@ class DevContainerNetwork implements Network {
   public Statement apply(Statement base, Description description) {
     return null;
   }
-
 };
 
 @ActiveProfiles("test")

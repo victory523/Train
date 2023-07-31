@@ -21,13 +21,19 @@ services:
       POSTGRES_DB: training-log
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      SPRING_ACTUATOR_PORT: 8081
+      SPRING_ACTUATOR_PORT: 8082
       SPRING_ADMIN_SERVER_HOST: localhost
       SPRING_ADMIN_SERVER_PORT: 9090
       WITHINGS_ACCOUNTS_URI: http://reverse-proxy/withings
       WITHINGS_API_URI: http://mock-withings:8080
       WITHINGS_CLIENT_ID: withings-client-id
       WITHINGS_CLIENT_SECRET: withings-client-secret
+    healthcheck:
+      test: ["CMD", "thc"]
+      interval: 1m30s
+      timeout: 30s
+      retries: 5
+      start_period: 15s
   reverse-proxy:
     image: traefik
     ports:
