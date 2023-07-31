@@ -83,6 +83,7 @@ jobs:
       - run: node docker-compose.js | docker compose --file - up --wait --quiet-pull
       - run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - run: docker compose logs
+        if: always()
 
   deploy:
     needs: test-e2e
