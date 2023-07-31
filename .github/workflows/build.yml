@@ -65,6 +65,7 @@ jobs:
       - run: python scripts/build.py ${{ secrets.GITHUB_TOKEN }}
 
   test-e2e:
+    needs: build-images
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -83,7 +84,7 @@ jobs:
       - run: mvn test
 
   deploy:
-    needs: build-images
+    needs: test-e2e
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
