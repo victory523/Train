@@ -6,3 +6,4 @@
 - create weight graph
 - create weight endpoints which retuns weight in last day, week, month, year
 - fix pgexporter logs about missing role
+- use msw on client side

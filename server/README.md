@@ -180,3 +180,5 @@ After succesful authentication using `AuthenticationManager` `OAuth2Authorizatio
 `OAuth2AuthorizedClient` is saved using [`OAuth2AuthorizedClientRepository.saveAuthorizedClient(OAuth2AuthorizedClient authorizedClient, Authentication principal, HttpServletRequest request, HttpServletResponse response)`](https://github.com/spring-projects/spring-security/blob/main/oauth2/oauth2-client/src/main/java/org/springframework/security/oauth2/client/web/OAuth2AuthorizedClientRepository.java#L68).
 
 As last step it redirects back to previous url.
+
+# Version 32
