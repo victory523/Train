@@ -22,7 +22,7 @@ jobs:
           distribution: "temurin"
           java-version: "17"
           cache: "maven"
-      - run: mvn test
+      - run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
   test-client:
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
           java-version: "17"
           cache: "maven"
       - run: node docker-compose.js | docker compose --file - up --wait
-      - run: mvn test
+      - run: mvn test -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
   deploy:
     needs: test-e2e
