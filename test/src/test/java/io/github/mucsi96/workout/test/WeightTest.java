@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-class WeightTests extends BaseIntegrationTest {
+class WeightTest extends BaseIntegrationTest {
 
 	@Test
 	void display_todays_weight() {

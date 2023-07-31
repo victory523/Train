@@ -11,13 +11,14 @@ const config = {
     "mock-withings": {
       build: "./mock_withings",
     },
-    db: {
+    "test-db": {
       image: "postgres:15.2-bullseye",
       environment: {
         POSTGRES_DB: "training-log",
         POSTGRES_PASSWORD: "postgres",
         POSTGRES_USER: "postgres",
       },
+      ports: ["5434:5432"],
     },
     client: {
       image: "mucsi96/training-log-pro-client",
@@ -32,7 +33,7 @@ const config = {
     server: {
       image: "mucsi96/training-log-pro-server",
       environment: {
-        POSTGRES_HOSTNAME: "db",
+        POSTGRES_HOSTNAME: "test-db",
         POSTGRES_PORT: 5432,
         POSTGRES_DB: "training-log",
         POSTGRES_PASSWORD: "postgres",
