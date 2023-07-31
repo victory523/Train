@@ -64,6 +64,24 @@ jobs:
 
       - run: python scripts/build.py ${{ secrets.GITHUB_TOKEN }}
 
+  test-e2e:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: test
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+          cache: "maven"
+      - run: node docker-compose.js | docker compose --file - up --wait
+      - run: mvn test
+
   deploy:
     needs: build-images
     runs-on: ubuntu-latest

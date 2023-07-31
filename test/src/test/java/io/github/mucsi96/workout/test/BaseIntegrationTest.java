@@ -22,13 +22,16 @@ public class BaseIntegrationTest {
   @Autowired
   WebDriver webDriver;
 
+  @Autowired
+  String baseUrl;
+
   WebDriverWait wait;
 
   public void setupMocks(Runnable prepare) {
     wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     // initDB();
     prepare.run();
-    webDriver.get("http://reverse-proxy");
+    webDriver.get(baseUrl);
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
     wait.until(ExpectedConditions.invisibilityOfElementLocated(By.tagName("app-loader")));

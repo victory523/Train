@@ -12,6 +12,11 @@ import org.springframework.context.annotation.Bean;
 public class WebDriverConfiguration {
 
   @Bean
+  String baseUrl() {
+    return System.getenv("DOCKER_NETWORK") != null ? "http://reverse-proxy" : "http://localhost:8080";
+  }
+
+  @Bean
   public WebDriver getWebDriver() {
     ChromeOptions options = new ChromeOptions().addArguments("--headless",
         "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
@@ -24,10 +29,11 @@ public class WebDriverConfiguration {
 
   // @Bean
   // public WebDriver getWebDriver() throws MalformedURLException {
-  //   ChromeOptions options = new ChromeOptions();
+  // ChromeOptions options = new ChromeOptions();
 
-  //   RemoteWebDriver driver = new RemoteWebDriver(new URL("http://chrome:4444"), options);
-  //   driver.setLogLevel(Level.WARNING);
-  //   return driver;
+  // RemoteWebDriver driver = new RemoteWebDriver(new URL("http://chrome:4444"),
+  // options);
+  // driver.setLogLevel(Level.WARNING);
+  // return driver;
   // }
 }
