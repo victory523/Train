@@ -1,7 +1,5 @@
-- Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
-- add p0 deployment as manual action step
-- populate db with some data for local
+- use msw on client side
 - create weight graph
 - create weight endpoints which retuns weight in last day, week, month, year
 - fix pgexporter logs about missing role
-- use msw on client side
+- Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
