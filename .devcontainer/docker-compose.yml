@@ -47,13 +47,9 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
     volumes:
       - ./pgadmin-servers.json:/pgadmin4/servers.json
-      - ./pgadmin.pgpass:/pgadmin4/pgpass
+      - ./pgadmin.pgpass:/tmp/pgpass
     entrypoint: >
       /bin/sh -c "
-      mkdir -p -m 700 /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/;
-      chown -R pgadmin:pgadmin /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/;
-      cp /pgadmin4/pgpass /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
-      chown pgadmin:pgadmin /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
-      chmod 0600 /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
+      chmod 600 /tmp/pgpass;
       /entrypoint.sh;
       "

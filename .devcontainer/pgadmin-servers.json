@@ -5,20 +5,18 @@
       "Group": "Servers",
       "Host": "db",
       "Port": 5432,
-      "MaintenanceDB": "postgres",
+      "MaintenanceDB": "training-log",
       "Username": "postgres",
-      "PassFile": "/var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt",
-      "SSLMode": "prefer"
+      "PassFile": "/tmp/pgpass"
     },
     "2": {
       "Name": "test",
       "Group": "Servers",
       "Host": "test-db",
       "Port": 5432,
-      "MaintenanceDB": "postgres",
+      "MaintenanceDB": "training-log",
       "Username": "postgres",
-      "PassFile": "/var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt",
-      "SSLMode": "prefer"
+      "PassFile": "/tmp/pgpass"
     }
   }
 }
