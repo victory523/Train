@@ -1,0 +1,24 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "local",
+      "Group": "Servers",
+      "Host": "db",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "postgres",
+      "PassFile": "/var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt",
+      "SSLMode": "prefer"
+    },
+    "2": {
+      "Name": "test",
+      "Group": "Servers",
+      "Host": "test-db",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "postgres",
+      "PassFile": "/var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt",
+      "SSLMode": "prefer"
+    }
+  }
+}

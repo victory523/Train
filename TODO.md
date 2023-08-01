@@ -1,5 +1,4 @@
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
-- Add pgAdmin to dev container https://www.pgadmin.org/download/pgadmin-4-container/s
 - add p0 deployment as manual action step
 - populate db with some data for local
 - create weight graph

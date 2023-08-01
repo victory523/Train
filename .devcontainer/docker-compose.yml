@@ -34,3 +34,26 @@ services:
       POSTGRES_DB: training-log
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
+
+  pdadmin:
+    image: dpage/pgadmin4:7.5
+    restart: unless-stopped
+    ports:
+      - 5532:80
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin@mycomp.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
+    volumes:
+      - ./pgadmin-servers.json:/pgadmin4/servers.json
+      - ./pgadmin.pgpass:/pgadmin4/pgpass
+    entrypoint: >
+      /bin/sh -c "
+      mkdir -p -m 700 /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/;
+      chown -R pgadmin:pgadmin /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/;
+      cp /pgadmin4/pgpass /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
+      chown pgadmin:pgadmin /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
+      chmod 0600 /var/lib/pgadmin/storage/pgadmin4_pgadmin.org/pgpassfile.txt;
+      /entrypoint.sh;
+      "
