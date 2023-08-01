@@ -95,5 +95,6 @@ jobs:
           mkdir .ansible
           echo "${{ secrets.ANSIBLE_VAULT_KEY }}" > .ansible/vault_key
 
-      - name: Install Python requirements
-        run: pip install -r requirements.txt
+      - run: pip install -r requirements.txt
+      - run: scripts/provision.sh
+
