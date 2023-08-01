@@ -96,5 +96,6 @@ jobs:
           echo "${{ secrets.ANSIBLE_VAULT_KEY }}" > .ansible/vault_key
 
       - run: pip install -r requirements.txt
+      - run: ansible-galaxy install -r galaxy-requirements.yaml
       - run: scripts/provision.sh
 
