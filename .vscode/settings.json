@@ -13,6 +13,16 @@
       },
       {
         "previewLimit": 50,
+        "server": "test-db",
+        "port": 5432,
+        "driver": "PostgreSQL",
+        "name": "test",
+        "database": "training-log",
+        "username": "postgres",
+        "password": "postgres"
+      },
+      {
+        "previewLimit": 50,
         "server": "localhost",
         "port": 5433,
         "askForPassword": true,

@@ -28,6 +28,12 @@ RUN curl -fsSL -o get_node.sh https://deb.nodesource.com/setup_18.x \
     && chmod 700 get_node.sh \
     && ./get_node.sh
 
+# Configure the PostgreSQL apt repository.
+RUN curl -fsSL https://www.postgresql.org/media/keys/ACCC4CF8.asc | gpg --dearmor -o /etc/apt/trusted.gpg.d/apt.postgresql.org.gpg
+RUN echo \
+  "deb [signed-by=/etc/apt/trusted.gpg.d/apt.postgresql.org.gpg] http://apt.postgresql.org/pub/repos/apt \
+  $(lsb_release -cs)-pgdg main" | tee /etc/apt/sources.list.d/pgdg.list > /dev/null
+
 RUN apt-get update && apt-get -y install --no-install-recommends \
     sshpass \
     chromium \
@@ -39,7 +45,8 @@ RUN apt-get update && apt-get -y install --no-install-recommends \
     docker-compose-plugin \
     nodejs \
     python3 \
-    python3-pip
+    python3-pip \
+    postgresql-client-15
 
 # Apt cleanup
 RUN apt-get autoremove -y; \

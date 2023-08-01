@@ -2,7 +2,10 @@ package io.github.mucsi96.workout.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -38,16 +41,43 @@ public class BaseIntegrationTest {
     // initDB();
     prepare.run();
     webDriver.get(baseUrl);
+    waitForLoad();
+  }
+
+  public void setupMocks() {
+    setupMocks(() -> {
+      jdbcTemplate.execute("INSERT INTO oauth2_authorized_client (" + //
+          "client_registration_id," + //
+          "principal_name," + //
+          "access_token_type," + //
+          "access_token_value," + //
+          "access_token_issued_at," + //
+          "access_token_expires_at," + //
+          "access_token_scopes," + //
+          "refresh_token_value," + //
+          "refresh_token_issued_at," + //
+          "created_at" + //
+          ") VALUES (" + //
+          "'withings-client'," + //
+          "'rob'," + //
+          "'Bearer'," + //
+          "'test-access-token'," + //
+          String.format("'%s',", Timestamp.from(Instant.now())) + //
+          String.format("'%s',", Timestamp.from(Instant.now().plus(1, ChronoUnit.DAYS))) + //
+          "'user.metrics'," + //
+          "'test-refresh-token'," + //
+          String.format("'%s',", Timestamp.from(Instant.now())) + //
+          String.format("'%s'", Timestamp.from(Instant.now())) + //
+          ");");
+    });
+  }
+
+  public void waitForLoad() {
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
     wait.until(ExpectedConditions.invisibilityOfElementLocated(By.tagName("app-loader")));
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.tagName("app-header")));
-  }
-
-  public void setupMocks() {
-    setupMocks(() -> {
-    });
   }
 
   public void cleanupDB() {
