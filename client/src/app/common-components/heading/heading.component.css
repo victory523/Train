@@ -1,6 +1,7 @@
 :host {
   display: block;
-  color: white;
+  color: var(--color-scope, white);
+  transition: color 0.3s;
 }
 
 :host.level1 {

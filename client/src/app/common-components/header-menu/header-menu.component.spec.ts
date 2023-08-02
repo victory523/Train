@@ -1,9 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
-import { HeadingComponent } from '../heading/heading.component';
-import { HeaderComponent } from './header.component';
 import { Component } from '@angular/core';
-import { HeaderMenuComponent } from '../header-menu/header-menu.component';
+import { HeaderMenuComponent } from './header-menu.component';
 
 async function setup({
   template,
@@ -16,7 +14,7 @@ async function setup({
   class TestComponent {}
 
   await TestBed.configureTestingModule({
-    declarations: [HeaderComponent, TestComponent, HeadingComponent, HeaderMenuComponent],
+    declarations: [HeaderMenuComponent, TestComponent],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);
@@ -29,20 +27,18 @@ async function setup({
   };
 }
 
-describe('HeaderComponent', () => {
+describe('HeaderMenuComponent', () => {
   it('render content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-header>test text</app-header>',
+      template: '<app-header-menu>test text</app-header-menu>',
     });
     expect(nativeElement.textContent).toBe('test text');
   });
 
-  it('render title', async () => {
+  it('renders href', async () => {
     const { nativeElement } = await setup({
-      template: '<app-header title="test title"></app-header>',
+      template: '<app-header-menu href="/test/url"></app-header-menu>',
     });
-    expect(nativeElement.querySelector('app-heading')?.textContent).toBe(
-      'test title'
-    );
+    expect(nativeElement.getAttribute('href')).toBe('/test/url');
   });
 });

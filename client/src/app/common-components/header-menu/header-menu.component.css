@@ -1,0 +1,8 @@
+a {
+  text-decoration: initial;
+}
+
+a:hover {
+  --color-scope: hsl(218, 93%, 61%);
+  color: var(--color-scope);
+}

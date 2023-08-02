@@ -7,6 +7,7 @@ import { LoaderComponent } from './loader/loader.component';
 import { MainComponent } from './main/main.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { HeaderMenuComponent } from './header-menu/header-menu.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { NotificationsComponent } from './notifications/notifications.component'
     NotificationComponent,
     NotificationsComponent,
     LoaderComponent,
+    HeaderMenuComponent,
   ],
   imports: [CommonModule],
   exports: [
@@ -26,7 +28,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
     BadgeComponent,
     NotificationComponent,
     NotificationsComponent,
-    LoaderComponent
+    LoaderComponent,
+    HeaderMenuComponent
   ],
 })
 export class CommonComponentsModule {}
