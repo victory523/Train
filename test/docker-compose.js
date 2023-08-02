@@ -18,7 +18,7 @@ const config = {
         POSTGRES_PASSWORD: "postgres",
         POSTGRES_USER: "postgres",
       },
-      ports: ["5434:5432"],
+      ports: ["9734:5432"],
     },
     client: {
       image: "mucsi96/training-log-pro-client",
@@ -42,7 +42,7 @@ const config = {
         SPRING_ADMIN_SERVER_HOST: "localhost",
         SPRING_ADMIN_SERVER_PORT: 9090,
         WITHINGS_ACCOUNTS_URI: `http://${
-          dockerNetwork ? "reverse-proxy" : "localhost:8080"
+          dockerNetwork ? "reverse-proxy" : "localhost:9780"
         }/withings`,
         WITHINGS_API_URI: "http://mock-withings:8080",
         WITHINGS_CLIENT_ID: "withings-client-id",
@@ -58,7 +58,7 @@ const config = {
     },
     "reverse-proxy": {
       image: "traefik",
-      ports: ["8080:80"],
+      ports: ["9780:80"],
       volumes: [
         `${workspaceRoot}/test/reverse_proxy/traefik_static_conf.yml:/etc/traefik/traefik.yml`,
         `${workspaceRoot}/test/reverse_proxy/traefik_dynamic_conf.yml:/etc/traefik/traefik_dynamic_conf.yml`,

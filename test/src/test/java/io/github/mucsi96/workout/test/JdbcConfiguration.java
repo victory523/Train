@@ -11,7 +11,7 @@ public class JdbcConfiguration {
   @Bean
   JdbcTemplate jdbcTemplate() {
     DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-    String host = System.getenv("DOCKER_NETWORK") != null ? "test-db:5432" : "localhost:5434";
+    String host = System.getenv("DOCKER_NETWORK") != null ? "test-db:5432" : "localhost:9734";
     dataSourceBuilder.url(String.format("jdbc:postgresql://%s/training-log", host));
     dataSourceBuilder.username("postgres");
     dataSourceBuilder.password("postgres");

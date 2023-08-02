@@ -13,7 +13,7 @@ public class WebDriverConfiguration {
 
   @Bean
   String baseUrl() {
-    return System.getenv("DOCKER_NETWORK") != null ? "http://reverse-proxy" : "http://localhost:8080";
+    return System.getenv("DOCKER_NETWORK") != null ? "http://reverse-proxy" : "http://localhost:9780";
   }
 
   @Bean
