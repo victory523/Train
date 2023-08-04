@@ -2,7 +2,8 @@
   display: grid;
   align-items: center;
   justify-content: center;
-  height: 90vh;
+  grid-template-columns: 1fr;
+  padding: 20px 0;
 }
 
 .lastBackup {

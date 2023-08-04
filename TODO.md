@@ -2,4 +2,3 @@
 - create weight endpoints which retuns weight in last day, week, month, year
 - fix pgexporter logs about missing role
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
-- Add button to backup tool which shows the dump on UI with INSERTS (possibly data only toggle) 
