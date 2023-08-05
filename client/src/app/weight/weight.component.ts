@@ -27,6 +27,7 @@ export class WeightComponent implements OnInit {
     { label: 'Week', value: 7 },
     { label: 'Month', value: 30 },
     { label: 'Year', value: 365 },
+    { label: 'All time', value: 0 },
   ];
   selectedPeriod = this.periods[0];
 
@@ -56,8 +57,12 @@ export class WeightComponent implements OnInit {
 
   get chartOptions(): EChartsOption | null {
     if (!this.weightState.isReady) {
-      return null
+      return null;
     }
+
+    const today = new Date(this.weightState.value.slice(-1)[0].date);
+    const cutDate =
+      today.getTime() - this.selectedPeriod.value * 1000 * 60 * 60 * 24;
 
     return {
       animation: false,
@@ -71,8 +76,11 @@ export class WeightComponent implements OnInit {
         source: [
           ['date', 'weight'],
           ...this.weightState.value
-            .slice(-this.selectedPeriod.value)
-            .map(({ date, weight }) => [date, weight]),
+            .filter(
+              ({ date }) =>
+                !this.selectedPeriod.value || new Date(date).getTime() >= cutDate
+            )
+            .map(({ date, weight }) => [new Date(date), weight]),
         ],
       },
       xAxis: {
