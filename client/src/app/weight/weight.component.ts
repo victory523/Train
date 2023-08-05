@@ -39,7 +39,11 @@ export class WeightComponent implements OnInit {
   weightState: HttpRequestState<WeightMeasurement[]> = initialHttpRequestState;
 
   ngOnInit(): void {
-    requestState(this.weightService.getWeight(), (newState) => {
+    this.fetchPeriod();
+  }
+
+  fetchPeriod() {
+    requestState(this.weightService.getWeight(this.selectedPeriod.value), (newState) => {
       this.weightState = newState;
 
       if (newState.hasFailed) {
@@ -53,16 +57,13 @@ export class WeightComponent implements OnInit {
 
   selectPeriod(newPeriod: Period) {
     this.selectedPeriod = newPeriod;
+    this.fetchPeriod();
   }
 
   get chartOptions(): EChartsOption | null {
     if (!this.weightState.isReady) {
       return null;
     }
-
-    const today = new Date(this.weightState.value.slice(-1)[0].date);
-    const cutDate =
-      today.getTime() - this.selectedPeriod.value * 1000 * 60 * 60 * 24;
 
     return {
       animation: false,
@@ -75,12 +76,10 @@ export class WeightComponent implements OnInit {
       dataset: {
         source: [
           ['date', 'weight'],
-          ...this.weightState.value
-            .filter(
-              ({ date }) =>
-                !this.selectedPeriod.value || new Date(date).getTime() >= cutDate
-            )
-            .map(({ date, weight }) => [new Date(date), weight]),
+          ...this.weightState.value.map(({ date, weight }) => [
+            new Date(date),
+            weight,
+          ]),
         ],
       },
       xAxis: {

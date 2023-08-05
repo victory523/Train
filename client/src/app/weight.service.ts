@@ -13,7 +13,9 @@ export type WeightMeasurement = {
 export class WeightService {
   constructor(private http: HttpClient) {}
 
-  getWeight(): Observable<WeightMeasurement[]> {
-    return this.http.get<WeightMeasurement[]>('/api/weight');
+  getWeight(period: number): Observable<WeightMeasurement[]> {
+    return this.http.get<WeightMeasurement[]>('/api/weight', {
+      params: { period },
+    });
   }
 }

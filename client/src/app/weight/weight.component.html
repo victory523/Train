@@ -1,6 +1,6 @@
 <section *ngIf="weightState.isReady">
   <app-heading class="weight">
-    Weight<app-badge>{{ weightState.value[0].weight || "-" }}</app-badge>
+    Weight<app-badge>{{ weightState.value.slice(-1)[0].weight || "-" }}</app-badge>
   </app-heading>
 
   <app-button-group
