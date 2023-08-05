@@ -1,12 +1,12 @@
 :host {
-  background-color: var(--color-scope, white);
+  background-color: var(--color-scope, hsl(225, 54%, 30%));
   transition: background-color 0.3s;
-  color: rgb(30, 66, 159);
+  color: hsla(215, 98%, 82%);
   display: inline-block;
-  padding: 0.125em 0.4em;
+  padding: calc(2em / 14) calc(10em / 14);;
   font-size: 90%;
-  font-weight: 700;
-  line-height: 1;
+  font-weight: 500;
+  line-height: calc(20em / 14);
   white-space: nowrap;
-  border-radius: 0.6em;
+  border-radius: calc(4em / 14);
 }

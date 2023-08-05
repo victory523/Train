@@ -8,6 +8,7 @@ import { MainComponent } from './main/main.component';
 import { NotificationComponent } from './notification/notification.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { HeaderMenuComponent } from './header-menu/header-menu.component';
+import { ButtonGroupComponent } from './button-group/button-group.component';
 
 @NgModule({
   declarations: [
@@ -19,6 +20,7 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
     NotificationsComponent,
     LoaderComponent,
     HeaderMenuComponent,
+    ButtonGroupComponent,
   ],
   imports: [CommonModule],
   exports: [
@@ -29,7 +31,8 @@ import { HeaderMenuComponent } from './header-menu/header-menu.component';
     NotificationComponent,
     NotificationsComponent,
     LoaderComponent,
-    HeaderMenuComponent
+    HeaderMenuComponent,
+    ButtonGroupComponent
   ],
 })
 export class CommonComponentsModule {}

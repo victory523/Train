@@ -1,7 +1,20 @@
-<app-heading *ngIf="weightState.isReady" class="weight">
-  Weight<app-badge>{{ weightState.value[0].weight || "-" }}</app-badge>
-</app-heading>
+<section *ngIf="weightState.isReady">
+  <app-heading class="weight">
+    Weight<app-badge>{{ weightState.value[0].weight || "-" }}</app-badge>
+  </app-heading>
 
-<div *ngIf="weightState.isReady" echarts [options]="chartOptions" [initOpts]="initOpts"></div>
+  <app-button-group
+    ><button
+      *ngFor="let period of periods"
+      type="button"
+      (click)="selectPeriod(period)"
+      [ariaPressed]="selectedPeriod === period"
+    >
+      {{ period.label }}
+    </button>
+  </app-button-group>
+
+  <div echarts [options]="chartOptions" [initOpts]="initOpts"></div>
+</section>
 
 <app-loader *ngIf="weightState.isLoading"></app-loader>

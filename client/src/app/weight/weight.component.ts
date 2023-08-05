@@ -9,16 +9,26 @@ import {
 import { WeightMeasurement, WeightService } from '../weight.service';
 import { NgxEchartsDirective } from 'ngx-echarts';
 
+type Period = {
+  label: string;
+  value: number;
+};
+
 @Component({
   selector: 'app-weight',
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],
 })
 export class WeightComponent implements OnInit {
-  chartOptions: EChartsOption | null = null;
   initOpts: NgxEchartsDirective['initOpts'] = {
     renderer: 'svg',
-  }
+  };
+  periods: Period[] = [
+    { label: 'Week', value: 7 },
+    { label: 'Month', value: 30 },
+    { label: 'Year', value: 365 },
+  ];
+  selectedPeriod = this.periods[0];
 
   constructor(
     private weightService: WeightService,
@@ -31,31 +41,6 @@ export class WeightComponent implements OnInit {
     requestState(this.weightService.getWeight(), (newState) => {
       this.weightState = newState;
 
-      if (newState.isReady) {
-        this.chartOptions = {
-          animation: false,
-          dataset: {
-            source: [
-              ['date', 'weight'],
-              ...newState.value.map(({ date, weight }) => [date, weight]),
-            ],
-          },
-          xAxis: {
-            type: 'time',
-          },
-          yAxis: {
-            max: 'dataMax',
-            min: 'dataMin',
-          },
-          series: [
-            {
-              type: 'line',
-              smooth: true,
-            },
-          ],
-        };
-      }
-
       if (newState.hasFailed) {
         this.notificationService.showNotification(
           'Unable to fetch weight',
@@ -63,5 +48,46 @@ export class WeightComponent implements OnInit {
         );
       }
     });
+  }
+
+  selectPeriod(newPeriod: Period) {
+    this.selectedPeriod = newPeriod;
+  }
+
+  get chartOptions(): EChartsOption | null {
+    if (!this.weightState.isReady) {
+      return null
+    }
+
+    return {
+      animation: false,
+      grid: {
+        top: 10,
+        right: 0,
+        bottom: 40,
+        left: 40,
+      },
+      dataset: {
+        source: [
+          ['date', 'weight'],
+          ...this.weightState.value
+            .slice(-this.selectedPeriod.value)
+            .map(({ date, weight }) => [date, weight]),
+        ],
+      },
+      xAxis: {
+        type: 'time',
+      },
+      yAxis: {
+        max: 'dataMax',
+        min: 'dataMin',
+      },
+      series: [
+        {
+          type: 'line',
+          smooth: true,
+        },
+      ],
+    };
   }
 }

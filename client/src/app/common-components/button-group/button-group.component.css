@@ -1,0 +1,33 @@
+:host {
+  display: inline-flex;
+  border-radius: 6px;
+}
+
+:host /deep/ button {
+  padding: 8px 16px;
+  color: white;
+  border: initial;
+  border-top: 1px solid hsl(215, 14%, 34%);
+  border-bottom: 1px solid hsl(215, 14%, 34%);
+  border-right: 1px solid hsl(215, 14%, 34%);
+  background-color: hsl(215, 28%, 17%);
+  transition: background-color 0.3s;
+  cursor: pointer;
+  line-height: 20px;
+}
+
+:host /deep/ button:first-child {
+  border-left: 1px solid hsl(215, 14%, 34%);
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+}
+
+:host /deep/ button:last-child {
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+
+:host /deep/ button:hover,
+:host /deep/ button[aria-pressed="true"] {
+  background-color: hsl(217, 19%, 27%);
+}

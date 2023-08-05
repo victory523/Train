@@ -1,10 +1,7 @@
 <app-header title="Workout">
   <app-header-menu href="/db">
-    <app-heading *ngIf="lastNackupState.isReady" level="3" class="lastBackup"
-      >Last backup
-      <app-badge>{{
-        lastNackupState.value.time | relativeTime
-      }}</app-badge></app-heading
+    <app-badge *ngIf="lastNackupState.isReady"
+      >Last backup {{ lastNackupState.value.time | relativeTime }}</app-badge
     >
   </app-header-menu>
 </app-header>
