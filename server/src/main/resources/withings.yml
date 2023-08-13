@@ -84,14 +84,18 @@ paths:
                           properties:
                             grpid:
                               type: integer
+                              format: int64
                             attrib:
                               type: integer
                             date:
                               type: integer
+                              format: int64
                             created:
                               type: integer
+                              format: int64
                             modified:
                               type: integer
+                              format: int64
                             category:
                               type: integer
                             deviceid:

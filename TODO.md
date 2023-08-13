@@ -1,6 +1,7 @@
-- create weight graph
 - create weight endpoints which retuns weight in last day, week, month, year
 - fix pgexporter logs about missing role
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
 - Deploy using Kubernetes credentials instead of SSH
 - Pull fitnes from strava
+- add client code coverage report
+- add server code coverage report

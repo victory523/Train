@@ -67,14 +67,14 @@ public class WithingsService {
     return response.getBody();
   }
 
-  private Optional<Weight> getFirstMeasureValue(WithingsGetMeasureResponseBody measureResponseBody) {
+  private Optional<Weight> getLastMeasureValue(WithingsGetMeasureResponseBody measureResponseBody) {
     List<WithingsMeasureGroup> measureGroups = measureResponseBody.getMeasuregrps();
 
     if (measureGroups == null || measureGroups.isEmpty()) {
       return Optional.empty();
     }
 
-    WithingsMeasureGroup measureGroup = measureGroups.get(0);
+    WithingsMeasureGroup measureGroup = measureGroups.get(measureGroups.size() - 1);
 
     List<WithingsMeasure> measures = measureGroup.getMeasures();
 
@@ -82,15 +82,15 @@ public class WithingsService {
       return Optional.empty();
     }
 
-    WithingsMeasure measure = measures.get(0);
+    WithingsMeasure measure = measures.get(measures.size() - 1);
     double weight = measure.getValue() * Math.pow(10, measure.getUnit());
 
     return Optional.of(Weight.builder().value(weight).createdAt(Instant.ofEpochSecond(measureGroup.getDate())).build());
   }
 
   public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient) {
-    log.info("Getting today first weight measure");
-    Optional<Weight> result = getFirstMeasureValue(getMeasure(authorizedClient));
+    log.info("Getting today last weight measure");
+    Optional<Weight> result = getLastMeasureValue(getMeasure(authorizedClient));
     log.info("Got {}", result.isPresent() ? result.get().getValue() : "null");
     return result;
   }
