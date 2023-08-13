@@ -4,9 +4,10 @@ import {
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { WithingsService } from './withings.service';
+import { Location } from '@angular/common';
 
 function setup() {
-  const mockLocation = jasmine.createSpyObj(['assign']) as Location;
+  const mockLocation = jasmine.createSpyObj(['go']) as Location
   TestBed.configureTestingModule({
     imports: [HttpClientTestingModule],
     providers: [{ provide: Location, useValue: mockLocation }],
@@ -35,7 +36,7 @@ describe('WithingsService', () => {
         { _links: { oauth2Login: { href: '/withings/auth' } } },
         { status: 401, statusText: 'Unauthorized' }
       );
-      expect(mockLocation.assign).toHaveBeenCalledWith('/withings/auth');
+      expect(mockLocation.go).toHaveBeenCalledWith('/withings/auth');
       httpTestingController.verify();
     });
   });

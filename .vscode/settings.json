@@ -48,5 +48,11 @@
       "vs-kubernetes.kubeconfig": ".kube/config",
       "vs-kubernetes.knownKubeconfigs": [".kube/config"],
     },
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/bower_components": true,
+      "**/*.code-search": true,
+      "client/.angular": true
+    }
 }

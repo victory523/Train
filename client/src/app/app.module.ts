@@ -9,6 +9,7 @@ import { CommonComponentsModule } from './common-components/common-components.mo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { Location } from '@angular/common';
 
 @NgModule({
   declarations: [
@@ -26,10 +27,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
       echarts: () => import('echarts')
     })
   ],
-  providers: [{
-    provide: Location,
-    useValue: window.location
-  }],
+  providers: [Location],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
