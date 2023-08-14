@@ -52,9 +52,7 @@ public class WithingsController {
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
-      if (!weightService.getTodayWeight().isPresent()) {
-        withingsService.getTodayWeight(authorizedClient).ifPresent(weightService::saveWeight);
-      }
+      withingsService.getTodayWeight(authorizedClient).ifPresent(weightService::saveWeight);
     } catch (OAuth2AuthorizationException ex) {
       Link oauth2LogLink = linkTo(methodOn(WithingsController.class).authorize(null, null, null))
           .withRel("oauth2Login");

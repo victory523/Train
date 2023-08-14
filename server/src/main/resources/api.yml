@@ -16,12 +16,18 @@ paths:
           content:
             application/json:
               schema:
-                title: WeightResponse
-                type: object
-                required:
-                  - weight
-                properties:
-                  weight:
-                    type: number
-                    format: double
+                type: array
+                items:
+                  title: WeightMeasurement
+                  type: object
+                  required:
+                    - weight
+                    - date
+                  properties:
+                    weight:
+                      type: number
+                      format: double
+                    date:
+                      type: string
+                      format: date-time
 
