@@ -3,5 +3,11 @@
 - Try using WebTestClient https://docs.spring.io/spring-framework/reference/testing/webtestclient.html#webtestclient-json
 - Deploy using Kubernetes credentials instead of SSH
 - Pull fitnes from strava
+- add github actions test reports for client, server and e2e tests
 - add client code coverage report
 - add server code coverage report
+- add graph test in client
+- adjust server interface to new measurements response
+- get body composition from withings
+- get fitness from strava
+- add pushup counter
