@@ -26,7 +26,7 @@ describe('WeightService', () => {
       service.getWeight(7).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
-      httpTestingController.expectOne('/api/weight').flush(mockResponse);
+      httpTestingController.expectOne('/api/weight?period=7').flush(mockResponse);
       httpTestingController.verify();
     });
   });

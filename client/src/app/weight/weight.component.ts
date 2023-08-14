@@ -97,4 +97,12 @@ export class WeightComponent implements OnInit {
       ],
     };
   }
+
+  get todayWeight(): number | undefined {
+    if (!this.weightState.isReady || !this.weightState.value.length) {
+      return undefined
+    }
+
+    return this.weightState.value[0].weight;
+  }
 }

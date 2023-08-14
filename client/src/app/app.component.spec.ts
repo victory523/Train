@@ -76,7 +76,7 @@ describe('AppComponent', () => {
     const { element, fixture, lastBackupSubject } = await setup();
     lastBackupSubject.next({ time: new Date(Date.now() - 5 * 60 * 1000) });
     fixture.detectChanges();
-    expect(element.querySelector('app-heading app-badge')?.textContent).toEqual('5 minutes ago');
+    expect(element.querySelector('app-header-menu app-badge')?.textContent).toEqual('Last backup 5 minutes ago');
   })
 
   it('renders error notification on last backup time fetching failure', async () => {

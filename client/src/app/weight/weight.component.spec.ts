@@ -5,6 +5,20 @@ import { CommonComponentsModule } from '../common-components/common-components.m
 import { NotificationService } from '../common-components/notification.service';
 import { WeightMeasurement, WeightService } from '../weight.service';
 import { WeightComponent } from './weight.component';
+import { Directive, Input } from '@angular/core';
+import { EChartsOption } from 'echarts';
+import { NgxEchartsDirective } from 'ngx-echarts';
+
+@Directive({
+  selector: '[echarts]'
+})
+class MockECharts {
+  @Input()
+  options?: EChartsOption
+
+  @Input()
+  initOpts?: NgxEchartsDirective['initOpts']
+}
 
 async function setup() {
   const weightMeasurementSubject = new Subject<WeightMeasurement[]>();
@@ -17,7 +31,7 @@ async function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
   await TestBed.configureTestingModule({
-    declarations: [WeightComponent],
+    declarations: [WeightComponent, MockECharts],
     providers: [
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
@@ -51,7 +65,7 @@ describe('WeightComponent', () => {
       },
     ]);
     fixture.detectChanges();
-    expect(element.querySelector('app-badge')?.textContent).toEqual('87.6');
+    expect(element.querySelector('app-badge')?.textContent).toEqual('108.9');
   });
 
   it('renders question mark if no weight is returned', async () => {
