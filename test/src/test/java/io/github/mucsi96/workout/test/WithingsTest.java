@@ -11,19 +11,19 @@ public class WithingsTest extends BaseIntegrationTest {
 
   @Test
   void authorizes_withings() {
-    setupMocks(() -> {
-      webDriver.get(baseUrl);
-      wait.until(ExpectedConditions
-          .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Withings\")]")));
-      webDriver.findElement(By.xpath("//a[contains(text(), \"Authorize\")]")).click();
-    });
+    setupMocksWithNoAuth();
+    webDriver.get(baseUrl);
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Withings\")]")));
+    webDriver.findElement(By.xpath("//a[contains(text(), \"Authorize\")]")).click();
   }
 
   @Test
   void pulls_todays_weigth_from_withings_to_db() {
     setupMocks();
+    open();
     WebElement element = webDriver
-        .findElement(By.xpath("//app-heading[contains(text(), \"Weight\")]"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 65.75");
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]"));
+    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.15");
   }
 }
