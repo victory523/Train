@@ -11,7 +11,7 @@ import { NgxEchartsDirective } from 'ngx-echarts';
 
 type Period = {
   label: string;
-  value: number;
+  value?: number;
 };
 
 @Component({
@@ -27,7 +27,7 @@ export class WeightComponent implements OnInit {
     { label: 'Week', value: 7 },
     { label: 'Month', value: 30 },
     { label: 'Year', value: 365 },
-    { label: 'All time', value: 0 },
+    { label: 'All time' },
   ];
   selectedPeriod = this.periods[0];
 
@@ -102,10 +102,10 @@ export class WeightComponent implements OnInit {
   }
 
   get todayWeight(): number | undefined {
-    if (!this.weightState.isReady || !this.weightState.value.length) {
+    if (!this.weightState.isReady) {
       return undefined
     }
 
-    return this.weightState.value[0].weight;
+    return this.weightService.getTodayWeight(this.weightState.value);
   }
 }

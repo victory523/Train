@@ -7,7 +7,7 @@ const entries = readFileSync(resolve(__dirname, "real.log"), "utf8")
   .map(([date, value]) => ({ date, value }))
   .filter(({ value }) => value)
   .map(({ date, value }) => ({
-    date: new Date(date),
+    date: (new Date('2021-08-07T00:00:00.000Z').getTime() - new Date(date).getTime()) / (1000 * 3600 * 24),
     weight: parseFloat(value),
   }));
 
