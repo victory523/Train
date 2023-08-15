@@ -42,20 +42,20 @@ async function setup({
 describe('NotificationsComponent', () => {
   it('should render notifications added by notification service', async () => {
     const { nativeElement, fixture, notificationService } = await setup({
-      template: '<app-notifications></app-notifications>',
+      template: '<ul app-notifications></ul>',
     });
     notificationService.showNotification('test notification');
     fixture.detectChanges();
     const notifications = Array.from(
-      nativeElement.querySelectorAll('app-notification')
+      nativeElement.querySelectorAll('li[role="alert"]')
     );
     expect(notifications).toHaveSize(1);
-    expect(notifications[0].textContent).toBe('test notification');
+    expect(notifications[0].textContent?.trim()).toBe('test notification');
   });
 
   it('should render multiple notifications added by notification service', async () => {
     const { nativeElement, fixture, notificationService } = await setup({
-      template: '<app-notifications></app-notifications>',
+      template: '<ul app-notifications></ul>',
     });
     notificationService.showNotification('test notification 1');
     notificationService.showNotification('test notification 2', 'error');
@@ -63,16 +63,16 @@ describe('NotificationsComponent', () => {
     notificationService.showNotification('test notification 4', 'error');
     fixture.detectChanges();
     const notifications = Array.from(
-      nativeElement.querySelectorAll('app-notification')
+      nativeElement.querySelectorAll('li[role="alert"]')
     );
     expect(notifications).toHaveSize(4);
-    expect(notifications[0].textContent).toBe('test notification 1');
+    expect(notifications[0].textContent?.trim()).toBe('test notification 1');
     expect(notifications[0].classList.contains('success')).toBe(true);
-    expect(notifications[1].textContent).toBe('test notification 2');
+    expect(notifications[1].textContent?.trim()).toBe('test notification 2');
     expect(notifications[1].classList.contains('error')).toBe(true);
-    expect(notifications[2].textContent).toBe('test notification 3');
+    expect(notifications[2].textContent?.trim()).toBe('test notification 3');
     expect(notifications[2].classList.contains('success')).toBe(true);
-    expect(notifications[3].textContent).toBe('test notification 4');
+    expect(notifications[3].textContent?.trim()).toBe('test notification 4');
     expect(notifications[3].classList.contains('error')).toBe(true);
   });
 });

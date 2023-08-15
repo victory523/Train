@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import { Notification, NotificationService } from '../notification.service';
 
 @Component({
-  selector: 'app-notifications',
+  selector: '[app-notifications]',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
 })

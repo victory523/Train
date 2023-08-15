@@ -30,15 +30,9 @@ async function setup({
 describe('HeaderMenuComponent', () => {
   it('render content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-header-menu>test text</app-header-menu>',
+      template: '<a app-header-menu>test text</a>',
     });
     expect(nativeElement.textContent).toBe('test text');
   });
 
-  it('renders href', async () => {
-    const { nativeElement } = await setup({
-      template: '<app-header-menu href="/test/url"></app-header-menu>',
-    });
-    expect(nativeElement.getAttribute('href')).toBe('/test/url');
-  });
 });

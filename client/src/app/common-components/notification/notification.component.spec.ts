@@ -32,14 +32,14 @@ async function setup({
 describe('NotificationComponent', () => {
   it('renders content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-notification>Test notification</app-notification>',
+      template: '<li app-notification>Test notification</li>',
     });
     expect(nativeElement.textContent).toBe('Test notification');
   });
 
   it('defaults to success type', async () => {
     const { nativeElement } = await setup({
-      template: '<app-notification></app-notification>',
+      template: '<li app-notification></li>',
     });
 
     expect(nativeElement.classList.contains('success')).toBe(true);
@@ -47,7 +47,7 @@ describe('NotificationComponent', () => {
 
   it('renders success type', async () => {
     const { nativeElement } = await setup({
-      template: '<app-notification type="success"></app-notification>',
+      template: '<li app-notification type="success"></li>',
     });
 
     expect(nativeElement.classList.contains('success')).toBe(true);
@@ -55,7 +55,7 @@ describe('NotificationComponent', () => {
 
   it('renders error type', async () => {
     const { nativeElement } = await setup({
-      template: '<app-notification type="error"></app-notification>',
+      template: '<li app-notification type="error"></li>',
     });
 
     expect(nativeElement.classList.contains('error')).toBe(true);

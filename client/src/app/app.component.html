@@ -1,14 +1,26 @@
-<app-header title="Workout">
-  <app-header-menu href="/db">
-    <app-badge *ngIf="lastNackupState.isReady"
-      >Last backup {{ lastNackupState.value.time | relativeTime }}</app-badge
-    >
-  </app-header-menu>
-</app-header>
-<app-main>
-  <div id="main">
+<header app-header>
+  <nav>
+    <a app-header-menu href="/"><h1 app-heading>Workout</h1></a>
+    <a app-header-menu href="/db">
+      <span
+        app-badge
+        role="status"
+        *ngIf="lastNackupState.isReady"
+        class="lastBackup"
+        >Last backup {{ lastNackupState.value.time | relativeTime }}</span
+      >
+    </a>
+  </nav>
+</header>
+<main app-main>
+  <section class="main">
     <app-weight *ngIf="syncState.isReady"></app-weight>
-    <app-loader *ngIf="syncState.isLoading"></app-loader>
-  </div>
-</app-main>
-<app-notifications></app-notifications>
+    <div
+      role="alert"
+      aria-busy="true"
+      app-loader
+      *ngIf="syncState.isLoading"
+    ></div>
+  </section>
+</main>
+<ul app-notifications></ul>

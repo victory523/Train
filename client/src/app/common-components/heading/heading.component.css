@@ -2,19 +2,25 @@
   display: block;
   color: var(--color-scope, white);
   transition: color 0.3s;
+  margin: initial;
 }
 
-:host.level1 {
+:host(h1) {
   font-size: 24px;
   font-weight: 700;
 }
 
-:host.level2 {
+:host(h2) {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+:host(h3) {
   font-size: 21px;
   font-weight: 700;
 }
 
-:host.level3 {
+:host(h4) {
   font-size: 16px;
   font-weight: 700;
 }

@@ -28,19 +28,7 @@ async function setup({
 
 describe('HeadingComponent', () => {
   it('renders content', async () => {
-    const { nativeElement } = await setup({ template: '<app-heading>test text</app-heading>'});
+    const { nativeElement } = await setup({ template: '<h1 app-heading>test text</h1>'});
     expect(nativeElement.textContent).toContain('test text');
-  });
-
-  it('defaults to level 1', async () => {
-    const { nativeElement } = await setup({ template: '<app-heading></app-heading>'});
-    expect(nativeElement.className).toContain('level1');
-  });
-
-  [1, 2, 3, 4, 5, 6].forEach((level) => {
-    it(`renderes level ${level}`, async () => {
-      const { nativeElement } = await setup({ template: `<app-heading level="${level}"></app-heading>`});
-      expect(nativeElement.className).toContain(`level${level}`);
-    });
   });
 });

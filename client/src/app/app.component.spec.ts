@@ -49,49 +49,49 @@ async function setup() {
 describe('AppComponent', () => {
   it('should render header', async () => {
     const { element } = await setup();
-    expect(element.querySelector('app-header')?.textContent).toBe('Workout');
+    expect(element.querySelector('header h1')?.textContent).toBe('Workout');
   });
 
   it('should render loading state', async () => {
     const { element } = await setup();
-    expect(element.querySelector('app-loading')).toBeDefined();
+    expect(element.querySelector('[aria-busy="true"]')).toBeDefined();
   });
 
   it('renders weight', async () => {
     const { element, fixture, syncSubject } = await setup();
     syncSubject.next(undefined);
     fixture.detectChanges();
-    expect(element.querySelector('#main')?.textContent).toEqual('87.6');
+    expect(element.querySelector('.main')?.textContent).toEqual('87.6');
   });
 
   it('renders error notification on Withings sync failure', async () => {
     const { element, fixture, syncSubject } = await setup();
     syncSubject.error({});
     fixture.detectChanges();
-    expect(element.querySelector('app-notification')?.textContent).toBe('Unable to sync with Withings')
-    expect(element.querySelector('app-notification')?.classList.contains('error')).toBe(true)
+    expect(element.querySelector('li[role="alert"]')?.textContent?.trim()).toBe('Unable to sync with Withings')
+    expect(element.querySelector('li[role="alert"]')?.classList.contains('error')).toBe(true)
   });
 
   it('renders last backup time', async () => {
     const { element, fixture, lastBackupSubject } = await setup();
     lastBackupSubject.next({ time: new Date(Date.now() - 5 * 60 * 1000) });
     fixture.detectChanges();
-    expect(element.querySelector('app-header-menu app-badge')?.textContent).toEqual('Last backup 5 minutes ago');
+    expect(element.querySelector('header [role="status"]')?.textContent).toEqual('Last backup 5 minutes ago');
   })
 
   it('renders error notification on last backup time fetching failure', async () => {
     const { element, fixture, lastBackupSubject } = await setup();
     lastBackupSubject.error({});
     fixture.detectChanges();
-    expect(element.querySelector('app-notification')?.textContent).toBe('Unable to fetch last backup time')
-    expect(element.querySelector('app-notification')?.classList.contains('error')).toBe(true)
+    expect(element.querySelector('li[role="alert"]')?.textContent?.trim()).toBe('Unable to fetch last backup time')
+    expect(element.querySelector('li[role="alert"]')?.classList.contains('error')).toBe(true)
   });
 
   it('renders error notification on last backup time error message', async () => {
     const { element, fixture, lastBackupSubject } = await setup();
     lastBackupSubject.next({ time: new Date(), errorMessage: 'last backup time error message' });
     fixture.detectChanges();
-    expect(element.querySelector('app-notification')?.textContent).toBe('last backup time error message')
-    expect(element.querySelector('app-notification')?.classList.contains('error')).toBe(true)
+    expect(element.querySelector('li[role="alert"]')?.textContent?.trim()).toBe('last backup time error message')
+    expect(element.querySelector('li[role="alert"]')?.classList.contains('error')).toBe(true)
   });
 });

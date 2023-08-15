@@ -30,7 +30,7 @@ async function setup({
 describe('MainComponent', () => {
   it('renders content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-main>test text</app-main>',
+      template: '<main app-main>test text</main>',
     });
     expect(nativeElement.textContent).toBe('test text');
   });

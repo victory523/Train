@@ -32,17 +32,8 @@ async function setup({
 describe('HeaderComponent', () => {
   it('render content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-header>test text</app-header>',
+      template: '<header app-header>test text</header>',
     });
     expect(nativeElement.textContent).toBe('test text');
-  });
-
-  it('render title', async () => {
-    const { nativeElement } = await setup({
-      template: '<app-header title="test title"></app-header>',
-    });
-    expect(nativeElement.querySelector('app-heading')?.textContent).toBe(
-      'test title'
-    );
   });
 });

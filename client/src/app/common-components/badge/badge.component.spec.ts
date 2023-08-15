@@ -30,7 +30,7 @@ async function setup({
 describe('BadgeComponent', () => {
   it('renders content', async () => {
     const { nativeElement } = await setup({
-      template: '<app-badge>test text</app-badge>',
+      template: '<span app-badge>test text</span>',
     });
     expect(nativeElement.textContent).toBe('test text');
   });

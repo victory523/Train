@@ -20,7 +20,7 @@ export class AppComponent implements OnInit {
   lastNackupState: HttpRequestState<LastBackup> = initialHttpRequestState;
 
   ngOnInit(): void {
-    // setInterval(() => this.notificationService.showNotification('hello'), 1000);
+    // setInterval(() => this.notificationService.showNotification('hello', 'error'), 1000);
     requestState(this.withingsService.sync(), (newState) => {
       this.syncState = newState;
 

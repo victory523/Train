@@ -1,8 +1,8 @@
-a {
+:host {
   text-decoration: initial;
 }
 
-a:hover {
+:host:hover {
   --color-scope: hsl(218, 93%, 61%);
   color: var(--color-scope);
 }

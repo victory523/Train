@@ -1,9 +1,9 @@
 <section *ngIf="weightState.isReady">
-  <app-heading class="weight">
-    Weight<app-badge>{{ todayWeight || "-" }}</app-badge>
-  </app-heading>
+  <h2 app-heading class="weight">
+    Weight<span role='status' app-badge>{{ todayWeight || "-" }}</span>
+  </h2>
 
-  <app-button-group
+  <span app-button-group
     ><button
       *ngFor="let period of periods"
       type="button"
@@ -12,9 +12,9 @@
     >
       {{ period.label }}
     </button>
-  </app-button-group>
+  </span>
 
-  <div echarts [options]="chartOptions" [initOpts]="initOpts"></div>
+  <div role="img" echarts [options]="chartOptions" [initOpts]="initOpts"></div>
 </section>
 
-<app-loader *ngIf="weightState.isLoading"></app-loader>
+<div role="alert" aria-busy="true" app-loader *ngIf="weightState.isLoading"></div>

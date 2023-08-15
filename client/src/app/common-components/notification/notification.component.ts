@@ -17,7 +17,7 @@ import {
 import { NotificationType } from '../notification.service';
 
 @Component({
-  selector: 'app-notification',
+  selector: '[app-notification]',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css'],
   animations: [

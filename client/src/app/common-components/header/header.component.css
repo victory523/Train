@@ -9,7 +9,7 @@
   font-size: 16px;
 }
 
-:host header {
+:host /deep/ nav {
   padding: 18px 1rem 19px;
   max-width: 90rem;
   margin: 0 auto;

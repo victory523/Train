@@ -32,7 +32,7 @@ function measure(request, response) {
             deviceid: "892359876fd8805ac45bab078c4828692f0276b1",
             measures: [
               {
-                value: 65750,
+                value: 87150,
                 type: 1,
                 unit: -3,
                 algo: 3425,

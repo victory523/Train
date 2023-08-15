@@ -12,3 +12,4 @@
 - get fitness from strava
 - add pushup counter
 - migrate e2e tests to selenide
+- remove deprecated /deep/

@@ -66,6 +66,9 @@ export class WeightComponent implements OnInit {
     }
 
     return {
+      aria: {
+        enabled: true
+      },
       animation: false,
       grid: {
         top: 10,

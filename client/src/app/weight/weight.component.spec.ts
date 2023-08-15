@@ -53,7 +53,7 @@ async function setup() {
 describe('WeightComponent', () => {
   it('renders loading state', async () => {
     const { element } = await setup();
-    expect(element.querySelector('app-loader')).toBeDefined();
+    expect(element.querySelector('[aria-busy="true"]')).toBeDefined();
   });
 
   it('renders weight', async () => {
@@ -65,14 +65,14 @@ describe('WeightComponent', () => {
       },
     ]);
     fixture.detectChanges();
-    expect(element.querySelector('app-badge')?.textContent).toEqual('108.9');
+    expect(element.querySelector('[role="status"]')?.textContent).toEqual('108.9');
   });
 
   it('renders question mark if no weight is returned', async () => {
     const { element, fixture, weightSubject } = await setup();
     weightSubject.next([]);
     fixture.detectChanges();
-    expect(element.querySelector('app-badge')?.textContent).toEqual('-');
+    expect(element.querySelector('[role="status"]')?.textContent).toEqual('-');
   });
 
   it('renders error state', async () => {
