@@ -7,13 +7,6 @@ export const weightMocks = [
     const today = weightMeasurements.slice(-1)[0].date;
     const cutDate = today.getTime() - period * 1000 * 60 * 60 * 24;
 
-    console.log({
-      params: req.params,
-      today,
-      cutDate: new Date(cutDate),
-      period: period * 1000 * 60 * 60 * 24,
-    });
-
     return res(
       ctx.json(
         weightMeasurements.filter(
