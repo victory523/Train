@@ -10,8 +10,9 @@ function measure(request, response) {
   }
 
   const searchParams = getSearchParams(request);
-  const startDate = searchParams.get("startdate");
-  const endDate = searchParams.get("enddate");
+  const startDate = parseInt(searchParams.get("startdate"));
+  const endDate = parseInt(searchParams.get("enddate"));
+  const date = startDate + 60 * 60 * 12;
   response.writeHead(200, {
     "Content-Type": "application/json",
   });
@@ -25,8 +26,8 @@ function measure(request, response) {
           {
             grpid: 12,
             attrib: 1,
-            date: startDate,
-            created: startDate,
+            date,
+            created: date,
             modified: endDate,
             category: 1594257200,
             deviceid: "892359876fd8805ac45bab078c4828692f0276b1",

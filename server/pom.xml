@@ -126,7 +126,7 @@
                 <library>native</library>
                 <useJakartaEe>true</useJakartaEe>
                 <supportUrlQuery>false</supportUrlQuery>
-                <additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor</additionalModelTypeAnnotations>
+                <additionalModelTypeAnnotations>@lombok.Builder @lombok.AllArgsConstructor @SuppressWarnings("all")</additionalModelTypeAnnotations>
               </configOptions>
               <generateApis>false</generateApis>
               <generateApiTests>false</generateApiTests>

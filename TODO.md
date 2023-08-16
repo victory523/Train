@@ -10,3 +10,4 @@
 - add pushup counter
 - migrate e2e tests to selenide
 - remove deprecated /deep/
+- make sure server sends correct startTime to Withings measure. Correct in timezone
