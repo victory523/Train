@@ -1,10 +1,9 @@
 package mucsi96.traininglog;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.within;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-import java.time.Instant;
+import java.time.Clock;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
@@ -26,6 +25,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
 
   private final MockMvc mockMvc;
   private final WeightRepository weightRepository;
+  private final Clock clock;
 
   @BeforeEach
   void beforeEach() {
@@ -71,7 +71,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/weight")
-                .headers(getAuthHeaders("guest")))
+                .headers(getHeaders("guest")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -83,13 +83,13 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .perform(
             get("/weight")
                 .queryParam("period", "1")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(1);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(87.1);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class)))
-        .isCloseTo(Instant.now(), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
+        .isEqualTo("2031-08-22T06:00:00-04:00");
   }
 
   @Test
@@ -98,22 +98,22 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .perform(
             get("/weight")
                 .queryParam("period", "7")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(4);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(88.3);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class)))
-        .isCloseTo(Instant.now().minus(6, ChronoUnit.DAYS), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
+        .isEqualTo("2031-08-16T06:00:00-04:00");
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[1].weight", Double.class)).isEqualTo(87.7);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[1].date", String.class)))
-        .isCloseTo(Instant.now().minus(5, ChronoUnit.DAYS), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[1].date", String.class))
+        .isEqualTo("2031-08-17T06:00:00-04:00");
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[2].weight", Double.class)).isEqualTo(87.5);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[2].date", String.class)))
-        .isCloseTo(Instant.now().minus(1, ChronoUnit.DAYS), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[2].date", String.class))
+        .isEqualTo("2031-08-21T06:00:00-04:00");
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[3].weight", Double.class)).isEqualTo(87.1);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[3].date", String.class)))
-        .isCloseTo(Instant.now(), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[3].date", String.class))
+        .isEqualTo("2031-08-22T06:00:00-04:00");
   }
 
   @Test
@@ -121,15 +121,15 @@ public class WeightControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/weight")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(6);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(108.9);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class)))
-        .isCloseTo(Instant.now().minus(400, ChronoUnit.DAYS), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
+        .isEqualTo("2030-07-18T06:00:00-04:00");
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[5].weight", Double.class)).isEqualTo(87.1);
-    assertThat(Instant.parse(JsonPath.parse(response.getContentAsString()).read("$[5].date", String.class)))
-        .isCloseTo(Instant.now(), within(1, ChronoUnit.MINUTES));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[5].date", String.class))
+        .isEqualTo("2031-08-22T06:00:00-04:00");
   }
 }

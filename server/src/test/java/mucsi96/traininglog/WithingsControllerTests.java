@@ -8,10 +8,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,7 +99,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(401);
@@ -116,7 +113,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getAuthHeaders("guest")))
+                .headers(getHeaders("guest")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -126,7 +123,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   public void redirects_to_withings_request_authorization_page() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
-            get("/withings/authorize").headers(getAuthHeaders("user")))
+            get("/withings/authorize").headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(302);
@@ -151,7 +148,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
 
     MockHttpSession mockHttpSession = new MockHttpSession();
     MockHttpServletResponse response1 = mockMvc.perform(
-        get("/withings/authorize").headers(getAuthHeaders("user"))
+        get("/withings/authorize").headers(getHeaders("user"))
             .session(mockHttpSession))
         .andReturn().getResponse();
     UriComponents components = UriComponentsBuilder.fromUriString(response1.getRedirectedUrl()).build();
@@ -161,7 +158,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
 
     MockHttpServletResponse response2 = mockMvc
         .perform(get(components.getQueryParams().getFirst(OAuth2ParameterNames.REDIRECT_URI))
-            .headers(getAuthHeaders("user"))
+            .headers(getHeaders("user"))
             .queryParam(OAuth2ParameterNames.STATE, state)
             .queryParam(OAuth2ParameterNames.CODE, "test-authorization-code")
             .session(mockHttpSession))
@@ -197,11 +194,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
         WireMock.aResponse()
             .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .withBodyFile("withings-authorize.json")));
-    long startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN).toInstant(ZoneOffset.UTC).getEpochSecond();
-    long endTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toInstant(ZoneOffset.UTC).getEpochSecond();
     mockWithingsServer.stubFor(WireMock
-        .post(String.format("/measure?action=getmeas&meastype=1&category=1&startdate=%s&enddate=%s",
-            startTime, endTime))
+        .post("/measure?action=getmeas&meastype=1&category=1&startdate=1945137600&enddate=1945224000")
         .willReturn(
             WireMock.aResponse()
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -220,7 +214,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -254,7 +248,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -269,11 +263,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   @Test
   public void pulls_todays_weight_from_withings_to_database() throws Exception {
     authorizeWithingsOAuth2Client();
-    long startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN).toInstant(ZoneOffset.UTC).getEpochSecond();
-    long endTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toInstant(ZoneOffset.UTC).getEpochSecond();
     mockWithingsServer.stubFor(WireMock
-        .post(String.format("/measure?action=getmeas&meastype=1&category=1&startdate=%s&enddate=%s",
-            startTime, endTime))
+        .post("/measure?action=getmeas&meastype=1&category=1&startdate=1945137600&enddate=1945224000")
         .willReturn(
             WireMock.aResponse()
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -282,7 +273,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getAuthHeaders("user")))
+                .headers(getHeaders("user")))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(200);

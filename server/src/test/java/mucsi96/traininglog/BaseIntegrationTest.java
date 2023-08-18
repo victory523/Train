@@ -1,9 +1,5 @@
 package mucsi96.traininglog;
 
-import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
-
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
@@ -40,19 +36,18 @@ class DevContainerNetwork implements Network {
 @AutoConfigureMockMvc
 public class BaseIntegrationTest {
 
-  Clock clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
-
   @Autowired
   MockMvc mockMvc;
 
   static PostgreSQLContainer<?> dbMock;
 
-  HttpHeaders getAuthHeaders(String authority) {
+  HttpHeaders getHeaders(String authority) {
     HttpHeaders headers = new HttpHeaders();
     headers.add("Remote-User", "rob");
     headers.add("Remote-Groups", authority);
     headers.add("Remote-Name", "Robert White");
     headers.add("Remote-Email", "robert.white@mockemail.com");
+    headers.add("X-Timezone", "America/New_York");
     return headers;
   }
 
