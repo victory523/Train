@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -9,13 +9,10 @@ import { CommonComponentsModule } from './common-components/common-components.mo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { TimezoneInterceptor } from './http-interceptors/timezone-interceptor';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    WeightComponent,
-    RelativeTimePipe,
-  ],
+  declarations: [AppComponent, WeightComponent, RelativeTimePipe],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -23,10 +20,13 @@ import { NgxEchartsModule } from 'ngx-echarts';
     CommonComponentsModule,
     BrowserAnimationsModule,
     NgxEchartsModule.forRoot({
-      echarts: () => import('echarts')
-    })
+      echarts: () => import('echarts'),
+    }),
   ],
-  providers: [{ provide: Location, useValue: window.location }],
-  bootstrap: [AppComponent]
+  providers: [
+    { provide: Location, useValue: window.location },
+    { provide: HTTP_INTERCEPTORS, useClass: TimezoneInterceptor, multi: true },
+  ],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
