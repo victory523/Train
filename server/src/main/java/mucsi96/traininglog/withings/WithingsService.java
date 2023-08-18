@@ -1,10 +1,11 @@
 package mucsi96.traininglog.withings;
 
+import java.time.Clock;
 import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,10 +27,13 @@ import mucsi96.traininglog.weight.Weight;
 public class WithingsService {
 
   private final WithingsConfiguration withingsConfiguration;
+  private final Clock clock;
 
-  private String getMeasureUrl() {
-    long startTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIN).toInstant(ZoneOffset.UTC).getEpochSecond();
-    long endTime = LocalDateTime.of(LocalDate.now(), LocalTime.MAX).toInstant(ZoneOffset.UTC).getEpochSecond();
+  private String getMeasureUrl(ZoneId zoneId) {
+    long startTime = ZonedDateTime.now(clock).withZoneSameInstant(zoneId).truncatedTo(ChronoUnit.DAYS).toEpochSecond();
+    long endTime = ZonedDateTime.now(clock).withZoneSameInstant(zoneId).truncatedTo(ChronoUnit.DAYS).plusDays(1)
+        .toEpochSecond();
+    log.info("Getting today last weight measure from {} to {}", startTime, endTime);
     return UriComponentsBuilder
         .fromHttpUrl(withingsConfiguration.getApi().getUri())
         .path("/measure")
@@ -43,13 +47,13 @@ public class WithingsService {
         .toUriString();
   }
 
-  private WithingsGetMeasureResponseBody getMeasure(OAuth2AuthorizedClient authorizedClient) {
+  private WithingsGetMeasureResponseBody getMeasure(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
     HttpEntity<String> request = new HttpEntity<>("", headers);
     RestTemplate restTemplate = new RestTemplate();
     WithingsGetMeasureResponse response = restTemplate
-        .postForObject(getMeasureUrl(), request, WithingsGetMeasureResponse.class);
+        .postForObject(getMeasureUrl(zoneId), request, WithingsGetMeasureResponse.class);
 
     if (response == null) {
       throw new WithingsTechnicalException();
@@ -84,13 +88,13 @@ public class WithingsService {
 
     WithingsMeasure measure = measures.get(measures.size() - 1);
     double weight = measure.getValue() * Math.pow(10, measure.getUnit());
+    ZonedDateTime createdAt = ZonedDateTime.ofInstant(Instant.ofEpochSecond(measureGroup.getDate()), ZoneOffset.UTC);
 
-    return Optional.of(Weight.builder().value(weight).createdAt(Instant.ofEpochSecond(measureGroup.getDate())).build());
+    return Optional.of(Weight.builder().value(weight).createdAt(createdAt).build());
   }
 
-  public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient) {
-    log.info("Getting today last weight measure");
-    Optional<Weight> result = getLastMeasureValue(getMeasure(authorizedClient));
+  public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
+    Optional<Weight> result = getLastMeasureValue(getMeasure(authorizedClient, zoneId));
     log.info("Got {}", result.isPresent() ? result.get().getValue() : "null");
     return result;
   }

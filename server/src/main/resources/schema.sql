@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS oauth2_authorized_client (
 
 CREATE TABLE IF NOT EXISTS weight (
   id bigserial NOT NULL,
-  created_at timestamp(6) with time zone NOT NULL,
+  created_at timestamp NOT NULL,
   value float(53),
   PRIMARY KEY (id)
 );

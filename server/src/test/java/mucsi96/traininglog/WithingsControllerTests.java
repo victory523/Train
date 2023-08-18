@@ -289,6 +289,6 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     Optional<Weight> weight = weightRepository.findAll().stream().findFirst();
     assertThat(weight.isPresent()).isTrue();
     assertThat(weight.get().getValue()).isEqualTo(65.75);
-    assertThat(weight.get().getCreatedAt().getEpochSecond()).isEqualTo(1594245600L);
+    assertThat(weight.get().getCreatedAt().toEpochSecond()).isEqualTo(1594245600L);
   }
 }

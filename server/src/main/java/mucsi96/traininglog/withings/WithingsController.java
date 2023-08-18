@@ -3,6 +3,8 @@ package mucsi96.traininglog.withings;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.time.ZoneId;
+
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.http.HttpStatus;
@@ -14,11 +16,14 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.core.OAuth2AuthorizationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.view.RedirectView;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.annotation.security.RolesAllowed;
@@ -40,19 +45,22 @@ public class WithingsController {
   private final OAuth2AuthorizedClientManager withingsAuthorizedClientManager;
 
   @PostMapping("/sync")
-  @Operation(responses = { @ApiResponse(content = @Content()),
+  @Operation(parameters = {
+    @Parameter(in = ParameterIn.HEADER, name = "X-Timezone", required = true, example = "America/New_York")
+  }, responses = { @ApiResponse(content = @Content()),
       @ApiResponse(responseCode = "401", content = @Content(), links = {
           @io.swagger.v3.oas.annotations.links.Link(name = "oauth2Login", operationId = "withings-authorize") }) })
   public ResponseEntity<RepresentationModel<?>> sync(
       Authentication principal,
       HttpServletRequest servletRequest,
-      HttpServletResponse servletResponse) {
+      HttpServletResponse servletResponse,
+      @RequestHeader("X-Timezone") ZoneId zoneId) {
 
     log.info("syncing from Withings");
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
-      withingsService.getTodayWeight(authorizedClient).ifPresent(weightService::saveWeight);
+      withingsService.getTodayWeight(authorizedClient, zoneId).ifPresent(weightService::saveWeight);
     } catch (OAuth2AuthorizationException ex) {
       Link oauth2LogLink = linkTo(methodOn(WithingsController.class).authorize(null, null, null))
           .withRel("oauth2Login");

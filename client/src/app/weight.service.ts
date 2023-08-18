@@ -17,6 +17,9 @@ export class WeightService {
     return this.http
       .get<WeightMeasurement[]>('/api/weight', {
         params: { ...(period ? { period } : {}) },
+        headers: {
+          'X-Timezone': Intl.DateTimeFormat().resolvedOptions().timeZone,
+        },
       })
       .pipe(
         map((measurements) =>

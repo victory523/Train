@@ -45,6 +45,8 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
+        jdbc:
+          time_zone: UTC
 
 logging:
   level:

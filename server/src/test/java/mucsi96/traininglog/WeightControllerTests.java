@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.within;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -31,27 +32,27 @@ public class WeightControllerTests extends BaseIntegrationTest {
     weightRepository.deleteAll();
     weightRepository.save(Weight.builder()
         .value(108.9)
-        .createdAt(Instant.now().minus(400, ChronoUnit.DAYS))
+        .createdAt(ZonedDateTime.now(clock).minus(400, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
         .value(98)
-        .createdAt(Instant.now().minus(356, ChronoUnit.DAYS))
+        .createdAt(ZonedDateTime.now(clock).minus(356, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
         .value(88.3)
-        .createdAt(Instant.now().minus(6, ChronoUnit.DAYS))
+        .createdAt(ZonedDateTime.now(clock).minus(6, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
         .value(87.7)
-        .createdAt(Instant.now().minus(5, ChronoUnit.DAYS))
+        .createdAt(ZonedDateTime.now(clock).minus(5, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
         .value(87.1)
-        .createdAt(Instant.now())
+        .createdAt(ZonedDateTime.now(clock))
         .build());
     weightRepository.save(Weight.builder()
         .value(87.5)
-        .createdAt(Instant.now().minus(1, ChronoUnit.DAYS))
+        .createdAt(ZonedDateTime.now(clock).minus(1, ChronoUnit.DAYS))
         .build());
   }
 
