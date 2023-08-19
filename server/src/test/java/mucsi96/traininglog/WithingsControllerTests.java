@@ -9,6 +9,7 @@ import java.net.URI;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -279,7 +280,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     assertThat(response.getStatus()).isEqualTo(200);
     Optional<Weight> weight = weightRepository.findAll().stream().findFirst();
     assertThat(weight.isPresent()).isTrue();
-    assertThat(weight.get().getValue()).isEqualTo(65.75);
-    assertThat(weight.get().getCreatedAt().toEpochSecond()).isEqualTo(1594245600L);
+    assertThat(weight.get().getValue()).isEqualTo(65.76);
+    assertThat(weight.get().getCreatedAt().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
+        .isEqualTo("2020-07-08T22:16:40Z[Etc/UTC]");
   }
 }

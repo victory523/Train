@@ -87,7 +87,7 @@ public class WithingsService {
     }
 
     WithingsMeasure measure = measures.get(measures.size() - 1);
-    double weight = measure.getValue() * Math.pow(10, measure.getUnit());
+    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 100.0) / 100.0;
     ZonedDateTime createdAt = ZonedDateTime.ofInstant(Instant.ofEpochSecond(measureGroup.getDate()), ZoneOffset.UTC);
 
     return Optional.of(Weight.builder().value(weight).createdAt(createdAt).build());
