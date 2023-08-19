@@ -282,8 +282,8 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     assertThat(weight.isPresent()).isTrue();
     assertThat(weight.get().getCreatedAt().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
         .isEqualTo("2020-07-08T22:16:40Z[Etc/UTC]");
-    assertThat(weight.get().getWeight()).isEqualTo(65.76);
-    assertThat(weight.get().getFatRatio()).isEqualTo(32.27);
-    assertThat(weight.get().getFatMassWeight()).isEqualTo(21.76);
+    assertThat(weight.get().getWeight()).isEqualTo(65.8);
+    assertThat(weight.get().getFatRatio()).isEqualTo(32.3);
+    assertThat(weight.get().getFatMassWeight()).isEqualTo(21.8);
   }
 }

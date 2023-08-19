@@ -72,7 +72,7 @@ public class WithingsService {
 
   private double getMeasurement(List<WithingsMeasure> measures, int type) {
     WithingsMeasure measure = measures.stream().filter(m -> m.getType() == type).findFirst().orElseThrow();
-    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 100.0) / 100.0;
+    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 10.0) / 10.0;
     return weight;
   }
 
