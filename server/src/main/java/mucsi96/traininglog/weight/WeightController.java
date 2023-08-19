@@ -37,8 +37,10 @@ public class WeightController {
       @RequestHeader("X-Timezone") ZoneId zoneId) {
     return weightService.getWeight(Optional.ofNullable(period), zoneId).stream().map(measurement -> WeightMeasurement
         .builder()
-        .weight(measurement.getValue())
         .date(measurement.getCreatedAt().withZoneSameInstant(zoneId).toOffsetDateTime())
+        .weight(measurement.getWeight())
+        .fatRatio(measurement.getFatRatio())
+        .fatMassWeight(measurement.getFatMassWeight())
         .build()).toList();
   }
 }

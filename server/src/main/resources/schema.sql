@@ -13,8 +13,9 @@ CREATE TABLE IF NOT EXISTS oauth2_authorized_client (
 );
 
 CREATE TABLE IF NOT EXISTS weight (
-  id bigserial NOT NULL,
   created_at timestamp NOT NULL,
-  value float(53),
-  PRIMARY KEY (id)
+  weight float(53),
+  fat_mass_weight float(53),
+  fat_ratio float(53),
+  PRIMARY KEY (created_at)
 );

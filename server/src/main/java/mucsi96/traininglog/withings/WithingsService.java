@@ -38,7 +38,6 @@ public class WithingsService {
         .fromHttpUrl(withingsConfiguration.getApi().getUri())
         .path("/measure")
         .queryParam("action", "getmeas")
-        .queryParam("meastype", 1)
         .queryParam("category", 1)
         .queryParam("startdate", startTime)
         .queryParam("enddate", endTime)
@@ -71,6 +70,12 @@ public class WithingsService {
     return response.getBody();
   }
 
+  private double getMeasurement(List<WithingsMeasure> measures, int type) {
+    WithingsMeasure measure = measures.stream().filter(m -> m.getType() == type).findFirst().orElseThrow();
+    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 100.0) / 100.0;
+    return weight;
+  }
+
   private Optional<Weight> getLastMeasureValue(WithingsGetMeasureResponseBody measureResponseBody) {
     List<WithingsMeasureGroup> measureGroups = measureResponseBody.getMeasuregrps();
 
@@ -86,16 +91,19 @@ public class WithingsService {
       return Optional.empty();
     }
 
-    WithingsMeasure measure = measures.get(measures.size() - 1);
-    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 100.0) / 100.0;
-    ZonedDateTime createdAt = ZonedDateTime.ofInstant(Instant.ofEpochSecond(measureGroup.getDate()), ZoneOffset.UTC);
-
-    return Optional.of(Weight.builder().value(weight).createdAt(createdAt).build());
+    return Optional.of(
+        Weight
+            .builder()
+            .createdAt(ZonedDateTime.ofInstant(Instant.ofEpochSecond(measureGroup.getDate()), ZoneOffset.UTC))
+            .weight(getMeasurement(measures, 1))
+            .fatRatio(getMeasurement(measures, 6))
+            .fatMassWeight(getMeasurement(measures, 8))
+            .build());
   }
 
   public Optional<Weight> getTodayWeight(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
     Optional<Weight> result = getLastMeasureValue(getMeasure(authorizedClient, zoneId));
-    log.info("Got {}", result.isPresent() ? result.get().getValue() : "null");
+    log.info("Got {}", result.isPresent() ? result.get().getWeight() : "null");
     return result;
   }
 }

@@ -21,13 +21,19 @@ paths:
                   title: WeightMeasurement
                   type: object
                   required:
-                    - weight
                     - date
+                    - weight
                   properties:
-                    weight:
-                      type: number
-                      format: double
                     date:
                       type: string
                       format: date-time
+                    weight:
+                      type: number
+                      format: double
+                    fatRatio:
+                      type: number
+                      format: double
+                    fatMassWeight:
+                      type: number
+                      format: double
 

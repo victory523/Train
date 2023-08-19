@@ -20,6 +20,22 @@
             "algo": 3425,
             "fm": 1,
             "fw": 1000
+          },
+          {
+            "value": 322664,
+            "type": 6,
+            "unit": -4,
+            "algo": 3425,
+            "fm": 1,
+            "fw": 1000
+          },
+          {
+            "value": 217634,
+            "type": 8,
+            "unit": -4,
+            "algo": 3425,
+            "fm": 1,
+            "fw": 1000
           }
         ],
         "comment": "A measurement comment",

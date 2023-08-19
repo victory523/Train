@@ -4,14 +4,11 @@ import java.time.ZonedDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @Entity
@@ -20,13 +17,14 @@ import lombok.NonNull;
 @NoArgsConstructor
 public class Weight {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
-
-    @NonNull
-    @Column(nullable = false)
     private ZonedDateTime createdAt;
 
     @Column
-    private double value;
+    private double weight;
+
+    @Column
+    private double fatMassWeight;
+
+    @Column
+    private double fatRatio;
 }

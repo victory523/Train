@@ -31,27 +31,29 @@ public class WeightControllerTests extends BaseIntegrationTest {
   void beforeEach() {
     weightRepository.deleteAll();
     weightRepository.save(Weight.builder()
-        .value(108.9)
+        .weight(108.9)
         .createdAt(ZonedDateTime.now(clock).minus(400, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .value(98)
+        .weight(98)
         .createdAt(ZonedDateTime.now(clock).minus(356, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .value(88.3)
+        .weight(88.3)
         .createdAt(ZonedDateTime.now(clock).minus(6, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .value(87.7)
+        .weight(87.7)
         .createdAt(ZonedDateTime.now(clock).minus(5, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .value(87.1)
+        .weight(87.1)
+        .fatRatio(31.01)
+        .fatMassWeight(21.34)
         .createdAt(ZonedDateTime.now(clock))
         .build());
     weightRepository.save(Weight.builder()
-        .value(87.5)
+        .weight(87.5)
         .createdAt(ZonedDateTime.now(clock).minus(1, ChronoUnit.DAYS))
         .build());
   }
@@ -87,9 +89,11 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(1);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(87.1);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
         .isEqualTo("2031-08-22T06:00:00-04:00");
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(87.1);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatRatio", Double.class)).isEqualTo(31.01);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatMassWeight", Double.class)).isEqualTo(21.34);
   }
 
   @Test

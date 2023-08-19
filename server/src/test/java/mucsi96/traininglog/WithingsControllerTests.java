@@ -196,7 +196,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
             .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
             .withBodyFile("withings-authorize.json")));
     mockWithingsServer.stubFor(WireMock
-        .post("/measure?action=getmeas&meastype=1&category=1&startdate=1945137600&enddate=1945224000")
+        .post("/measure?action=getmeas&category=1&startdate=1945137600&enddate=1945224000")
         .willReturn(
             WireMock.aResponse()
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -265,7 +265,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   public void pulls_todays_weight_from_withings_to_database() throws Exception {
     authorizeWithingsOAuth2Client();
     mockWithingsServer.stubFor(WireMock
-        .post("/measure?action=getmeas&meastype=1&category=1&startdate=1945137600&enddate=1945224000")
+        .post("/measure?action=getmeas&category=1&startdate=1945137600&enddate=1945224000")
         .willReturn(
             WireMock.aResponse()
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
@@ -280,8 +280,10 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     assertThat(response.getStatus()).isEqualTo(200);
     Optional<Weight> weight = weightRepository.findAll().stream().findFirst();
     assertThat(weight.isPresent()).isTrue();
-    assertThat(weight.get().getValue()).isEqualTo(65.76);
     assertThat(weight.get().getCreatedAt().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
         .isEqualTo("2020-07-08T22:16:40Z[Etc/UTC]");
+    assertThat(weight.get().getWeight()).isEqualTo(65.76);
+    assertThat(weight.get().getFatRatio()).isEqualTo(32.27);
+    assertThat(weight.get().getFatMassWeight()).isEqualTo(21.76);
   }
 }

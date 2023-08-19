@@ -21,7 +21,7 @@ public class WeightService {
   private final Clock clock;
 
   public void saveWeight(Weight weight) {
-    log.info("persisting weight in db with value {}", weight.getValue());
+    log.info("persisting weight in db with value {}", weight.getWeight());
     weightRepository.save(weight);
   }
 
