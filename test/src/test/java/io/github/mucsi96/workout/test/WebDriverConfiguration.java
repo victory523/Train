@@ -1,5 +1,6 @@
 package io.github.mucsi96.workout.test;
 
+import java.util.Map;
 import java.util.logging.Level;
 
 import org.openqa.selenium.WebDriver;
@@ -24,6 +25,7 @@ public class WebDriverConfiguration {
 
     ChromeDriver driver = new ChromeDriver(options);
     driver.setLogLevel(Level.WARNING);
+    driver.executeCdpCommand("Emulation.setTimezoneOverride", Map.of("timezoneId", "Europe/Zurich"));
     return driver;
   }
 

@@ -24,6 +24,6 @@ public class WithingsTest extends BaseIntegrationTest {
     open();
     WebElement element = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.15");
+    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.2");
   }
 }

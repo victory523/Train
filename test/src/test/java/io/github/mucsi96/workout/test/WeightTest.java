@@ -26,18 +26,24 @@ class WeightTest extends BaseIntegrationTest {
   void beforeEach() {
     setupMocks();
     jdbcTemplate.execute("DELETE FROM weight;");
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 108.9);",
-        Timestamp.from(Instant.now().minus(400, ChronoUnit.DAYS))));
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 98);",
-        Timestamp.from(Instant.now().minus(356, ChronoUnit.DAYS))));
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 89.4);",
-        Timestamp.from(Instant.now().minus(14, ChronoUnit.DAYS))));
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 88.3);",
-        Timestamp.from(Instant.now().minus(6, ChronoUnit.DAYS))));
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 87.7);",
-        Timestamp.from(Instant.now().minus(5, ChronoUnit.DAYS))));
-    jdbcTemplate.execute(String.format("INSERT INTO weight (created_at, value) VALUES ('%s', 87.5);",
-        Timestamp.from(Instant.now().minus(1, ChronoUnit.DAYS))));
+    jdbcTemplate.execute(
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 108.9, 35.4, 38.6);",
+            Timestamp.from(Instant.now().minus(400, ChronoUnit.DAYS))));
+    jdbcTemplate
+        .execute(String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 98, 35.2, 34.5);",
+            Timestamp.from(Instant.now().minus(355, ChronoUnit.DAYS))));
+    jdbcTemplate.execute(
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 89.4, 34.5, 30.8);",
+            Timestamp.from(Instant.now().minus(14, ChronoUnit.DAYS))));
+    jdbcTemplate.execute(
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 88.3, 34.2, 30.2);",
+            Timestamp.from(Instant.now().minus(6, ChronoUnit.DAYS))));
+    jdbcTemplate.execute(
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 87.7, 33.2, 29.1);",
+            Timestamp.from(Instant.now().minus(5, ChronoUnit.DAYS))));
+    jdbcTemplate.execute(
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 87.5, 31.1, 27.2);",
+            Timestamp.from(Instant.now().minus(1, ChronoUnit.DAYS))));
   }
 
   @Test
@@ -45,7 +51,7 @@ class WeightTest extends BaseIntegrationTest {
     open();
     WebElement element = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.15");
+    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.2");
   }
 
   @Test
@@ -55,7 +61,7 @@ class WeightTest extends BaseIntegrationTest {
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
-    assertThat(label).contains("The data is as follows:", "88.3,", "87.7,", "87.5,", "87.15.");
+    assertThat(label).contains("The data is as follows:", "88.3,", "87.7,", "87.5,", "87.2.");
     assertThat(label).doesNotContain("108.9,", "98,", "89.4,");
   }
 
@@ -74,7 +80,7 @@ class WeightTest extends BaseIntegrationTest {
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
-    assertThat(label).contains("The data is as follows:", "89.4,", "88.3,", "87.7,", "87.5,", "87.15.");
+    assertThat(label).contains("The data is as follows:", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");
     assertThat(label).doesNotContain("108.9,", "98,");
   }
 
@@ -93,7 +99,7 @@ class WeightTest extends BaseIntegrationTest {
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
-    assertThat(label).contains("The data is as follows:", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.15.");
+    assertThat(label).contains("The data is as follows:", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");
     assertThat(label).doesNotContain("108.9,");
   }
 
@@ -112,7 +118,7 @@ class WeightTest extends BaseIntegrationTest {
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
-    assertThat(label).contains("The data is as follows:", "108.9,", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.15.");
+    assertThat(label).contains("The data is as follows:", "108.9,", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");
   }
 
 }

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS oauth2_authorized_client (
 CREATE TABLE IF NOT EXISTS weight (
   created_at timestamp NOT NULL,
   weight float(53),
-  fat_mass_weight float(53),
   fat_ratio float(53),
+  fat_mass_weight float(53),
   PRIMARY KEY (created_at)
 );
