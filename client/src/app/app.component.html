@@ -1,18 +1,16 @@
 <header app-header>
   <nav>
-    <a app-header-menu href="/"><h1 app-heading>Workout</h1></a>
-    <a app-header-menu href="/db">
-      <span
-        app-badge
-        role="status"
-        *ngIf="lastNackupState.isReady"
-        class="lastBackup"
-        >Last backup {{ lastNackupState.value.time | relativeTime }}</span
-      >
-    </a>
+    <a app-header-menu href="/"><h1 app-heading>W6</h1></a>
+    <a app-header-menu href="/">Week</a>
+    <a app-header-menu href="/month">Month</a>
+    <a app-header-menu href="/year">Year</a>
+    <a app-header-menu href="/all-time">All time</a>
   </nav>
 </header>
 <main app-main>
+  <a app-badge href="/db" *ngIf="lastNackupState.isReady" class="lastBackup"
+    >Last backup {{ lastNackupState.value.time | relativeTime }}</a
+  >
   <section class="main">
     <app-weight *ngIf="syncState.isReady"></app-weight>
     <div

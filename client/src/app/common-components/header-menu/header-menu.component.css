@@ -1,8 +1,23 @@
 :host {
   text-decoration: initial;
+  font-size: 16px;
+  font-weight: 500;
+  color: white;
+  white-space: nowrap;
+}
+
+:host(:has(h1)) {
+  width: 100%;
+}
+
+:host(:not(:first-child)) {
+  padding-left: 16px;
+}
+
+:host(:not(:last-child)) {
+  padding-right: 16px;
 }
 
 :host:hover {
-  --color-scope: hsl(218, 93%, 61%);
-  color: var(--color-scope);
+  color: rgb(63, 131, 248);
 }

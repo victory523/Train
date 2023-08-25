@@ -10,3 +10,11 @@
   white-space: nowrap;
   border-radius: calc(4em / 14);
 }
+
+:host(a) {
+  text-decoration: none;
+}
+
+:host(a:hover) {
+  background-color: rgb(30, 66, 159);
+}

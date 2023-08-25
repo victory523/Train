@@ -72,9 +72,9 @@ export class WeightComponent implements OnInit {
       animation: false,
       grid: {
         top: 10,
-        right: 0,
-        bottom: 40,
-        left: 40,
+        right: 10,
+        bottom: 10,
+        left: 10,
       },
       dataset: {
         source: [
@@ -87,15 +87,18 @@ export class WeightComponent implements OnInit {
       },
       xAxis: {
         type: 'time',
+        show: false
       },
       yAxis: {
         max: 'dataMax',
         min: 'dataMin',
+        show: false
       },
       series: [
         {
           type: 'line',
           smooth: true,
+          showSymbol: false,
         },
       ],
     };

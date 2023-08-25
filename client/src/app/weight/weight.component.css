@@ -2,9 +2,22 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 1;
 }
 
 section {
-  display: grid;
+  display: flex;
+  flex-direction: row-reverse;
   gap: 20px
+}
+
+.chart-wrapper {
+  position: relative;
+  width: 20vw;
+  aspect-ratio: 1;
+}
+
+.chart {
+  position: absolute;
+  inset: 0;
 }

@@ -1,20 +1,29 @@
+<!-- <span app-button-group
+  ><button
+    *ngFor="let period of periods"
+    type="button"
+    (click)="selectPeriod(period)"
+    [ariaPressed]="selectedPeriod === period"
+  >
+    {{ period.label }}
+  </button>
+</span> -->
 <section *ngIf="weightState.isReady">
-  <h2 app-heading class="weight">
-    Weight<span role='status' app-badge>{{ todayWeight || "-" }}</span>
-  </h2>
-
-  <span app-button-group
-    ><button
-      *ngFor="let period of periods"
-      type="button"
-      (click)="selectPeriod(period)"
-      [ariaPressed]="selectedPeriod === period"
-    >
-      {{ period.label }}
-    </button>
-  </span>
-
-  <div role="img" echarts [options]="chartOptions" [initOpts]="initOpts"></div>
+  <h2 app-heading class="weight">{{ todayWeight || "-" }} kg</h2>
+  <div class="chart-wrapper">
+    <div
+      role="img"
+      class="chart"
+      echarts
+      [options]="chartOptions"
+      [initOpts]="initOpts"
+    ></div>
+  </div>
 </section>
 
-<div role="alert" aria-busy="true" app-loader *ngIf="weightState.isLoading"></div>
+<div
+  role="alert"
+  aria-busy="true"
+  app-loader
+  *ngIf="weightState.isLoading"
+></div>
