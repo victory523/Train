@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
 import { HeadingComponent } from '../common-components/heading/heading.component';
@@ -28,41 +29,28 @@ export class WeightComponent implements OnInit {
   initOpts: NgxEchartsDirective['initOpts'] = {
     renderer: 'svg',
   };
-  periods: Period[] = [
-    { label: 'Week', value: 7 },
-    { label: 'Month', value: 30 },
-    { label: 'Year', value: 365 },
-    { label: 'All time' },
-  ];
-  selectedPeriod = this.periods[0];
 
   constructor(
     private weightService: WeightService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   weightState: HttpRequestState<WeightMeasurement[]> = initialHttpRequestState;
 
   ngOnInit(): void {
-    this.fetchPeriod();
-  }
+    this.activatedRoute.data.subscribe((data) =>
+      requestState(this.weightService.getWeight(data['period']), (newState) => {
+        this.weightState = newState;
 
-  fetchPeriod() {
-    requestState(this.weightService.getWeight(this.selectedPeriod.value), (newState) => {
-      this.weightState = newState;
-
-      if (newState.hasFailed) {
-        this.notificationService.showNotification(
-          'Unable to fetch weight',
-          'error'
-        );
-      }
-    });
-  }
-
-  selectPeriod(newPeriod: Period) {
-    this.selectedPeriod = newPeriod;
-    this.fetchPeriod();
+        if (newState.hasFailed) {
+          this.notificationService.showNotification(
+            'Unable to fetch weight',
+            'error'
+          );
+        }
+      })
+    );
   }
 
   get chartOptions(): EChartsOption | null {
@@ -72,7 +60,7 @@ export class WeightComponent implements OnInit {
 
     return {
       aria: {
-        enabled: true
+        enabled: true,
       },
       animation: false,
       grid: {
@@ -92,12 +80,12 @@ export class WeightComponent implements OnInit {
       },
       xAxis: {
         type: 'time',
-        show: false
+        show: false,
       },
       yAxis: {
         max: 'dataMax',
         min: 'dataMin',
-        show: false
+        show: false,
       },
       series: [
         {
@@ -111,7 +99,7 @@ export class WeightComponent implements OnInit {
 
   get todayWeight(): number | undefined {
     if (!this.weightState.isReady) {
-      return undefined
+      return undefined;
     }
 
     return this.weightService.getTodayWeight(this.weightState.value);

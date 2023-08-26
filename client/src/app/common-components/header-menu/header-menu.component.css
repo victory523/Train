@@ -18,6 +18,7 @@
   padding-right: 16px;
 }
 
-:host:hover {
+:host:hover,
+:host(.active) {
   color: rgb(63, 131, 248);
 }

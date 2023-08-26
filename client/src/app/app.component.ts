@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { BadgeComponent } from './common-components/badge/badge.component';
 import { HeaderMenuComponent } from './common-components/header-menu/header-menu.component';
 import { HeaderComponent } from './common-components/header/header.component';
@@ -12,13 +13,14 @@ import { BackupService, LastBackup } from './services/backup.service';
 import { WithingsService } from './services/withings.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
 import { HttpRequestState, initialHttpRequestState, requestState } from './utils/request-state';
-import { WeightComponent } from './weight/weight.component';
 
 @Component({
   standalone: true,
   imports:[
     CommonModule,
-    WeightComponent,
+    RouterOutlet,
+    RouterLink,
+    RouterLinkActive,
     RelativeTimePipe,
     HeadingComponent,
     HeaderComponent,
