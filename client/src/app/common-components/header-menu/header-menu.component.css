@@ -4,6 +4,7 @@
   font-weight: 500;
   color: white;
   white-space: nowrap;
+  transition: color 0.3s;
 }
 
 :host(:has(h1)) {

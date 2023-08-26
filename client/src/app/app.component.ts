@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { RouterTokens } from './app.routes';
 import { BadgeComponent } from './common-components/badge/badge.component';
 import { HeaderMenuComponent } from './common-components/header-menu/header-menu.component';
 import { HeaderComponent } from './common-components/header/header.component';
@@ -17,7 +18,6 @@ import {
   initialHttpRequestState,
   requestState,
 } from './utils/request-state';
-import { RouterTokens } from './app.routes';
 
 @Component({
   standalone: true,

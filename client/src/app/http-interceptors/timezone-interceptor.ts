@@ -1,10 +1,11 @@
 import {
+  HTTP_INTERCEPTORS,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, Provider } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -22,4 +23,12 @@ export class TimezoneInterceptor implements HttpInterceptor {
       })
     );
   }
+}
+
+export function provideTimezoneInterceptor(): Provider {
+  return {
+    provide: HTTP_INTERCEPTORS,
+    useClass: TimezoneInterceptor,
+    multi: true,
+  };
 }
