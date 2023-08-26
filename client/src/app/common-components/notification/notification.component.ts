@@ -6,17 +6,17 @@ import {
   trigger,
 } from '@angular/animations';
 import {
-  Attribute,
   Component,
   EventEmitter,
   HostBinding,
   HostListener,
   Input,
-  Output,
+  Output
 } from '@angular/core';
 import { NotificationType } from '../notification.service';
 
 @Component({
+  standalone: true,
   selector: '[app-notification]',
   templateUrl: './notification.component.html',
   styleUrls: ['./notification.component.css'],

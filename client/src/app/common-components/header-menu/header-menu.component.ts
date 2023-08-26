@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
+  standalone: true,
   selector: '[app-header-menu]',
   templateUrl: './header-menu.component.html',
   styleUrls: ['./header-menu.component.css'],

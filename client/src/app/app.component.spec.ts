@@ -3,11 +3,10 @@ import { TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { AppComponent } from './app.component';
-import { CommonComponentsModule } from './common-components/common-components.module';
 import { NotificationService } from './common-components/notification.service';
-import { WithingsService } from './withings.service';
-import { BackupService, LastBackup } from './backup.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
+import { WithingsService } from './services/withings.service';
+import { BackupService, LastBackup } from './services/backup.service';
 
 @Component({
   selector: 'app-weight',
@@ -32,7 +31,7 @@ async function setup() {
       NotificationService,
       { provide: BackupService, useValue: mockBackupService },
     ],
-    imports: [CommonComponentsModule, NoopAnimationsModule],
+    imports: [NoopAnimationsModule],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(AppComponent);

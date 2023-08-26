@@ -1,14 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Subject } from 'rxjs';
-import { CommonComponentsModule } from '../common-components/common-components.module';
 import { NotificationService } from '../common-components/notification.service';
-import { WeightMeasurement, WeightService } from '../weight.service';
 import { WeightComponent } from './weight.component';
 import { Directive, Input } from '@angular/core';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { By } from '@angular/platform-browser';
+import { WeightMeasurement, WeightService } from '../services/weight.service';
 
 @Directive({
   selector: '[echarts]',
@@ -37,7 +36,6 @@ async function setup() {
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
     ],
-    imports: [CommonComponentsModule],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(WeightComponent);

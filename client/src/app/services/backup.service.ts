@@ -7,9 +7,7 @@ export type LastBackup = {
   errorMessage?: string;
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class BackupService {
   constructor(private http: HttpClient) {}
 

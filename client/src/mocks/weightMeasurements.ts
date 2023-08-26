@@ -1,4 +1,4 @@
-import { WeightMeasurement } from 'src/app/weight.service';
+import { WeightMeasurement } from "src/app/services/weight.service";
 
 function daysBefore(days: number): Date {
   return new Date(new Date().getTime() - days * 1000 * 60 * 60 * 24);

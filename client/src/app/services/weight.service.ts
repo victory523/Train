@@ -7,9 +7,7 @@ export type WeightMeasurement = {
   date: Date;
 };
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class WeightService {
   constructor(private http: HttpClient) {}
 

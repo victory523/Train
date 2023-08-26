@@ -1,13 +1,37 @@
+import { NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NotificationService } from './common-components/notification.service';
-import { WithingsService } from './withings.service';
-import { BackupService, LastBackup } from './backup.service';
+import { BackupService, LastBackup } from './services/backup.service';
+import { WithingsService } from './services/withings.service';
+import { RelativeTimePipe } from './utils/relative-time.pipe';
 import { HttpRequestState, initialHttpRequestState, requestState } from './utils/request-state';
+import { WeightComponent } from './weight/weight.component';
+import { HeaderComponent } from './common-components/header/header.component';
+import { HeaderMenuComponent } from './common-components/header-menu/header-menu.component';
+import { MainComponent } from './common-components/main/main.component';
+import { BadgeComponent } from './common-components/badge/badge.component';
+import { LoaderComponent } from './common-components/loader/loader.component';
+import { NotificationsComponent } from './common-components/notifications/notifications.component';
+import { HeadingComponent } from './common-components/heading/heading.component';
 
 @Component({
+  standalone: true,
+  imports:[
+    NgIf,
+    WeightComponent,
+    RelativeTimePipe,
+    HeadingComponent,
+    HeaderComponent,
+    HeaderMenuComponent,
+    MainComponent,
+    BadgeComponent,
+    LoaderComponent,
+    NotificationsComponent
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
+
 })
 export class AppComponent implements OnInit {
   constructor(

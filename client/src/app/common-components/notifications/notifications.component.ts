@@ -1,7 +1,11 @@
 import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import { Notification, NotificationService } from '../notification.service';
+import { NgFor } from '@angular/common';
+import { NotificationComponent } from '../notification/notification.component';
 
 @Component({
+  standalone: true,
+  imports: [NgFor, NotificationComponent],
   selector: '[app-notifications]',
   templateUrl: './notifications.component.html',
   styleUrls: ['./notifications.component.css'],
