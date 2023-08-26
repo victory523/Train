@@ -19,6 +19,6 @@
 }
 
 :host:hover,
-:host(.active) {
+:host([aria-current="page"]) {
   color: rgb(63, 131, 248);
 }

@@ -12,11 +12,16 @@ import { NotificationsComponent } from './common-components/notifications/notifi
 import { BackupService, LastBackup } from './services/backup.service';
 import { WithingsService } from './services/withings.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
-import { HttpRequestState, initialHttpRequestState, requestState } from './utils/request-state';
+import {
+  HttpRequestState,
+  initialHttpRequestState,
+  requestState,
+} from './utils/request-state';
+import { RouterTokens } from './app.routes';
 
 @Component({
   standalone: true,
-  imports:[
+  imports: [
     CommonModule,
     RouterOutlet,
     RouterLink,
@@ -28,18 +33,19 @@ import { HttpRequestState, initialHttpRequestState, requestState } from './utils
     MainComponent,
     BadgeComponent,
     LoaderComponent,
-    NotificationsComponent
+    NotificationsComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
-
 })
 export class AppComponent implements OnInit {
+  readonly routerTokens = RouterTokens;
+
   constructor(
-    private withingsService: WithingsService,
-    private notificationService: NotificationService,
-    private backupService: BackupService
+    private readonly withingsService: WithingsService,
+    private readonly notificationService: NotificationService,
+    private readonly backupService: BackupService
   ) {}
 
   syncState: HttpRequestState<void> = initialHttpRequestState;
@@ -58,25 +64,22 @@ export class AppComponent implements OnInit {
       }
     });
 
-    requestState(
-      this.backupService.getLastBackupTime(),
-      (newState) => {
-        this.lastNackupState = newState;
+    requestState(this.backupService.getLastBackupTime(), (newState) => {
+      this.lastNackupState = newState;
 
-        if (newState.isReady && newState.value.errorMessage) {
-          this.notificationService.showNotification(
-            newState.value.errorMessage,
-            'error'
-          );
-        }
-
-        if (newState.hasFailed) {
-          this.notificationService.showNotification(
-            'Unable to fetch last backup time',
-            'error'
-          );
-        }
+      if (newState.isReady && newState.value.errorMessage) {
+        this.notificationService.showNotification(
+          newState.value.errorMessage,
+          'error'
+        );
       }
-    );
+
+      if (newState.hasFailed) {
+        this.notificationService.showNotification(
+          'Unable to fetch last backup time',
+          'error'
+        );
+      }
+    });
   }
 }

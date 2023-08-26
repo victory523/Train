@@ -1,10 +1,40 @@
 <header app-header>
   <nav>
-    <a app-header-menu routerLink="/" routerLinkActive="active"><h1 app-heading>W6</h1></a>
-    <a app-header-menu routerLink="/week" routerLinkActive="active">Week</a>
-    <a app-header-menu routerLink="/month" routerLinkActive="active">Month</a>
-    <a app-header-menu routerLink="/year" routerLinkActive="active">Year</a>
-    <a app-header-menu routerLink="/all-time" routerLinkActive="active">All time</a>
+    <a
+      app-header-menu
+      [routerLink]="routerTokens.WEEK"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      ><h1 app-heading>W6</h1></a
+    >
+    <a
+      app-header-menu
+      [routerLink]="routerTokens.WEEK"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      >Week</a
+    >
+    <a
+      app-header-menu
+      [routerLink]="routerTokens.MONTH"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      >Month</a
+    >
+    <a
+      app-header-menu
+      [routerLink]="routerTokens.YEAR"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      >Year</a
+    >
+    <a
+      app-header-menu
+      [routerLink]="routerTokens.ALL_TIME"
+      routerLinkActive
+      ariaCurrentWhenActive="page"
+      >All time</a
+    >
   </nav>
 </header>
 <main app-main>

@@ -1,27 +1,36 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './home/home.component';
 
+export enum RouterTokens {
+  WEEK = 'week',
+  MONTH = 'month',
+  YEAR = 'year',
+  ALL_TIME = 'all-time',
+}
+
 export const routes: Routes = [
   {
     path: '',
-    redirectTo: 'week',
+    redirectTo: RouterTokens.WEEK,
     pathMatch: 'full',
   },
   {
-    path: 'week',
+    path: RouterTokens.WEEK,
     component: HomeComponent,
     data: { period: 7 },
   },
   {
-    path: 'month',
+    path: RouterTokens.MONTH,
     component: HomeComponent,
     data: { period: 30 },
-  }, {
-    path: 'year',
+  },
+  {
+    path: RouterTokens.YEAR,
     component: HomeComponent,
     data: { period: 365 },
-  }, {
-    path: 'all-time',
+  },
+  {
+    path: RouterTokens.ALL_TIME,
     component: HomeComponent,
   },
 ];
