@@ -1,0 +1,48 @@
+{
+  // For more information, visit: https://go.microsoft.com/fwlink/?LinkId=733558
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "start",
+      "isBackground": true,
+      "path": "client",
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    },
+    {
+      "type": "shell",
+      "command": "ng",
+      "label": "Run current client test",
+      "args": ["test", "--include", "**/${fileBasename}", "--no-watch"],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": {
+        "owner": "typescript",
+        "pattern": "$tsc",
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": {
+            "regexp": "(.*?)"
+          },
+          "endsPattern": {
+            "regexp": "bundle generation complete"
+          }
+        }
+      }
+    }
+  ]
+}

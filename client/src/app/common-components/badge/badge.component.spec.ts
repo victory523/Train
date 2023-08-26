@@ -9,13 +9,11 @@ async function setup({
   template?: string;
 } = {}) {
   @Component({
+    standalone: true,
+    imports: [BadgeComponent],
     template,
   })
   class TestComponent {}
-
-  await TestBed.configureTestingModule({
-    declarations: [BadgeComponent, TestComponent],
-  }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);
   const debugElement = fixture.debugElement.children[0];

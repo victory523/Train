@@ -1,14 +1,17 @@
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { Subject } from 'rxjs';
 import { AppComponent } from './app.component';
 import { NotificationService } from './common-components/notification.service';
-import { RelativeTimePipe } from './utils/relative-time.pipe';
-import { WithingsService } from './services/withings.service';
 import { BackupService, LastBackup } from './services/backup.service';
+import { WithingsService } from './services/withings.service';
+import { RelativeTimePipe } from './utils/relative-time.pipe';
+import { WeightService } from './services/weight.service';
+import { provideHttpClient } from '@angular/common/http';
 
 @Component({
+  standalone: true,
   selector: 'app-weight',
   template: '87.6',
 })
@@ -25,13 +28,15 @@ async function setup() {
   mockBackupService.getLastBackupTime.and.returnValue(lastBackupSubject)
 
   await TestBed.configureTestingModule({
-    declarations: [AppComponent, MockWeightComponent, RelativeTimePipe],
+    imports: [MockWeightComponent, RelativeTimePipe],
     providers: [
+      provideNoopAnimations(),
+      provideHttpClient(),
+      WeightService,
       { provide: WithingsService, useValue: mockWithingsService },
       NotificationService,
       { provide: BackupService, useValue: mockBackupService },
     ],
-    imports: [NoopAnimationsModule],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(AppComponent);
@@ -48,7 +53,7 @@ async function setup() {
 describe('AppComponent', () => {
   it('should render header', async () => {
     const { element } = await setup();
-    expect(element.querySelector('header h1')?.textContent).toBe('Workout');
+    expect(element.querySelector('header h1')?.textContent).toBe('W6');
   });
 
   it('should render loading state', async () => {

@@ -1,13 +1,14 @@
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { WeightMeasurement, WeightService } from './weight.service';
 
 function setup() {
   TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule],
+    providers: [provideHttpClient(), provideHttpClientTesting(), WeightService]
   });
   const service = TestBed.inject(WeightService);
   const httpTestingController = TestBed.inject(HttpTestingController);

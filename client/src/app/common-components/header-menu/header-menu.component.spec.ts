@@ -9,13 +9,11 @@ async function setup({
   template?: string;
 } = {}) {
   @Component({
+    standalone: true,
+    imports: [HeaderMenuComponent],
     template,
   })
   class TestComponent {}
-
-  await TestBed.configureTestingModule({
-    declarations: [HeaderMenuComponent, TestComponent],
-  }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);
   const debugElement = fixture.debugElement.children[0];
@@ -34,5 +32,4 @@ describe('HeaderMenuComponent', () => {
     });
     expect(nativeElement.textContent).toBe('test text');
   });
-
 });

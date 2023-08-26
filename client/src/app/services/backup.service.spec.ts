@@ -1,10 +1,11 @@
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { BackupService } from './backup.service';
+import { provideHttpClient } from '@angular/common/http';
 
 function setup() {
   TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule]
+    providers: [provideHttpClient(), provideHttpClientTesting(), BackupService]
   });
   const service = TestBed.inject(BackupService);
   const httpTestingController = TestBed.inject(HttpTestingController)

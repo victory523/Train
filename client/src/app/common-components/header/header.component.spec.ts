@@ -11,13 +11,11 @@ async function setup({
   template?: string;
 } = {}) {
   @Component({
+    standalone: true,
+    imports: [HeaderComponent, HeadingComponent, HeaderMenuComponent],
     template,
   })
   class TestComponent {}
-
-  await TestBed.configureTestingModule({
-    declarations: [HeaderComponent, TestComponent, HeadingComponent, HeaderMenuComponent],
-  }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);
   const debugElement = fixture.debugElement.children[0];

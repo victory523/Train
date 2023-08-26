@@ -1,16 +1,16 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { EChartsOption } from 'echarts';
+import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
+import { HeadingComponent } from '../common-components/heading/heading.component';
+import { LoaderComponent } from '../common-components/loader/loader.component';
 import { NotificationService } from '../common-components/notification.service';
+import { WeightMeasurement, WeightService } from '../services/weight.service';
 import {
   HttpRequestState,
   initialHttpRequestState,
   requestState,
 } from '../utils/request-state';
-import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
-import { WeightMeasurement, WeightService } from '../services/weight.service';
-import { NgIf } from '@angular/common';
-import { HeadingComponent } from '../common-components/heading/heading.component';
-import { LoaderComponent } from '../common-components/loader/loader.component';
 
 type Period = {
   label: string;
@@ -19,7 +19,7 @@ type Period = {
 
 @Component({
   standalone: true,
-  imports: [NgIf, NgxEchartsModule, HeadingComponent, LoaderComponent],
+  imports: [CommonModule, HeadingComponent, LoaderComponent, NgxEchartsModule],
   selector: 'app-weight',
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],

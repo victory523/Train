@@ -3,7 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { Notification, NotificationService } from './notification.service';
 
 function setup() {
-  TestBed.configureTestingModule({});
+  TestBed.configureTestingModule({
+    providers: [NotificationService]
+  });
 
   const service = TestBed.inject(NotificationService);
   return { service };

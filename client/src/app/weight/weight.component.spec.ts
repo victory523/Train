@@ -8,8 +8,12 @@ import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import { By } from '@angular/platform-browser';
 import { WeightMeasurement, WeightService } from '../services/weight.service';
+import { CommonModule } from '@angular/common';
+import { HeadingComponent } from '../common-components/heading/heading.component';
+import { LoaderComponent } from '../common-components/loader/loader.component';
 
 @Directive({
+  standalone: true,
   selector: '[echarts]',
 })
 class MockECharts {
@@ -31,12 +35,17 @@ async function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
   await TestBed.configureTestingModule({
-    declarations: [WeightComponent, MockECharts],
     providers: [
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
     ],
   }).compileComponents();
+
+  TestBed.overrideComponent(WeightComponent, {
+    set: {
+      imports: [CommonModule, HeadingComponent, LoaderComponent, MockECharts],
+    },
+  });
 
   const fixture = TestBed.createComponent(WeightComponent);
   fixture.detectChanges();

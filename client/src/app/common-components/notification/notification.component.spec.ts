@@ -1,7 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 
 import { Component } from '@angular/core';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import {
+  provideNoopAnimations
+} from '@angular/platform-browser/animations';
 import { NotificationComponent } from './notification.component';
 
 async function setup({
@@ -10,13 +12,14 @@ async function setup({
   template?: string;
 } = {}) {
   @Component({
+    standalone: true,
+    imports: [NotificationComponent],
     template,
   })
   class TestComponent {}
 
   await TestBed.configureTestingModule({
-    declarations: [NotificationComponent, TestComponent],
-    imports: [NoopAnimationsModule],
+    providers: [provideNoopAnimations()],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(TestComponent);

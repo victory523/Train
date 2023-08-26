@@ -1,15 +1,20 @@
+import { provideHttpClient } from '@angular/common/http';
 import {
-  HttpClientTestingModule,
   HttpTestingController,
+  provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { WithingsService } from './withings.service';
 
 function setup() {
-  const mockLocation = jasmine.createSpyObj(['assign']) as Location
+  const mockLocation = jasmine.createSpyObj(['assign']) as Location;
   TestBed.configureTestingModule({
-    imports: [HttpClientTestingModule],
-    providers: [{ provide: Location, useValue: mockLocation }],
+    providers: [
+      provideHttpClient(),
+      provideHttpClientTesting(),
+      { provide: Location, useValue: mockLocation },
+      WithingsService,
+    ],
   });
   const service = TestBed.inject(WithingsService);
   const httpTestingController = TestBed.inject(HttpTestingController);
