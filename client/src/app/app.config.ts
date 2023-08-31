@@ -1,16 +1,16 @@
 import { ApplicationConfig, Provider } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import * as echarts from 'echarts';
 import { NGX_ECHARTS_CONFIG } from 'ngx-echarts';
 import { routes } from './app.routes';
 import { NotificationService } from './common-components/notification.service';
-import { provideTimezoneInterceptor } from './http-interceptors/timezone-interceptor';
+import { timezoneInterceptor } from './http-interceptors/timezone-interceptor';
 import { BackupService } from './services/backup.service';
 import { WeightService } from './services/weight.service';
 import { WithingsService } from './services/withings.service';
-import * as echarts from 'echarts';
 
 function provideECharts(): Provider {
   return {
@@ -27,9 +27,8 @@ export const appConfig: ApplicationConfig = {
   providers: [
     provideAnimations(),
     provideRouter(routes),
-    provideHttpClient(),
+    provideHttpClient(withInterceptors([timezoneInterceptor])),
     provideLocation(),
-    provideTimezoneInterceptor(),
     provideECharts(),
     WeightService,
     WithingsService,
