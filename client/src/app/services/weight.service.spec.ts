@@ -57,7 +57,7 @@ describe('WeightService', () => {
         },
       ];
       expect(service.getTodayWeight(measurements)).toEqual({
-        date: daysBefore(0),
+        date: measurements[measurements.length - 1].date,
         weight: 107.8,
         fatRatio: 31.04,
         fatMassWeight: 21.34,
