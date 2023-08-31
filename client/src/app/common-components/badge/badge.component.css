@@ -16,5 +16,5 @@
 }
 
 :host(a:hover) {
-  background-color: rgb(30, 66, 159);
+  background-color: hsl(223, 68%, 37%);
 }

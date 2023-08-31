@@ -1,20 +1,20 @@
-.weight {
-  display: flex;
+section {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
   align-items: center;
-  gap: 10px;
-  flex: 1;
 }
 
-section {
-  display: flex;
-  flex-direction: row-reverse;
-  gap: 20px
+section > * {
+  display: grid;
+  gap: 4px;
 }
 
 .chart-wrapper {
-  position: relative;
-  width: 20vw;
   aspect-ratio: 1;
+  min-width: 100px;
+  max-width: 180px;
+  position: relative;
 }
 
 .chart {

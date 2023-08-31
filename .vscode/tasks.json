@@ -3,46 +3,44 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "type": "npm",
-      "script": "start",
+      "type": "shell",
+      "label": "Start client",
+      "command": "ng",
+      "args": ["serve"],
       "isBackground": true,
-      "path": "client",
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
     },
     {
       "type": "shell",
       "command": "ng",
       "label": "Run current client test",
-      "args": ["test", "--include", "**/${fileBasename}", "--no-watch"],
-      "isBackground": true,
+      "args": [
+        "test",
+        "--include",
+        "**/${fileBasename}",
+        "--no-watch"
+      ],
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
-      "problemMatcher": {
-        "owner": "typescript",
-        "pattern": "$tsc",
-        "background": {
-          "activeOnStart": true,
-          "beginsPattern": {
-            "regexp": "(.*?)"
-          },
-          "endsPattern": {
-            "regexp": "bundle generation complete"
-          }
-        }
-      }
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "command": "ng",
+      "label": "Run and watch current client test",
+      "args": [
+        "test",
+        "--include",
+        "**/${fileBasename}"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
     }
   ]
 }

@@ -1,4 +1,4 @@
-import { WeightMeasurement } from "src/app/services/weight.service";
+import { WeightMeasurement } from 'src/app/services/weight.service';
 
 function daysBefore(days: number): Date {
   return new Date(new Date().getTime() - days * 1000 * 60 * 60 * 24);
@@ -268,10 +268,10 @@ export const weightMeasurements = [
   { date: daysBefore(31), weight: 86.3 },
   { date: daysBefore(30), weight: 85.8 },
   { date: daysBefore(29), weight: 85.6 },
-  { date: daysBefore(7), weight: 88.3 },
+  { date: daysBefore(7), weight: 88.3, fatRatio: 31, fatMassWeight: 21 },
   { date: daysBefore(6), weight: 88.4 },
   { date: daysBefore(5), weight: 88.3 },
   { date: daysBefore(4), weight: 87.7 },
   { date: daysBefore(2), weight: 87.3 },
-  { date: daysBefore(0), weight: 87.2 },
+  { date: daysBefore(0), weight: 87.2, fatRatio: 31.04, fatMassWeight: 21.34 },
 ] satisfies WeightMeasurement[];

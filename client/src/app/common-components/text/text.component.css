@@ -1,0 +1,15 @@
+:host {
+  color: hsl(218, 11%, 65%);
+  font-family: system-ui;
+  font-size: 14px;
+  font-weight: initial;
+  margin: initial;
+}
+
+:host([app-text-type="green"]) {
+  color: hsl(111, 32%, 66%);
+}
+
+:host([app-text-type="red"]) {
+  color: hsl(0, 91%, 74%);
+}

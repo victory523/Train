@@ -12,15 +12,23 @@ import {
   initialHttpRequestState,
   requestState,
 } from '../utils/request-state';
-
-type Period = {
-  label: string;
-  value?: number;
-};
+import { TextComponent } from '../common-components/text/text.component';
+import { PercentageDiffPipe } from '../utils/percentage-diff.pipe';
+import { PercentageDiffColorPipe } from '../utils/percentage-diff-color.pipe';
+import { MeasurementWithUnitPipe } from '../utils/measurement-with-unit.pipe';
 
 @Component({
   standalone: true,
-  imports: [CommonModule, HeadingComponent, LoaderComponent, NgxEchartsModule],
+  imports: [
+    CommonModule,
+    HeadingComponent,
+    LoaderComponent,
+    NgxEchartsModule,
+    TextComponent,
+    PercentageDiffPipe,
+    PercentageDiffColorPipe,
+    MeasurementWithUnitPipe
+  ],
   selector: 'app-weight',
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],
@@ -97,11 +105,20 @@ export class WeightComponent implements OnInit {
     };
   }
 
-  get todayWeight(): number | undefined {
+  get todayWeight(): WeightMeasurement | undefined {
     if (!this.weightState.isReady) {
       return undefined;
     }
 
     return this.weightService.getTodayWeight(this.weightState.value);
   }
+
+  get diff(): WeightMeasurement | undefined {
+    if (!this.weightState.isReady) {
+      return undefined;
+    }
+
+    return this.weightService.getDiff(this.weightState.value);
+  }
+
 }

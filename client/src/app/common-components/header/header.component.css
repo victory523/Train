@@ -11,7 +11,7 @@
 
 :host /deep/ nav {
   padding: 18px 1rem 19px;
-  max-width: 90rem;
+  max-width: 1000px;
   margin: 0 auto;
   display: flex;
   align-items: center;

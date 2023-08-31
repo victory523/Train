@@ -21,5 +21,5 @@
 
 :host:hover,
 :host([aria-current="page"]) {
-  color: rgb(63, 131, 248);
+  color: hsl(218, 93%, 61%);
 }

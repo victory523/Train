@@ -3,8 +3,10 @@ import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
 export type WeightMeasurement = {
-  weight: number;
   date: Date;
+  weight: number;
+  fatRatio?: number;
+  fatMassWeight?: number;
 };
 
 @Injectable()
@@ -26,7 +28,9 @@ export class WeightService {
       );
   }
 
-  getTodayWeight(measurements: WeightMeasurement[]): number | undefined {
+  getTodayWeight(
+    measurements: WeightMeasurement[]
+  ): WeightMeasurement | undefined {
     const start = new Date();
     start.setUTCHours(0, 0, 0, 0);
     const end = new Date();
@@ -35,6 +39,30 @@ export class WeightService {
     return measurements.findLast(
       ({ date }) =>
         start.getTime() < date.getTime() && date.getTime() < end.getTime()
-    )?.weight;
+    );
+  }
+
+  getDiff(measurements: WeightMeasurement[]): WeightMeasurement | undefined {
+    if (measurements.length < 2) {
+      return undefined;
+    }
+
+    const initial = measurements[0];
+    const latest = measurements[measurements.length - 1];
+
+    return {
+      date: latest.date,
+      weight: (latest.weight - initial.weight) / initial.weight,
+      ...(initial.fatMassWeight &&
+        latest.fatMassWeight && {
+          fatMassWeight:
+            (latest.fatMassWeight - initial.fatMassWeight) /
+            initial.fatMassWeight,
+        }),
+      ...(initial.fatRatio &&
+        latest.fatRatio && {
+          fatRatio: (latest.fatRatio - initial.fatRatio) / initial.fatRatio,
+        }),
+    };
   }
 }

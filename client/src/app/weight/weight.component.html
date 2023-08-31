@@ -1,5 +1,4 @@
 <section *ngIf="weightState.isReady">
-  <h2 app-heading class="weight">{{ todayWeight || "-" }} kg</h2>
   <div class="chart-wrapper">
     <div
       role="img"
@@ -9,6 +8,42 @@
       [initOpts]="initOpts"
     ></div>
   </div>
+  <article>
+    <h2 app-text>Weight</h2>
+    <p app-heading large>
+      {{ todayWeight?.weight | measurementWithUnit : "kg" }}
+    </p>
+    <p
+      app-text
+      [app-text-type]="diff?.weight | percentageDiffColor : 'inverse'"
+    >
+      {{ diff?.weight | percentageDiff }}
+    </p>
+  </article>
+  <article>
+    <h2 app-text>Body fat</h2>
+    <p app-heading large>
+      {{ todayWeight?.fatMassWeight | measurementWithUnit : "kg" }}
+    </p>
+    <p
+      app-text
+      [app-text-type]="diff?.fatMassWeight | percentageDiffColor : 'inverse'"
+    >
+      {{ diff?.fatMassWeight | percentageDiff }}
+    </p>
+  </article>
+  <article>
+    <h2 app-text>Fat ratio</h2>
+    <p app-heading large>
+      {{ todayWeight?.fatRatio | measurementWithUnit : "%" }}
+    </p>
+    <p
+      app-text
+      [app-text-type]="diff?.fatRatio | percentageDiffColor : 'inverse'"
+    >
+      {{ diff?.fatRatio | percentageDiff }}
+    </p>
+  </article>
 </section>
 
 <div

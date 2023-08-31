@@ -1,16 +1,14 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Subject } from 'rxjs';
-import { NotificationService } from '../common-components/notification.service';
-import { WeightComponent } from './weight.component';
 import { Directive, Input } from '@angular/core';
-import { EChartsOption } from 'echarts';
-import { NgxEchartsDirective } from 'ngx-echarts';
 import { By } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
+import { EChartsOption } from 'echarts';
+import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
+import { Subject, of } from 'rxjs';
+import { NotificationService } from '../common-components/notification.service';
 import { WeightMeasurement, WeightService } from '../services/weight.service';
-import { CommonModule } from '@angular/common';
-import { HeadingComponent } from '../common-components/heading/heading.component';
-import { LoaderComponent } from '../common-components/loader/loader.component';
+import { WeightComponent } from './weight.component';
 
 @Directive({
   standalone: true,
@@ -24,10 +22,10 @@ class MockECharts {
   initOpts?: NgxEchartsDirective['initOpts'];
 }
 
-async function setup() {
+async function setup({ period }: { period?: number } = {}) {
   const weightMeasurementSubject = new Subject<WeightMeasurement[]>();
   const mockWeightService: jasmine.SpyObj<WeightService> = jasmine.createSpyObj(
-    ['getWeight', 'getTodayWeight']
+    ['getWeight', 'getTodayWeight', 'getDiff']
   );
   mockWeightService.getWeight.and.returnValue(
     weightMeasurementSubject.asObservable()
@@ -38,12 +36,16 @@ async function setup() {
     providers: [
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
+      { provide: ActivatedRoute, useValue: { data: of({ period }) } },
     ],
   }).compileComponents();
 
   TestBed.overrideComponent(WeightComponent, {
-    set: {
-      imports: [CommonModule, HeadingComponent, LoaderComponent, MockECharts],
+    remove: {
+      imports: [NgxEchartsModule],
+    },
+    add: {
+      imports: [MockECharts],
     },
   });
 
@@ -69,20 +71,58 @@ describe('WeightComponent', () => {
     const { element, fixture, weightSubject, mockWeightService } =
       await setup();
     weightSubject.next([]);
-    mockWeightService.getTodayWeight.and.returnValue(108.9);
+    mockWeightService.getTodayWeight.and.returnValue({
+      date: new Date(),
+      weight: 108.9,
+      fatMassWeight: 21.3,
+      fatRatio: 31,
+    });
     fixture.detectChanges();
-    expect(element.querySelector('[role="status"]')?.textContent).toEqual(
-      '108.9'
-    );
+    const valueElements = element.querySelectorAll('h2 + *');
+    expect(valueElements[0].textContent?.trim()).toEqual('108.9 kg');
+    expect(valueElements[1].textContent?.trim()).toEqual('21.3 kg');
+    expect(valueElements[2].textContent?.trim()).toEqual('31 %');
   });
 
-  it('renders question mark if no weight is returned', async () => {
+  it('renders - if no weight is returned', async () => {
     const { element, fixture, weightSubject, mockWeightService } =
       await setup();
     weightSubject.next([]);
     mockWeightService.getTodayWeight.and.returnValue(undefined);
     fixture.detectChanges();
-    expect(element.querySelector('[role="status"]')?.textContent).toEqual('-');
+    const valueElements = element.querySelectorAll('h2 + *');
+    expect(valueElements[0].textContent?.trim()).toEqual('-');
+    expect(valueElements[1].textContent?.trim()).toEqual('-');
+    expect(valueElements[2].textContent?.trim()).toEqual('-');
+  });
+
+  it('renders weight diff', async () => {
+    const { element, fixture, weightSubject, mockWeightService } =
+      await setup();
+    weightSubject.next([]);
+    mockWeightService.getDiff.and.returnValue({
+      date: new Date(),
+      weight: -0.00132,
+      fatMassWeight: 0.05,
+      fatRatio: 0.07894,
+    });
+    fixture.detectChanges();
+    const valueElements = element.querySelectorAll('h2 + * + *');
+    expect(valueElements[0].textContent?.trim()).toEqual('↓ 0.1 %');
+    expect(valueElements[1].textContent?.trim()).toEqual('↑ 5 %');
+    expect(valueElements[2].textContent?.trim()).toEqual('↑ 7.9 %');
+  });
+
+  it('renders - if no weight diff is returned', async () => {
+    const { element, fixture, weightSubject, mockWeightService } =
+      await setup();
+    weightSubject.next([]);
+    mockWeightService.getDiff.and.returnValue(undefined);
+    fixture.detectChanges();
+    const valueElements = element.querySelectorAll('h2 + * + *');
+    expect(valueElements[0].textContent?.trim()).toEqual('-');
+    expect(valueElements[1].textContent?.trim()).toEqual('-');
+    expect(valueElements[2].textContent?.trim()).toEqual('-');
   });
 
   it('renders error state', async () => {
@@ -95,73 +135,13 @@ describe('WeightComponent', () => {
     );
   });
 
-  it('selected week period by default', async () => {
-    const { fixture, weightSubject } = await setup();
-    weightSubject.next([]);
-    fixture.detectChanges();
-    expect(
-      fixture.debugElement.queryAll(By.css('[app-button-group] button'))[0]
-        .attributes['aria-pressed']
-    ).toBe('true');
-  });
-
-  it('updates period selection on click', async () => {
-    const { fixture, weightSubject } = await setup();
-    weightSubject.next([]);
-    fixture.detectChanges();
-    fixture.debugElement
-      .queryAll(By.css('[app-button-group] button'))[1]
-      .triggerEventHandler('click');
-    weightSubject.next([]);
-    fixture.detectChanges();
-    expect(
-      fixture.debugElement.queryAll(By.css('[app-button-group] button'))[0]
-        .attributes['aria-pressed']
-    ).toBe('false');
-    expect(
-      fixture.debugElement.queryAll(By.css('[app-button-group] button'))[1]
-        .attributes['aria-pressed']
-    ).toBe('true');
-  });
-
   it('fetches weight meausrements with week period', async () => {
-    const { fixture, weightSubject, mockWeightService } = await setup();
+    const { fixture, weightSubject, mockWeightService } = await setup({
+      period: 7,
+    });
     weightSubject.next([]);
     fixture.detectChanges();
     expect(mockWeightService.getWeight).toHaveBeenCalledWith(7);
-  });
-
-  it('fetches weight meausrements with month period', async () => {
-    const { fixture, weightSubject, mockWeightService } = await setup();
-    weightSubject.next([]);
-    fixture.detectChanges();
-    mockWeightService.getWeight.calls.reset();
-    fixture.debugElement
-      .queryAll(By.css('[app-button-group] button'))[1]
-      .triggerEventHandler('click');
-    expect(mockWeightService.getWeight).toHaveBeenCalledWith(30);
-  });
-
-  it('fetches weight meausrements with year period', async () => {
-    const { fixture, weightSubject, mockWeightService } = await setup();
-    weightSubject.next([]);
-    fixture.detectChanges();
-    mockWeightService.getWeight.calls.reset();
-    fixture.debugElement
-      .queryAll(By.css('[app-button-group] button'))[2]
-      .triggerEventHandler('click');
-    expect(mockWeightService.getWeight).toHaveBeenCalledWith(365);
-  });
-
-  it('fetches weight meausrements with all time period', async () => {
-    const { fixture, weightSubject, mockWeightService } = await setup();
-    weightSubject.next([]);
-    fixture.detectChanges();
-    mockWeightService.getWeight.calls.reset();
-    fixture.debugElement
-      .queryAll(By.css('[app-button-group] button'))[3]
-      .triggerEventHandler('click');
-    expect(mockWeightService.getWeight).toHaveBeenCalledWith(undefined);
   });
 
   it('renders weight chart', async () => {

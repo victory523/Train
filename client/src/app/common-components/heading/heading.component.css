@@ -5,7 +5,8 @@
   margin: initial;
 }
 
-:host(h1) {
+:host(h1),
+:host([large]) {
   font-size: 24px;
   font-weight: 700;
 }
