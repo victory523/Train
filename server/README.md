@@ -181,4 +181,4 @@ After succesful authentication using `AuthenticationManager` `OAuth2Authorizatio
 
 As last step it redirects back to previous url.
 
-# Kubetools version: 30
+# Kubetools version: 31

@@ -1,4 +1,4 @@
 ansible == 8.1.0
 ansible-lint == 6.17.2
 docker == 6.1.3
-https://github.com/mucsi96/kubetools/releases/download/python-lib-30/kubetools-0.30.0-py3-none-any.whl
+https://github.com/mucsi96/kubetools/releases/download/python-lib-31/kubetools-0.31.0-py3-none-any.whl
