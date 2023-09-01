@@ -42,23 +42,43 @@ class WeightTest extends BaseIntegrationTest {
         String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 87.7, 33.2, 29.1);",
             Timestamp.from(Instant.now().minus(5, ChronoUnit.DAYS))));
     jdbcTemplate.execute(
-        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 87.5, 31.1, 27.2);",
+        String.format("INSERT INTO weight (created_at, weight, fat_ratio, fat_mass_weight) VALUES ('%s', 87.5, 32.8 , 29.0);",
             Timestamp.from(Instant.now().minus(1, ChronoUnit.DAYS))));
   }
 
   @Test
   void display_todays_weight() {
     open();
-    WebElement element = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.2");
+    WebElement weighElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*"));
+    assertThat(weighElement.getText()).isEqualToIgnoringWhitespace("87.2 kg");
+    WebElement bodyFatElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Body fat\")]/following-sibling::*"));
+    assertThat(bodyFatElement.getText()).isEqualToIgnoringWhitespace("21.8 kg");
+    WebElement fatRatioElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Fat ratio\")]/following-sibling::*"));
+    assertThat(fatRatioElement.getText()).isEqualToIgnoringWhitespace("35.3 %");
+  }
+
+  @Test
+  void display_weight_diff() {
+    open();
+    WebElement weighElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*/following-sibling::*"));
+    assertThat(weighElement.getText()).isEqualToIgnoringWhitespace("↓ 1.2 %");
+    WebElement bodyFatElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Body fat\")]/following-sibling::*/following-sibling::*"));
+    assertThat(bodyFatElement.getText()).isEqualToIgnoringWhitespace("↓ 27.8 %");
+    WebElement fatRatioElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Fat ratio\")]/following-sibling::*/following-sibling::*"));
+    assertThat(fatRatioElement.getText()).isEqualToIgnoringWhitespace("↑ 3.2 %");
   }
 
   @Test
   void display_weight_chart_for_week() {
     open();
     WebElement chart = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/ancestor::section//*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
     assertThat(label).contains("The data is as follows:", "88.3,", "87.7,", "87.5,", "87.2.");
@@ -70,14 +90,14 @@ class WeightTest extends BaseIntegrationTest {
     open();
     WebElement button = webDriver
         .findElement(
-            By.xpath("//h2[contains(text(), \"Weight\")]/parent::*//button[contains(text(), \"Month\")]"));
+            By.xpath("//a[contains(text(), \"Month\")]"));
 
     button.click();
 
     waitForLoad();
 
     WebElement chart = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/ancestor::section//*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
     assertThat(label).contains("The data is as follows:", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");
@@ -89,14 +109,14 @@ class WeightTest extends BaseIntegrationTest {
     open();
     WebElement button = webDriver
         .findElement(
-            By.xpath("//h2[contains(text(), \"Weight\")]/parent::*//button[contains(text(), \"Year\")]"));
+            By.xpath("//a[contains(text(), \"Year\")]"));
 
     button.click();
 
     waitForLoad();
 
     WebElement chart = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/ancestor::section//*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
     assertThat(label).contains("The data is as follows:", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");
@@ -108,14 +128,14 @@ class WeightTest extends BaseIntegrationTest {
     open();
     WebElement button = webDriver
         .findElement(
-            By.xpath("//h2[contains(text(), \"Weight\")]/parent::*//button[contains(text(), \"All time\")]"));
+            By.xpath("//a[contains(text(), \"All time\")]"));
 
     button.click();
 
     waitForLoad();
 
     WebElement chart = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*[@role=\"img\"]"));
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/ancestor::section//*[@role=\"img\"]"));
     wait.until(ExpectedConditions.attributeContains(chart, "aria-label", "This is a chart with type Line chart."));
     String label = chart.getAttribute("aria-label");
     assertThat(label).contains("The data is as follows:", "108.9,", "98,", "89.4,", "88.3,", "87.7,", "87.5,", "87.2.");

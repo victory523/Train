@@ -13,7 +13,7 @@ class BackupTest extends BaseIntegrationTest {
     setupMocks();
     open();
     WebElement element = webDriver
-        .findElement(By.xpath("//header//*[@role=\"status\"]"));
+        .findElement(By.xpath("//a[contains(text(), \"Last backup\")]"));
     assertThat(element.getText()).isEqualToIgnoringWhitespace("Last backup 5 minutes ago");
   }
 

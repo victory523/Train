@@ -42,7 +42,7 @@ function measure(request, response) {
                 fw: 1000,
               },
               {
-                value: 322664,
+                value: 352664,
                 type: 6,
                 unit: -4,
                 algo: 3425,

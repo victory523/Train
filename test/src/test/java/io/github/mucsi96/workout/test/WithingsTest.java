@@ -23,7 +23,7 @@ public class WithingsTest extends BaseIntegrationTest {
     setupMocks();
     open();
     WebElement element = webDriver
-        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("Weight 87.2");
+        .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*"));
+    assertThat(element.getText()).isEqualToIgnoringWhitespace("87.2 kg");
   }
 }
