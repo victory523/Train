@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
@@ -27,39 +27,36 @@ import { MeasurementWithUnitPipe } from '../utils/measurement-with-unit.pipe';
     TextComponent,
     PercentageDiffPipe,
     PercentageDiffColorPipe,
-    MeasurementWithUnitPipe
+    MeasurementWithUnitPipe,
   ],
   selector: 'app-weight',
   templateUrl: './weight.component.html',
   styleUrls: ['./weight.component.css'],
 })
-export class WeightComponent implements OnInit {
+export class WeightComponent {
   initOpts: NgxEchartsDirective['initOpts'] = {
     renderer: 'svg',
   };
 
+  @Input() set period(value: number | undefined) {
+    requestState(this.weightService.getWeight(value), (newState) => {
+      this.weightState = newState;
+
+      if (newState.hasFailed) {
+        this.notificationService.showNotification(
+          'Unable to fetch weight',
+          'error'
+        );
+      }
+    });
+  }
+
   constructor(
     private weightService: WeightService,
-    private notificationService: NotificationService,
-    private activatedRoute: ActivatedRoute
+    private notificationService: NotificationService
   ) {}
 
   weightState: HttpRequestState<WeightMeasurement[]> = initialHttpRequestState;
-
-  ngOnInit(): void {
-    this.activatedRoute.data.subscribe((data) =>
-      requestState(this.weightService.getWeight(data['period']), (newState) => {
-        this.weightState = newState;
-
-        if (newState.hasFailed) {
-          this.notificationService.showNotification(
-            'Unable to fetch weight',
-            'error'
-          );
-        }
-      })
-    );
-  }
 
   get chartOptions(): EChartsOption | null {
     if (!this.weightState.isReady) {
@@ -120,5 +117,4 @@ export class WeightComponent implements OnInit {
 
     return this.weightService.getDiff(this.weightState.value);
   }
-
 }

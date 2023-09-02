@@ -1,15 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { WeightComponent } from '../weight/weight.component';
 import { HomeComponent } from './home.component';
+import { By } from '@angular/platform-browser';
 
 @Component({
   standalone: true,
   selector: 'app-weight',
-  template: '87.6',
 })
-class MockWeightComponent {}
+class MockWeightComponent {
+  @Input()
+  period: number | undefined;
+}
 
 async function setup() {
   TestBed.configureTestingModule({
@@ -32,9 +35,13 @@ async function setup() {
 }
 
 describe('HomeComponent', () => {
-  it('renders weight', async () => {
-    const { element, fixture } = await setup();
+  it('renders weight with passed period', async () => {
+    const { fixture } = await setup();
+    fixture.componentInstance.period = 7;
     fixture.detectChanges();
-    expect(element?.textContent).toEqual('87.6');
+    expect(
+      fixture.debugElement.query(By.directive(MockWeightComponent))
+        .componentInstance.period
+    ).toBe(7);
   });
 });

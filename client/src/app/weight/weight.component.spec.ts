@@ -2,10 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { Directive, Input } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { EChartsOption } from 'echarts';
 import { NgxEchartsDirective, NgxEchartsModule } from 'ngx-echarts';
-import { Subject, of } from 'rxjs';
+import { Subject } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { WeightMeasurement, WeightService } from '../services/weight.service';
 import { WeightComponent } from './weight.component';
@@ -36,7 +35,6 @@ async function setup({ period }: { period?: number } = {}) {
     providers: [
       { provide: WeightService, useValue: mockWeightService },
       { provide: NotificationService, useValue: mockNotificationService },
-      { provide: ActivatedRoute, useValue: { data: of({ period }) } },
     ],
   }).compileComponents();
 
@@ -50,6 +48,7 @@ async function setup({ period }: { period?: number } = {}) {
   });
 
   const fixture = TestBed.createComponent(WeightComponent);
+  fixture.componentInstance.period = period;
   fixture.detectChanges();
 
   return {

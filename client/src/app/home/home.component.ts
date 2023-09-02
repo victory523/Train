@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { WeightComponent } from '../weight/weight.component';
 
@@ -7,8 +7,9 @@ import { WeightComponent } from '../weight/weight.component';
   standalone: true,
   imports: [CommonModule, WeightComponent],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent {
-
+  @Input()
+  period: number | undefined;
 }
