@@ -1,5 +1,19 @@
-{"properties": [{
-  "name": "withings",
-  "type": "mucsi96.traininglog.withings.WithingsConfiguration",
-  "description": "Configuration for Withings API"
-}]}
+{
+  "properties": [
+    {
+      "name": "withings",
+      "type": "mucsi96.traininglog.withings.WithingsConfiguration",
+      "description": "Configuration for Withings API"
+    },
+    {
+      "name": "strava.username",
+      "type": "java.lang.String",
+      "description": "Strava username"
+    },
+    {
+      "name": "strava.password",
+      "type": "java.lang.String",
+      "description": "Strava password"
+    }
+  ]
+}

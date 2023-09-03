@@ -1,0 +1,98 @@
+openapi: "3.0.2"
+info:
+  title: API
+  version: "1.0"
+
+servers:
+  - url: https://www.strava.com
+
+paths:
+  /fitness/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: StravaFitnessResponse
+                  type: object
+                  required:
+                    - "data"
+                  properties:
+                    data:
+                      type: array
+                      items:
+                        title: StravaFitnessData
+                        type: object
+                        required:
+                          - "date"
+                          - "fitness_profile"
+                          - "activities"
+                        properties:
+                          date:
+                            type: object
+                            required:
+                              - "year"
+                              - "month"
+                              - "day"
+                            properties:
+                              year:
+                                type: integer
+                              month:
+                                type: integer
+                              day:
+                                type: integer
+                          fitness_profile:
+                            title: StravaFitnessProfile
+                            type: object
+                            required:
+                              - "fitness"
+                              - "impulse"
+                              - "relative_effort"
+                              - "fatigue"
+                              - "form"
+                            properties:
+                              fitness:
+                                type: number
+                                format: double
+                              impulse:
+                                type: number
+                                format: double
+                              relative_effort:
+                                type: number
+                                format: double
+                              fatigue:
+                                type: number
+                                format: double
+                              form:
+                                type: number
+                                format: double
+                          activities:
+                            type: array
+                            items:
+                              type: object
+                              required:
+                                - "id"
+                                - "impulse"
+                                - "relative_effort"
+                              properties:
+                                id:
+                                  type: integer
+                                  format: int64
+                                impulse:
+                                  type: number
+                                  format: double
+                                relative_effort:
+                                  type: number
+                                  format: double
+                    reference:
+                      type: object

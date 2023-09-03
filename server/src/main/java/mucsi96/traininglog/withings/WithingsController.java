@@ -31,6 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mucsi96.traininglog.strava.StravaService;
 import mucsi96.traininglog.weight.WeightService;
 
 @RestController
@@ -42,6 +43,7 @@ public class WithingsController {
 
   private final WithingsService withingsService;
   private final WeightService weightService;
+  private final StravaService stravaService;
   private final OAuth2AuthorizedClientManager withingsAuthorizedClientManager;
 
   @PostMapping("/sync")
@@ -57,6 +59,8 @@ public class WithingsController {
       @RequestHeader("X-Timezone") ZoneId zoneId) {
 
     log.info("syncing from Withings");
+
+    stravaService.getFitnessLevel();
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);

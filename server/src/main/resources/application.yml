@@ -46,7 +46,7 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format-sql: true
         jdbc:
-          time_zone: UTC
+          time-zone: UTC
 
 logging:
   level:
@@ -59,3 +59,6 @@ springdoc:
 withings:
   api:
     uri: ${WITHINGS_API_URI}
+strava:
+  username: ${STRAVA_USERNAME}
+  password: ${STRAVA_PASSWORD}
