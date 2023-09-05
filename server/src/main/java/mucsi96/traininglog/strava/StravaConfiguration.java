@@ -8,6 +8,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.RemoveAuthorizedClientOAuth2AuthorizationFailureHandler;
 import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
 import org.springframework.security.oauth2.client.endpoint.DefaultRefreshTokenTokenResponseClient;
@@ -60,6 +62,13 @@ public class StravaConfiguration {
 
     DefaultOAuth2AuthorizedClientManager authorizedClientManager = new DefaultOAuth2AuthorizedClientManager(
         clientRegistrationRepository, authorizedClientRepository);
+
+    OAuth2AuthorizedClientProvider authorizedClientProvider = OAuth2AuthorizedClientProviderBuilder.builder()
+        .authorizationCode()
+        .refreshToken(configurer -> configurer.accessTokenResponseClient(stravaRefreshTokenResponseClient()))
+        .build();
+
+    authorizedClientManager.setAuthorizedClientProvider(authorizedClientProvider);
 
     Set<String> removeAuthorizedClientErrorCodes = Set.of(
         OAuth2ErrorCodes.INVALID_GRANT,
