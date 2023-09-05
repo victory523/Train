@@ -3,6 +3,7 @@ package mucsi96.traininglog.strava;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +25,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mucsi96.traininglog.fitness.Fitness;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class StravaService {
+public class StravaFintnessService {
   private final WebDriver webDriver;
   private final StravaConfiguration configuration;
 
@@ -53,10 +55,10 @@ public class StravaService {
     }).findFirst().map(StravaFitnessData::getFitnessProfile);
   }
 
-  public Optional<Double> getFitnessLevel() {
+  public Optional<Fitness> getFitnessLevel() {
     log.info("Getting fitenss");
     webDriver.manage().deleteAllCookies();
-    webDriver.get("https://www.strava.com/athlete/fitness");
+    webDriver.get(configuration.getApiUri() + "/athlete/fitness");
     WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.id("email")));
@@ -85,8 +87,19 @@ public class StravaService {
     Optional<StravaFitnessProfile> profile = getTodayFitnessProfile(body);
     devTools.disconnectSession();
     webDriver.manage().deleteAllCookies();
-    Optional<Double> fitness = profile.map(StravaFitnessProfile::getFitness);
-    log.info("Received fitness: {}", fitness.orElse(null));
-    return fitness;
+    profile.ifPresent(value -> {
+      ObjectMapper mapper = new ObjectMapper();
+      try {
+        System.out.println(mapper.writeValueAsString(value));
+      } catch (JsonProcessingException e) {
+      }
+    });
+    return profile.map(
+        value -> Fitness.builder()
+            .createdAt(ZonedDateTime.now(ZoneOffset.UTC))
+            .fitness(value.getFitness())
+            .fatigue(value.getFatigue())
+            .form(value.getForm())
+            .build());
   }
 }

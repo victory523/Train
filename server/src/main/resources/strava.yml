@@ -63,19 +63,19 @@ paths:
                             properties:
                               fitness:
                                 type: number
-                                format: double
+                                format: float
                               impulse:
                                 type: number
-                                format: double
+                                format: float
                               relative_effort:
                                 type: number
-                                format: double
+                                format: float
                               fatigue:
                                 type: number
-                                format: double
+                                format: float
                               form:
                                 type: number
-                                format: double
+                                format: float
                           activities:
                             type: array
                             items:
@@ -90,9 +90,222 @@ paths:
                                   format: int64
                                 impulse:
                                   type: number
-                                  format: double
+                                  format: float
                                 relative_effort:
                                   type: number
-                                  format: double
+                                  format: float
                     reference:
                       type: object
+  /athlete/activities:
+    get:
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  title: StravaSummaryActivity
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      format: int64
+                    external_id:
+                      type: string
+                    upload_id:
+                      type: integer
+                      format: int64
+                    athlete:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          format: int64
+                    name:
+                      type: string
+                    distance:
+                      type: number
+                      format: float
+                    moving_time:
+                      type: integer
+                    elapsed_time:
+                      type: integer
+                    total_elevation_gain:
+                      type: number
+                      format: float
+                    elev_high:
+                      type: number
+                      format: float
+                    elev_low:
+                      type: number
+                      format: float
+                    sport_type:
+                      type: string
+                    start_date:
+                      type: string
+                      format: date-time
+                    achievement_count:
+                      type: integer
+                    kudos_count:
+                      type: integer
+                    comment_count:
+                      type: integer
+                    athlete_count:
+                      type: integer
+                    photo_count:
+                      type: integer
+                    total_photo_count:
+                      type: integer
+                    trainer:
+                      type: boolean
+                    commute:
+                      type: boolean
+                    manual:
+                      type: boolean
+                    private:
+                      type: boolean
+                    flagged:
+                      type: boolean
+                    workout_type:
+                      type: integer
+                    upload_id_str:
+                      type: string
+                    average_speed:
+                      type: number
+                      format: float
+                    max_speed:
+                      type: number
+                      format: float
+                    has_kudoed:
+                      type: boolean
+                    hide_from_home:
+                      type: boolean
+                    gear_id:
+                      type: string
+                    kilojoules:
+                      type: number
+                      format: float
+                    average_watts:
+                      type: number
+                      format: float
+                    device_watts:
+                      type: boolean
+                    max_watts:
+                      type: integer
+                    weighted_average_watts:
+                      type: integer
+
+  /activities/{id}:
+    get:
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: StravaDetailedActivity
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    format: int64
+                  external_id:
+                    type: string
+                  upload_id:
+                    type: string
+                  athlete:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        format: int64
+                  name:
+                    type: string
+                  distance:
+                    type: number
+                    format: float
+                  moving_time:
+                    type: integer
+                  elapsed_time:
+                    type: integer
+                  total_elevation_gain:
+                    type: number
+                    format: float
+                  elev_high:
+                    type: number
+                    format: float
+                  elev_low:
+                    type: number
+                    format: float
+                  sport_type:
+                    type: string
+                  start_date:
+                    type: string
+                    format: date-time
+                  achievement_count:
+                    type: integer
+                  kudos_count:
+                    type: integer
+                  comment_count:
+                    type: integer
+                  athlete_count:
+                    type: integer
+                  photo_count:
+                    type: integer
+                  total_photo_count:
+                    type: integer
+                  trainer:
+                    type: boolean
+                  commute:
+                    type: boolean
+                  manual:
+                    type: boolean
+                  private:
+                    type: boolean
+                  flagged:
+                    type: boolean
+                  workout_type:
+                    type: integer
+                  upload_id_str:
+                    type: string
+                  average_speed:
+                    type: number
+                    format: float
+                  max_speed:
+                    type: number
+                    format: float
+                  has_kudoed:
+                    type: boolean
+                  hide_from_home:
+                    type: boolean
+                  gear_id:
+                    type: string
+                  kilojoules:
+                    type: number
+                    format: float
+                  average_watts:
+                    type: number
+                    format: float
+                  device_watts:
+                    type: boolean
+                  max_watts:
+                    type: integer
+                  weighted_average_watts:
+                    type: integer
+                  description:
+                    type: string
+                  calories:
+                    type: number
+                    format: float
+                  device_name:
+                    type: string
+                  embed_token:
+                    type: string

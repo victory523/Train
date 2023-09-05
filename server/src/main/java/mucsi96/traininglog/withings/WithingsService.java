@@ -81,9 +81,9 @@ public class WithingsService {
     return response.getBody();
   }
 
-  private double getMeasurement(List<WithingsMeasure> measures, int type) {
+  private float getMeasurement(List<WithingsMeasure> measures, int type) {
     WithingsMeasure measure = measures.stream().filter(m -> m.getType() == type).findFirst().orElseThrow();
-    double weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 10.0) / 10.0;
+    float weight = Math.round(measure.getValue() * Math.pow(10, measure.getUnit()) * 10.0) / 10.0f;
     return weight;
   }
 

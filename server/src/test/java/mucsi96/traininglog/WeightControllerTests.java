@@ -31,29 +31,29 @@ public class WeightControllerTests extends BaseIntegrationTest {
   void beforeEach() {
     weightRepository.deleteAll();
     weightRepository.save(Weight.builder()
-        .weight(108.9)
+        .weight(108.9f)
         .createdAt(ZonedDateTime.now(clock).minus(400, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(98)
+        .weight(98f)
         .createdAt(ZonedDateTime.now(clock).minus(356, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(88.3)
+        .weight(88.3f)
         .createdAt(ZonedDateTime.now(clock).minus(6, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(87.7)
+        .weight(87.7f)
         .createdAt(ZonedDateTime.now(clock).minus(5, ChronoUnit.DAYS))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(87.1)
-        .fatRatio(31.01)
-        .fatMassWeight(21.34)
+        .weight(87.1f)
+        .fatRatio(31.01f)
+        .fatMassWeight(21.34f)
         .createdAt(ZonedDateTime.now(clock))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(87.5)
+        .weight(87.5f)
         .createdAt(ZonedDateTime.now(clock).minus(1, ChronoUnit.DAYS))
         .build());
   }

@@ -1,4 +1,4 @@
-package mucsi96.traininglog.weight;
+package mucsi96.traininglog.fitness;
 
 import java.time.ZonedDateTime;
 
@@ -15,16 +15,16 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Weight {
-    @Id
-    private ZonedDateTime createdAt;
+public class Fitness {
+  @Id
+  private ZonedDateTime createdAt;
 
-    @Column
-    private float weight;
+  @Column
+  private float fitness;
 
-    @Column
-    private float fatMassWeight;
+  @Column
+  private float fatigue;
 
-    @Column
-    private float fatRatio;
+  @Column
+  private float form;
 }

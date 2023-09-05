@@ -29,11 +29,11 @@ paths:
                       format: date-time
                     weight:
                       type: number
-                      format: double
+                      format: float
                     fatRatio:
                       type: number
-                      format: double
+                      format: float
                     fatMassWeight:
                       type: number
-                      format: double
+                      format: float
 

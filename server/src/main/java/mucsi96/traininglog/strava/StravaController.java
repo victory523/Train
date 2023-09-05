@@ -39,12 +39,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class StravaController {
 
-  private final StravaService stravaService;
+  private final StravaFintnessService stravaFintnessService;
+  private final StravaActivityService stravaActivityService;
   private final OAuth2AuthorizedClientManager stravaAuthorizedClientManager;
 
   @PostMapping("/sync")
   @Operation(parameters = {
-    @Parameter(in = ParameterIn.HEADER, name = "X-Timezone", required = true, example = "America/New_York")
+      @Parameter(in = ParameterIn.HEADER, name = "X-Timezone", required = true, example = "America/New_York")
   }, responses = { @ApiResponse(content = @Content()),
       @ApiResponse(responseCode = "401", content = @Content(), links = {
           @io.swagger.v3.oas.annotations.links.Link(name = "oauth2Login", operationId = "strava-authorize") }) })
@@ -56,11 +57,9 @@ public class StravaController {
 
     log.info("syncing from Strava");
 
-    // stravaService.getFitnessLevel();
-
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
-      log.info(authorizedClient.getAccessToken().getTokenValue());
+      stravaActivityService.getTodayActivities(authorizedClient, zoneId);
     } catch (OAuth2AuthorizationException ex) {
       Link oauth2LogLink = linkTo(methodOn(StravaController.class).authorize(null, null, null))
           .withRel("oauth2Login");
@@ -80,7 +79,7 @@ public class StravaController {
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
-        log.info("authorizing Strava client");
+    log.info("authorizing Strava client");
     getAuthorizedClient(principal, servletRequest, servletResponse);
     return new RedirectView("/");
   }
