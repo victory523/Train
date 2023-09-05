@@ -6,14 +6,9 @@
       "description": "Configuration for Withings API"
     },
     {
-      "name": "strava.username",
-      "type": "java.lang.String",
-      "description": "Strava username"
-    },
-    {
-      "name": "strava.password",
-      "type": "java.lang.String",
-      "description": "Strava password"
+      "name": "strava",
+      "type": "mucsi96.traininglog.strava.StravaCOnfiguration",
+      "description": "Configuration for Strava API"
     }
   ]
 }

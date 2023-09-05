@@ -17,12 +17,7 @@
       "type": "shell",
       "command": "ng",
       "label": "Run current client test",
-      "args": [
-        "test",
-        "--include",
-        "**/${fileBasename}",
-        "--no-watch"
-      ],
+      "args": ["test", "--include", "**/${fileBasename}", "--no-watch"],
       "options": {
         "cwd": "${workspaceFolder}/client"
       },
@@ -32,13 +27,31 @@
       "type": "shell",
       "command": "ng",
       "label": "Run and watch current client test",
-      "args": [
-        "test",
-        "--include",
-        "**/${fileBasename}"
-      ],
+      "args": ["test", "--include", "**/${fileBasename}"],
       "options": {
         "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Start server",
+      "command": "mvn",
+      "args": ["spring-boot:run", "-P", "local"],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Run server tests",
+      "command": "mvn",
+      "args": ["test"],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
       },
       "problemMatcher": []
     }

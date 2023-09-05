@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 public class WithingsConfiguration {
   public static final String registrationId = "withings-client";
 
-  private WithingsApiConfiguration api;
+  private String apiUri;
 
   @Bean
   SecurityFilterChain withingsSecurityFilterChain(
@@ -176,10 +176,5 @@ public class WithingsConfiguration {
       parameters.add(OAuth2ParameterNames.CLIENT_SECRET, request.getClientRegistration().getClientSecret());
       return parameters;
     };
-  }
-
-  @Data
-  public static class WithingsApiConfiguration {
-    private String uri;
   }
 }

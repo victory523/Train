@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import mucsi96.traininglog.weight.Weight;
@@ -35,7 +38,7 @@ public class WithingsService {
         .toEpochSecond();
     log.info("Getting today last weight measure from {} to {}", startTime, endTime);
     return UriComponentsBuilder
-        .fromHttpUrl(withingsConfiguration.getApi().getUri())
+        .fromHttpUrl(withingsConfiguration.getApiUri())
         .path("/measure")
         .queryParam("action", "getmeas")
         .queryParam("category", 1)
@@ -53,6 +56,14 @@ public class WithingsService {
     RestTemplate restTemplate = new RestTemplate();
     WithingsGetMeasureResponse response = restTemplate
         .postForObject(getMeasureUrl(zoneId), request, WithingsGetMeasureResponse.class);
+
+    ObjectMapper mapper = new ObjectMapper();
+
+    try {
+      log.info(mapper.writeValueAsString(response));
+    } catch (JsonProcessingException e) {
+      log.error("Cannot map response", e);
+    }
 
     if (response == null) {
       throw new WithingsTechnicalException();

@@ -14,8 +14,11 @@ spring:
       client:
         provider:
           withings:
-           authorization-uri: ${WITHINGS_ACCOUNTS_URI}/oauth2_user/authorize2
-           token-uri: ${WITHINGS_API_URI}/v2/oauth2
+            authorization-uri: ${WITHINGS_ACCOUNTS_URI}/oauth2_user/authorize2
+            token-uri: ${WITHINGS_API_URI}/v2/oauth2
+          strava:
+            authorization-uri: ${STRAVA_API_URI}/oauth/authorize
+            token-uri: ${STRAVA_API_URI}/oauth/token
         registration:
           withings-client:
             provider: withings
@@ -24,6 +27,13 @@ spring:
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/withings/authorize"
             scope: user.metrics
+          strava-client:
+            provider: strava
+            client-id: ${STRAVA_CLIENT_ID}
+            client-secret: ${STRAVA_CLIENT_SECRET}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/strava/authorize"
+            scope: activity:read
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOSTNAME}:${POSTGRES_PORT}/${POSTGRES_DB}
     username: ${POSTGRES_USER}
@@ -57,8 +67,8 @@ springdoc:
   swagger-ui:
     path: /
 withings:
-  api:
-    uri: ${WITHINGS_API_URI}
+  api-uri: ${WITHINGS_API_URI}
 strava:
   username: ${STRAVA_USERNAME}
   password: ${STRAVA_PASSWORD}
+  api-uri: ${STRAVA_API_URI}

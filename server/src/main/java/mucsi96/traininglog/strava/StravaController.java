@@ -1,4 +1,4 @@
-package mucsi96.traininglog.withings;
+package mucsi96.traininglog.strava;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -31,38 +31,38 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.traininglog.weight.WeightService;
 
 @RestController
-@RequestMapping("/withings")
+@RequestMapping("/strava")
 @RequiredArgsConstructor
 @RolesAllowed("user")
 @Slf4j
-public class WithingsController {
+public class StravaController {
 
-  private final WithingsService withingsService;
-  private final WeightService weightService;
-  private final OAuth2AuthorizedClientManager withingsAuthorizedClientManager;
+  private final StravaService stravaService;
+  private final OAuth2AuthorizedClientManager stravaAuthorizedClientManager;
 
   @PostMapping("/sync")
   @Operation(parameters = {
     @Parameter(in = ParameterIn.HEADER, name = "X-Timezone", required = true, example = "America/New_York")
   }, responses = { @ApiResponse(content = @Content()),
       @ApiResponse(responseCode = "401", content = @Content(), links = {
-          @io.swagger.v3.oas.annotations.links.Link(name = "oauth2Login", operationId = "withings-authorize") }) })
+          @io.swagger.v3.oas.annotations.links.Link(name = "oauth2Login", operationId = "strava-authorize") }) })
   public ResponseEntity<RepresentationModel<?>> sync(
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse,
       @RequestHeader("X-Timezone") ZoneId zoneId) {
 
-    log.info("syncing from Withings");
+    log.info("syncing from Strava");
+
+    // stravaService.getFitnessLevel();
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
-      withingsService.getTodayWeight(authorizedClient, zoneId).ifPresent(weightService::saveWeight);
+      log.info(authorizedClient.getAccessToken().getTokenValue());
     } catch (OAuth2AuthorizationException ex) {
-      Link oauth2LogLink = linkTo(methodOn(WithingsController.class).authorize(null, null, null))
+      Link oauth2LogLink = linkTo(methodOn(StravaController.class).authorize(null, null, null))
           .withRel("oauth2Login");
 
       RepresentationModel<?> model = RepresentationModel.of(null).add(oauth2LogLink);
@@ -75,12 +75,12 @@ public class WithingsController {
   }
 
   @GetMapping("/authorize")
-  @Operation(operationId = "withings-authorize", responses = { @ApiResponse(content = @Content()) })
+  @Operation(operationId = "strava-authorize", responses = { @ApiResponse(content = @Content()) })
   public RedirectView authorize(
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
-        log.info("authorizing Withings client");
+        log.info("authorizing Strava client");
     getAuthorizedClient(principal, servletRequest, servletResponse);
     return new RedirectView("/");
   }
@@ -88,13 +88,13 @@ public class WithingsController {
   private OAuth2AuthorizedClient getAuthorizedClient(Authentication principal, HttpServletRequest servletRequest,
       HttpServletResponse servletResponse) {
     OAuth2AuthorizeRequest authorizeRequest = OAuth2AuthorizeRequest
-        .withClientRegistrationId(WithingsConfiguration.registrationId)
+        .withClientRegistrationId(StravaConfiguration.registrationId)
         .principal(principal)
         .attribute(HttpServletRequest.class.getName(), servletRequest)
         .attribute(HttpServletResponse.class.getName(), servletResponse)
         .build();
-    OAuth2AuthorizedClient authorizedClient = withingsAuthorizedClientManager.authorize(authorizeRequest);
-    log.info("Successful Withings authorization");
+    OAuth2AuthorizedClient authorizedClient = stravaAuthorizedClientManager.authorize(authorizeRequest);
+    log.info("Successful Strava authorization");
     return authorizedClient;
   }
 }

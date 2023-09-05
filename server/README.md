@@ -181,4 +181,8 @@ After succesful authentication using `AuthenticationManager` `OAuth2Authorizatio
 
 As last step it redirects back to previous url.
 
+### Resources:
+- https://developer.withings.com/api-reference/
+- https://developers.strava.com/docs/authentication/
+
 # Kubetools version: 31
