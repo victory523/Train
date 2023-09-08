@@ -1,6 +1,7 @@
 package mucsi96.traininglog;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.withPrecision;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
 import java.time.Clock;
@@ -96,10 +97,10 @@ public class RideControllerTests extends BaseIntegrationTest {
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Float.class)).isEqualTo(646.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Float.class)).isEqualTo(408.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Float.class)).isEqualTo(11747.7f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Integer.class)).isEqualTo(3074);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isCloseTo(646.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Double.class)).isCloseTo(408.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Double.class)).isCloseTo(11747.7, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Long.class)).isEqualTo(3074);
   }
 
   @Test
@@ -111,10 +112,10 @@ public class RideControllerTests extends BaseIntegrationTest {
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Float.class)).isEqualTo(646.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Float.class)).isEqualTo(408.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Float.class)).isEqualTo(11747.7f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Integer.class)).isEqualTo(3074);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isEqualTo(646.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Double.class)).isEqualTo(408.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Double.class)).isEqualTo(11747.7, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Long.class)).isEqualTo(3074);
   }
 
   @Test
@@ -125,9 +126,9 @@ public class RideControllerTests extends BaseIntegrationTest {
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Float.class)).isEqualTo(1192.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Float.class)).isEqualTo(716.0f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Float.class)).isEqualTo(22495.4f);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Integer.class)).isEqualTo(5148);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isEqualTo(1192.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.elevationGain", Double.class)).isEqualTo(716.0, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.distance", Double.class)).isEqualTo(22495.4, withPrecision(0.1));
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$.time", Long.class)).isEqualTo(5148);
   }
 }

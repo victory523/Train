@@ -50,14 +50,15 @@ paths:
                 properties:
                   calories:
                     type: number
-                    format: float
+                    format: double
                   elevationGain:
                     type: number
-                    format: float
+                    format: double
                   distance:
                     type: number
-                    format: float
+                    format: double
                   time:
                     type: integer
+                    format: int64
 
 
