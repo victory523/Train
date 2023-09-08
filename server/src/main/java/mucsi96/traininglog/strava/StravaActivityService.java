@@ -25,7 +25,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mucsi96.traininglog.activity.Activity;
+import mucsi96.traininglog.rides.Ride;
+import mucsi96.traininglog.strava.StravaSummaryActivity.SportTypeEnum;
 
 @Service
 @RequiredArgsConstructor
@@ -35,8 +36,7 @@ public class StravaActivityService {
   private final Clock clock;
 
   private String getActivitiesUrl(ZoneId zoneId) {
-    long startTime = ZonedDateTime.now(clock).withZoneSameInstant(zoneId).truncatedTo(ChronoUnit.DAYS).minusDays(1)
-        .toEpochSecond();
+    long startTime = ZonedDateTime.now(clock).withZoneSameInstant(zoneId).truncatedTo(ChronoUnit.DAYS).toEpochSecond();
     long endTime = ZonedDateTime.now(clock).withZoneSameInstant(zoneId).truncatedTo(ChronoUnit.DAYS).plusDays(1)
         .toEpochSecond();
     log.info("Getting today activities from {} to {}", startTime, endTime);
@@ -50,7 +50,7 @@ public class StravaActivityService {
         .toUriString();
   }
 
-  private List<Long> getTodayActivityIds(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
+  private List<Long> getTodayRideActivityIds(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
     HttpHeaders headers = new HttpHeaders();
     headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
     HttpEntity<String> request = new HttpEntity<>("", headers);
@@ -76,11 +76,15 @@ public class StravaActivityService {
       throw new StravaTechnicalException();
     }
 
-    return activities.stream().map(StravaSummaryActivity::getId).toList();
+    List<SportTypeEnum> rideActivities = List.of(SportTypeEnum.RIDE, SportTypeEnum.GRAVELRIDE,
+        SportTypeEnum.MOUNTAINBIKERIDE, SportTypeEnum.VIRTUALRIDE);
+
+    return activities.stream().filter((activity) -> rideActivities.contains(activity.getSportType()))
+        .map(StravaSummaryActivity::getId).toList();
   }
 
-  public List<Activity> getTodayActivities(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
-    return getTodayActivityIds(authorizedClient, zoneId).stream().map(id -> {
+  public List<Ride> getTodayRides(OAuth2AuthorizedClient authorizedClient, ZoneId zoneId) {
+    return getTodayRideActivityIds(authorizedClient, zoneId).stream().map(id -> {
       log.info("Getting Strava activity with id" + id);
       HttpHeaders headers = new HttpHeaders();
       headers.setBearerAuth(authorizedClient.getAccessToken().getTokenValue());
@@ -107,7 +111,7 @@ public class StravaActivityService {
       } catch (JsonProcessingException e) {
       }
 
-      return Activity.builder()
+      return Ride.builder()
           .createdAt(activity.getStartDate().atZoneSameInstant(ZoneOffset.UTC))
           .name(activity.getName())
           .movingTime(activity.getMovingTime())

@@ -31,30 +31,30 @@ public class WeightControllerTests extends BaseIntegrationTest {
   void beforeEach() {
     weightRepository.deleteAll();
     weightRepository.save(Weight.builder()
-        .weight(108.9f)
         .createdAt(ZonedDateTime.now(clock).minus(400, ChronoUnit.DAYS))
+        .weight(108.9f)
         .build());
     weightRepository.save(Weight.builder()
-        .weight(98f)
         .createdAt(ZonedDateTime.now(clock).minus(356, ChronoUnit.DAYS))
+        .weight(98f)
         .build());
     weightRepository.save(Weight.builder()
-        .weight(88.3f)
         .createdAt(ZonedDateTime.now(clock).minus(6, ChronoUnit.DAYS))
+        .weight(88.3f)
         .build());
     weightRepository.save(Weight.builder()
-        .weight(87.7f)
         .createdAt(ZonedDateTime.now(clock).minus(5, ChronoUnit.DAYS))
+        .weight(87.7f)
         .build());
     weightRepository.save(Weight.builder()
+        .createdAt(ZonedDateTime.now(clock))
         .weight(87.1f)
         .fatRatio(31.01f)
         .fatMassWeight(21.34f)
-        .createdAt(ZonedDateTime.now(clock))
         .build());
     weightRepository.save(Weight.builder()
-        .weight(87.5f)
         .createdAt(ZonedDateTime.now(clock).minus(1, ChronoUnit.DAYS))
+        .weight(87.5f)
         .build());
   }
 
@@ -91,9 +91,9 @@ public class WeightControllerTests extends BaseIntegrationTest {
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(1);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
         .isEqualTo("2031-08-22T06:00:00-04:00");
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(87.1);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatRatio", Double.class)).isEqualTo(31.01);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatMassWeight", Double.class)).isEqualTo(21.34);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Float.class)).isEqualTo(87.1f);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatRatio", Float.class)).isEqualTo(31.01f);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].fatMassWeight", Float.class)).isEqualTo(21.34f);
   }
 
   @Test
@@ -106,16 +106,16 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(4);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(88.3);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Float.class)).isEqualTo(88.3f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
         .isEqualTo("2031-08-16T06:00:00-04:00");
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[1].weight", Double.class)).isEqualTo(87.7);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[1].weight", Float.class)).isEqualTo(87.7f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[1].date", String.class))
         .isEqualTo("2031-08-17T06:00:00-04:00");
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[2].weight", Double.class)).isEqualTo(87.5);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[2].weight", Float.class)).isEqualTo(87.5f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[2].date", String.class))
         .isEqualTo("2031-08-21T06:00:00-04:00");
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[3].weight", Double.class)).isEqualTo(87.1);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[3].weight", Float.class)).isEqualTo(87.1f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[3].date", String.class))
         .isEqualTo("2031-08-22T06:00:00-04:00");
   }
@@ -129,10 +129,10 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(6);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Double.class)).isEqualTo(108.9);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].weight", Float.class)).isEqualTo(108.9f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[0].date", String.class))
         .isEqualTo("2030-07-18T06:00:00-04:00");
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$[5].weight", Double.class)).isEqualTo(87.1);
+    assertThat(JsonPath.parse(response.getContentAsString()).read("$[5].weight", Float.class)).isEqualTo(87.1f);
     assertThat(JsonPath.parse(response.getContentAsString()).read("$[5].date", String.class))
         .isEqualTo("2031-08-22T06:00:00-04:00");
   }

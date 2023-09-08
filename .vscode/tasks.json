@@ -54,6 +54,17 @@
         "cwd": "${workspaceFolder}/server"
       },
       "problemMatcher": []
-    }
+    },
+    {
+      "type": "shell",
+      "label": "Compile server",
+      "command": "mvn",
+      "args": ["compile"],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/server"
+      },
+      "problemMatcher": []
+    },
   ]
 }

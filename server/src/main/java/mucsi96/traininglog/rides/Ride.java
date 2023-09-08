@@ -1,4 +1,4 @@
-package mucsi96.traininglog.activity;
+package mucsi96.traininglog.rides;
 
 import java.time.ZonedDateTime;
 
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Activity {
+public class Ride {
   @Id
   private ZonedDateTime createdAt;
 

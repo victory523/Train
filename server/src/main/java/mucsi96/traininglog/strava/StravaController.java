@@ -31,6 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mucsi96.traininglog.rides.RideService;
 
 @RestController
 @RequestMapping("/strava")
@@ -41,6 +42,7 @@ public class StravaController {
 
   private final StravaFintnessService stravaFintnessService;
   private final StravaActivityService stravaActivityService;
+  private final RideService rideService;
   private final OAuth2AuthorizedClientManager stravaAuthorizedClientManager;
 
   @PostMapping("/sync")
@@ -59,7 +61,7 @@ public class StravaController {
 
     try {
       OAuth2AuthorizedClient authorizedClient = getAuthorizedClient(principal, servletRequest, servletResponse);
-      stravaActivityService.getTodayActivities(authorizedClient, zoneId);
+      stravaActivityService.getTodayRides(authorizedClient, zoneId).forEach(rideService::saveRide);
     } catch (OAuth2AuthorizationException ex) {
       Link oauth2LogLink = linkTo(methodOn(StravaController.class).authorize(null, null, null))
           .withRel("oauth2Login");

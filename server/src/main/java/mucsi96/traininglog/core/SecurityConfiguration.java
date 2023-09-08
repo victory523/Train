@@ -22,7 +22,7 @@ public class SecurityConfiguration {
   SecurityFilterChain securityFilterChain(
       HttpSecurity http,
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer) throws Exception {
-    return kubetoolsSecurityConfigurer.configure(http).securityMatcher("/weight/**").build();
+    return kubetoolsSecurityConfigurer.configure(http).securityMatcher("/weight/**", "/ride/**").build();
   }
 
   @Bean

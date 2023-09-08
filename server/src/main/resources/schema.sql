@@ -12,10 +12,31 @@ CREATE TABLE IF NOT EXISTS oauth2_authorized_client (
   PRIMARY KEY (client_registration_id, principal_name)
 );
 
+CREATE TABLE IF NOT EXISTS ride (
+  created_at timestamp(6) NOT NULL,
+  calories float4,
+  distance float4,
+  moving_time integer,
+  name varchar(255),
+  sport_type varchar(255),
+  total_elevation_gain float4,
+  weighted_average_watts float4,
+  PRIMARY KEY (created_at)
+);
+
+CREATE TABLE IF NOT EXISTS fitness (
+  created_at timestamp(6) NOT NULL,
+  fatigue float4,
+  fitness
+  float4,
+  form float4,
+  PRIMARY KEY (created_at)
+);
+
 CREATE TABLE IF NOT EXISTS weight (
-  created_at timestamp NOT NULL,
-  weight float(53),
-  fat_ratio float(53),
-  fat_mass_weight float(53),
+  created_at timestamp(6) NOT NULL,
+  weight float4,
+  fat_ratio float4,
+  fat_mass_weight float4,
   PRIMARY KEY (created_at)
 );

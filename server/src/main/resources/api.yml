@@ -8,7 +8,7 @@ servers:
 
 paths:
 
-  /withings/weight:
+  /weight:
     get:
       responses:
         '200':
@@ -36,4 +36,28 @@ paths:
                     fatMassWeight:
                       type: number
                       format: float
+
+  /ride/stats:
+    get:
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: RideStats
+                type: object
+                properties:
+                  calories:
+                    type: number
+                    format: float
+                  elevationGain:
+                    type: number
+                    format: float
+                  distance:
+                    type: number
+                    format: float
+                  time:
+                    type: integer
+
 
