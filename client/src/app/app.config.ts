@@ -11,6 +11,7 @@ import { timezoneInterceptor } from './http-interceptors/timezone-interceptor';
 import { BackupService } from './services/backup.service';
 import { WeightService } from './services/weight.service';
 import { WithingsService } from './services/withings.service';
+import { RideService } from './services/ride.service';
 
 function provideECharts(): Provider {
   return {
@@ -30,6 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptors([timezoneInterceptor])),
     provideLocation(),
     provideECharts(),
+    RideService,
     WeightService,
     WithingsService,
     NotificationService,

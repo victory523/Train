@@ -13,3 +13,11 @@
 :host([app-text-type="red"]) {
   color: hsl(0, 91%, 74%);
 }
+
+:host([app-text-type="white"]) {
+  color: hsl(216, 12%, 84%);
+}
+
+:host([app-text-type="blue"]) {
+  color: hsl(217, 93%, 72%);
+}

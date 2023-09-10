@@ -1,0 +1,45 @@
+<section *ngIf="todayRideStatsState.isReady && periodRideStatsState.isReady">
+  <article>
+    <h2 app-text>Calories</h2>
+    <p app-heading large>
+      {{ todayRideStatsState.value.calories | measurementWithUnit : "" : 0 }}
+    </p>
+    <p app-text app-text-type="blue">
+      {{ periodRideStatsState.value.calories | measurementWithUnit : "" : 0 }}
+    </p>
+  </article>
+  <article>
+    <h2 app-text>Elevation gain</h2>
+    <p app-heading large>
+      {{ todayRideStatsState.value.elevationGain | measurementWithUnit : "m" : 0 }}
+    </p>
+    <p app-text app-text-type="blue">
+      {{ periodRideStatsState.value.elevationGain | measurementWithUnit : "m": 0 }}
+    </p>
+  </article>
+  <article>
+    <h2 app-text>Distance</h2>
+    <p app-heading large>
+      {{ todayRideStatsState.value.distance | measurementWithUnit : "km" : 0: 1000 }}
+    </p>
+    <p app-text app-text-type="blue">
+      {{ periodRideStatsState.value.distance | measurementWithUnit : "km": 0: 1000 }}
+    </p>
+  </article>
+  <article>
+    <h2 app-text>Time</h2>
+    <p app-heading large>
+      {{ todayRideStatsState.value.time | measurementWithUnit : "min": 0: 60 }}
+    </p>
+    <p app-text app-text-type="blue">
+      {{ periodRideStatsState.value.time | measurementWithUnit : "min": 0 : 60 }}
+    </p>
+  </article>
+</section>
+
+<div
+  role="alert"
+  aria-busy="true"
+  app-loader
+  *ngIf="todayRideStatsState.isLoading || periodRideStatsState.isLoading"
+></div>

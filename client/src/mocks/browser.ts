@@ -1,5 +1,6 @@
 import { rest, setupWorker } from 'msw';
 import { weightMocks } from './weight';
+import { rideMocks } from './ride';
 
 export const mocks = [
   rest.get('/db/last-backup-time', (_req, res, ctx) => {
@@ -18,6 +19,7 @@ export const mocks = [
     // );
     return res(ctx.status(200));
   }),
+  ...rideMocks,
   ...weightMocks
 ];
 

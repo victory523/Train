@@ -1,0 +1,30 @@
+section {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 60px 20px;
+  align-items: start;
+}
+
+@media screen and (width > 740px) {
+  section {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+  }
+}
+
+section > * {
+  display: grid;
+  gap: 4px;
+}
+
+.chart-wrapper {
+  aspect-ratio: 1;
+  min-width: 100px;
+  max-width: 180px;
+  position: relative;
+}
+
+.chart {
+  position: absolute;
+  inset: 0;
+}

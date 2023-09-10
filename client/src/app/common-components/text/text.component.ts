@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class TextComponent {
   @Input({alias: 'app-text-type'})
-  type?: 'green' | 'red';
+  type?: 'green' | 'red' | 'white' | 'blue';
 
   @HostBinding('attr.app-text-type')
   get textType() {
