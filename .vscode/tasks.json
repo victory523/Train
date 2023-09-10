@@ -35,6 +35,16 @@
     },
     {
       "type": "shell",
+      "command": "ng",
+      "label": "Run client tests",
+      "args": ["test", "--no-watch"],
+      "options": {
+        "cwd": "${workspaceFolder}/client"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "label": "Start server",
       "command": "mvn",
       "args": ["spring-boot:run", "-P", "local"],
