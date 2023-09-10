@@ -89,10 +89,10 @@ describe('RideComponent', () => {
     });
     fixture.detectChanges();
     const valueElements = element.querySelectorAll('h2 + * + *');
-    expect(valueElements[0].textContent?.trim()).toEqual('2584');
-    expect(valueElements[1].textContent?.trim()).toEqual('1632 m');
+    expect(valueElements[0].textContent?.trim()).toEqual('2 584');
+    expect(valueElements[1].textContent?.trim()).toEqual('1 632 m');
     expect(valueElements[2].textContent?.trim()).toEqual('47 km');
-    expect(valueElements[3].textContent?.trim()).toEqual('205 min');
+    expect(valueElements[3].textContent?.trim()).toEqual('3 h 25 min');
   });
 
   it('renders - if no today stats values are returned', async () => {
