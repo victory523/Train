@@ -10,8 +10,8 @@ import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v113.network.Network;
 import org.openqa.selenium.devtools.v113.network.model.RequestId;
 import org.openqa.selenium.devtools.v113.network.model.ResourceType;
@@ -62,7 +62,7 @@ public class StravaFintnessService {
     WebDriverWait wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.id("email")));
-    DevTools devTools = ((ChromeDriver) webDriver).getDevTools();
+    DevTools devTools = ((HasDevTools) webDriver).getDevTools();
     devTools.createSession();
     List<RequestId> matches = new ArrayList<>();
     devTools.send(Network.enable(Optional.of(1000000), Optional.empty(), Optional.empty()));

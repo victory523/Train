@@ -66,6 +66,8 @@ logging:
 springdoc:
   swagger-ui:
     path: /
+webdriver:
+  api-uri: ${WEBDRIVER_API_URI}
 withings:
   api-uri: ${WITHINGS_API_URI}
 strava:

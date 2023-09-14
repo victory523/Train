@@ -19,6 +19,7 @@ services:
       SPRING_ACTUATOR_PORT: 8081
       SPRING_ADMIN_SERVER_HOST: localhost
       SPRING_ADMIN_SERVER_PORT: 9090
+      WEBDRIVER_API_URI: http://chrome:4444/wd/hub
       WITHINGS_ACCOUNTS_URI: https://account.withings.com
       WITHINGS_API_URI: https://wbsapi.withings.net
       STRAVA_API_URI: https://www.strava.com
@@ -54,3 +55,8 @@ services:
       chmod 600 /tmp/pgpass;
       /entrypoint.sh;
       "
+
+  chrome:
+    image: seleniarm/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828
+    restart: unless-stopped
+    shm_size: '2gb'

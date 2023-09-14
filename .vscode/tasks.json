@@ -76,5 +76,41 @@
       },
       "problemMatcher": []
     },
+    {
+      "type": "shell",
+      "label": "Start e2e environment",
+      "command": "node",
+      "args": [
+        "docker-compose.js",
+        "|",
+        "docker",
+        "compose",
+        "--file",
+        "-",
+        "up",
+        "--force-recreate",
+        "--build",
+        "--remove-orphans",
+        "--wait",
+        "--pull",
+        "always"
+      ],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
+      "label": "Run e2e tests",
+      "command": "mvn",
+      "args": ["test"],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      },
+      "problemMatcher": []
+    },
   ]
 }

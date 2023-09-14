@@ -1,14 +1,17 @@
-{
-  "properties": [
-    {
-      "name": "withings",
-      "type": "mucsi96.traininglog.withings.WithingsConfiguration",
-      "description": "Configuration for Withings API"
-    },
-    {
-      "name": "strava",
-      "type": "mucsi96.traininglog.strava.StravaCOnfiguration",
-      "description": "Configuration for Strava API"
-    }
-  ]
-}
+{"properties": [
+  {
+    "name": "withings",
+    "type": "mucsi96.traininglog.withings.WithingsConfiguration",
+    "description": "Configuration for Withings API"
+  },
+  {
+    "name": "strava",
+    "type": "mucsi96.traininglog.strava.StravaCOnfiguration",
+    "description": "Configuration for Strava API"
+  },
+  {
+    "name": "webdriver",
+    "type": "mucsi96.traininglog.core.WebDriverConfiguration",
+    "description": "Configuration for webdriver"
+  }
+]}
