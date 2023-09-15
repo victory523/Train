@@ -1,3 +1,5 @@
+const os = require("os");
+const arch = os.arch();
 const dockerNetwork = process.env.DOCKER_NETWORK;
 const workspaceRoot = process.env.WORKSPACE_ROOT ?? "..";
 
@@ -41,6 +43,7 @@ const config = {
         SPRING_ACTUATOR_PORT: 8082,
         SPRING_ADMIN_SERVER_HOST: "localhost",
         SPRING_ADMIN_SERVER_PORT: 9090,
+        WEBDRIVER_API_URI: "http://chrome:4444/wd/hub",
         WITHINGS_ACCOUNTS_URI: `http://${
           dockerNetwork ? "reverse-proxy" : "localhost:9780"
         }/withings`,
@@ -63,6 +66,11 @@ const config = {
         `${workspaceRoot}/test/reverse_proxy/traefik_static_conf.yml:/etc/traefik/traefik.yml`,
         `${workspaceRoot}/test/reverse_proxy/traefik_dynamic_conf.yml:/etc/traefik/traefik_dynamic_conf.yml`,
       ],
+    },
+    chrome: {
+      image: `${
+        arch === "arm64" ? "seleniarm" : "selenium"
+      }/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828`,
     },
   },
   ...(dockerNetwork && {

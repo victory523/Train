@@ -12,15 +12,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import lombok.Data;
-
 class WeightTest extends BaseIntegrationTest {
-
-  @Data
-  static class Weight {
-    private Instant createdAt;
-    private double value;
-  }
 
   @BeforeEach
   void beforeEach() {
