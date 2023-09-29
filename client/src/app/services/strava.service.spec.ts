@@ -4,27 +4,25 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { WithingsService } from './withings.service';
+import { StravaService } from './strava.service';
 
 function setup() {
   TestBed.configureTestingModule({
-    providers: [
-      provideHttpClient(),
-      provideHttpClientTesting(),
-      WithingsService,
-    ],
+    providers: [provideHttpClient(), provideHttpClientTesting(), StravaService],
   });
-  const service = TestBed.inject(WithingsService);
+  const service = TestBed.inject(StravaService);
   const httpTestingController = TestBed.inject(HttpTestingController);
   return { service, httpTestingController };
 }
 
-describe('WithingsService', () => {
-  describe('$sync', () => {
-    it('should sync with Withings', () => {
+describe('StravaService', () => {
+  describe('$syncActivities', () => {
+    it('should sync with Strava', () => {
       const { service, httpTestingController } = setup();
-      service.$sync.subscribe();
-      const request = httpTestingController.expectOne('/api/withings/sync');
+      service.$syncActivities.subscribe();
+      const request = httpTestingController.expectOne(
+        '/api/strava/activities/sync'
+      );
       request.flush({});
       expect(request.request.method).toBe('POST');
       httpTestingController.verify();

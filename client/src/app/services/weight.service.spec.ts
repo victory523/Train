@@ -20,7 +20,7 @@ function daysBefore(days: number): Date {
 }
 
 describe('WeightService', () => {
-  describe('getWeight', () => {
+  describe('$weight', () => {
     it('should return weight', () => {
       const { service, httpTestingController } = setup();
       const mockResponse: WeightMeasurement[] = [

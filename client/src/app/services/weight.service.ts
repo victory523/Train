@@ -1,6 +1,17 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  catchError,
+  map,
+  mergeMap,
+  of,
+  shareReplay,
+  switchMap,
+} from 'rxjs';
+import { NotificationService } from '../common-components/notification.service';
+import { WithingsService } from './withings.service';
 
 export type WeightMeasurement = {
   date: Date;
@@ -11,10 +22,29 @@ export type WeightMeasurement = {
 
 @Injectable()
 export class WeightService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private readonly http: HttpClient,
+    private readonly withingsService: WithingsService,
+    private readonly notificationService: NotificationService
+  ) {}
 
-  getWeight(period?: number): Observable<WeightMeasurement[]> {
-    return this.http
+  private readonly cache: Record<number, Observable<WeightMeasurement[]>> = {};
+
+  private readonly selectedPeriodSubject = new BehaviorSubject<
+    number | undefined
+  >(undefined);
+  private readonly $selectedPeriod = this.selectedPeriodSubject.asObservable();
+
+  selectPeriod(newPeriod?: number) {
+    this.selectedPeriodSubject.next(newPeriod);
+  }
+
+  private getWeight(period = 0) {
+    if (this.cache[period]) {
+      return this.cache[period];
+    }
+
+    this.cache[period] = this.http
       .get<WeightMeasurement[]>('/api/weight', {
         params: { ...(period ? { period } : {}) },
       })
@@ -24,45 +54,55 @@ export class WeightService {
             ...measurement,
             date: new Date(measurement.date),
           }))
-        )
+        ),
+        catchError(() => {
+          this.notificationService.showNotification(
+            'Unable to fetch weight',
+            'error'
+          );
+          return of();
+        }),
+        shareReplay(1)
       );
+
+    return this.cache[period];
   }
 
-  getTodayWeight(
-    measurements: WeightMeasurement[]
-  ): WeightMeasurement | undefined {
-    const start = new Date();
-    start.setUTCHours(0, 0, 0, 0);
-    const end = new Date();
-    end.setUTCHours(23, 59, 59, 999);
+  $periodWeight = this.withingsService.$sync.pipe(
+    mergeMap(() =>
+      this.$selectedPeriod.pipe(switchMap((period) => this.getWeight(period)))
+    )
+  );
 
-    return measurements.findLast(
-      ({ date }) =>
-        start.getTime() < date.getTime() && date.getTime() < end.getTime()
-    );
-  }
+  $todayWeight = this.withingsService.$sync.pipe(
+    mergeMap(() =>
+      this.getWeight(1).pipe(map((measurements) => measurements.at(-1)))
+    )
+  );
 
-  getDiff(measurements: WeightMeasurement[]): WeightMeasurement | undefined {
-    if (measurements.length < 2) {
-      return undefined;
-    }
+  $diff = this.$periodWeight.pipe(
+    map((measurements) => {
+      if (measurements.length < 2) {
+        return undefined;
+      }
 
-    const initial = measurements[0];
-    const latest = measurements[measurements.length - 1];
+      const initial = measurements[0];
+      const latest = measurements[measurements.length - 1];
 
-    return {
-      date: latest.date,
-      weight: (latest.weight - initial.weight) / initial.weight,
-      ...(initial.fatMassWeight &&
-        latest.fatMassWeight && {
-          fatMassWeight:
-            (latest.fatMassWeight - initial.fatMassWeight) /
-            initial.fatMassWeight,
-        }),
-      ...(initial.fatRatio &&
-        latest.fatRatio && {
-          fatRatio: (latest.fatRatio - initial.fatRatio) / initial.fatRatio,
-        }),
-    };
-  }
+      return {
+        date: latest.date,
+        weight: (latest.weight - initial.weight) / initial.weight,
+        ...(initial.fatMassWeight &&
+          latest.fatMassWeight && {
+            fatMassWeight:
+              (latest.fatMassWeight - initial.fatMassWeight) /
+              initial.fatMassWeight,
+          }),
+        ...(initial.fatRatio &&
+          latest.fatRatio && {
+            fatRatio: (latest.fatRatio - initial.fatRatio) / initial.fatRatio,
+          }),
+      };
+    })
+  );
 }

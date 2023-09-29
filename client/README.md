@@ -32,3 +32,4 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 - https://flowbite.com/docs/components/tables/
 - https://hslpicker.com/
+- https://softchris.github.io/books/rxjs/cascading-calls/

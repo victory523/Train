@@ -32,17 +32,11 @@
   </nav>
 </header>
 <main app-main>
-  <a app-badge href="/db" *ngIf="lastNackupState.isReady" class="lastBackup"
-    >Last backup {{ lastNackupState.value.time | relativeTime }}</a
+  <a app-badge href="/db" *ngIf="backupService.$lastBackupTime | async as lastBackupTime" class="lastBackup"
+    >Last backup {{ lastBackupTime | relativeTime }}</a
   >
   <section class="main">
-    <router-outlet *ngIf="syncState.isReady"></router-outlet>
-    <div
-      role="alert"
-      aria-busy="true"
-      app-loader
-      *ngIf="syncState.isLoading"
-    ></div>
+    <router-outlet></router-outlet>
   </section>
 </main>
 <ul app-notifications></ul>

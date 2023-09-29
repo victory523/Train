@@ -4,20 +4,22 @@ import { catchError, of, shareReplay } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 
 @Injectable()
-export class WithingsService {
+export class StravaService {
   constructor(
     private http: HttpClient,
     private notificationService: NotificationService
   ) {}
 
-  $sync = this.http.post<void>('/api/withings/sync', undefined).pipe(
-    catchError(() => {
-      this.notificationService.showNotification(
-        'Unable to sync with Withings',
-        'error'
-      );
-      return of();
-    }),
-    shareReplay(1)
-  );
+  $syncActivities = this.http
+    .post<void>('/api/strava/activities/sync', undefined)
+    .pipe(
+      catchError(() => {
+        this.notificationService.showNotification(
+          'Unable to sync with Strava',
+          'error'
+        );
+        return of();
+      }),
+      shareReplay(1)
+    );
 }

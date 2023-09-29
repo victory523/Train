@@ -1,19 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { combineLatest, map } from 'rxjs';
 import { HeadingComponent } from '../common-components/heading/heading.component';
 import { LoaderComponent } from '../common-components/loader/loader.component';
-import { NotificationService } from '../common-components/notification.service';
 import { TextComponent } from '../common-components/text/text.component';
-import { RideService, RideStats } from '../services/ride.service';
+import { RideService } from '../services/ride.service';
 import { MeasurementWithUnitPipe } from '../utils/measurement-with-unit.pipe';
 import { PercentageDiffColorPipe } from '../utils/percentage-diff-color.pipe';
 import { PercentageDiffPipe } from '../utils/percentage-diff.pipe';
-import {
-  HttpRequestState,
-  initialHttpRequestState,
-  requestState,
-} from '../utils/request-state';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -32,35 +28,20 @@ import {
   styleUrls: ['./ride.component.css'],
 })
 export class RideComponent {
-  @Input() set period(value: number | undefined) {
-    requestState(this.rideService.getRideStats(value), (newState) => {
-      this.periodRideStatsState = newState;
-
-      if (newState.hasFailed) {
-        this.notificationService.showNotification(
-          'Unable to fetch ride stats',
-          'error'
-        );
-      }
-    });
-  }
-
   constructor(
-    private rideService: RideService,
-    private notificationService: NotificationService
+    readonly rideService: RideService,
+    private readonly route: ActivatedRoute
   ) {
-    requestState(this.rideService.getRideStats(1), (newState) => {
-      this.todayRideStatsState = newState;
-
-      if (newState.hasFailed) {
-        this.notificationService.showNotification(
-          'Unable to fetch ride stats',
-          'error'
-        );
-      }
-    });
+    route.data.subscribe((data) => rideService.selectPeriod(data['period']));
   }
 
-  periodRideStatsState: HttpRequestState<RideStats> = initialHttpRequestState;
-  todayRideStatsState: HttpRequestState<RideStats> = initialHttpRequestState;
+  $vm = combineLatest([
+    this.rideService.$todayRideStats,
+    this.rideService.$periodRideStats,
+  ]).pipe(
+    map(([todayRideStats, periodRideStats]) => ({
+      todayRideStats,
+      periodRideStats,
+    }))
+  );
 }

@@ -4,13 +4,21 @@ import { Subject } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { RideService, RideStats } from '../services/ride.service';
 import { RideComponent } from './ride.component';
+import { StravaService } from '../services/strava.service';
 
 async function setup({ period }: { period?: number } = {}) {
+  const stravaSyncSubject = new Subject<void>();
   const todayRideStatsSubject = new Subject<RideStats>();
   const periodRideStatsSubject = new Subject<RideStats>();
+  const mockStravaService: jasmine.SpyObj<StravaService> = jasmine.createSpyObj(
+    ['syncActivities']
+  );
   const mockRideService: jasmine.SpyObj<RideService> = jasmine.createSpyObj([
     'getRideStats',
   ]);
+  mockStravaService.syncActivities.and.returnValue(
+    stravaSyncSubject.asObservable()
+  );
   mockRideService.getRideStats.and.callFake((period) =>
     period === 1
       ? todayRideStatsSubject.asObservable()
@@ -20,6 +28,7 @@ async function setup({ period }: { period?: number } = {}) {
     jasmine.createSpyObj(['showNotification']);
   await TestBed.configureTestingModule({
     providers: [
+      { provide: StravaService, useValue: mockStravaService },
       { provide: RideService, useValue: mockRideService },
       { provide: NotificationService, useValue: mockNotificationService },
     ],
@@ -33,35 +42,47 @@ async function setup({ period }: { period?: number } = {}) {
     fixture,
     element: fixture.nativeElement as HTMLElement,
     mockNotificationService,
+    mockStravaService,
     mockRideService,
+    stravaSyncSubject,
     todayRideStatsSubject,
     periodRideStatsSubject,
   };
 }
 
 describe('RideComponent', () => {
-  it('renders loading state', async () => {
+  it('renders loading state if syncing strava activities', async () => {
     const { element } = await setup();
     expect(element.querySelector('[aria-busy="true"]')).toBeDefined();
   });
 
   it('renders loading state if fetching today stats', async () => {
-    const { element, periodRideStatsSubject, fixture } = await setup();
+    const { element, stravaSyncSubject, periodRideStatsSubject, fixture } =
+      await setup();
+    stravaSyncSubject.next();
     periodRideStatsSubject.next({});
     fixture.detectChanges();
     expect(element.querySelector('[aria-busy="true"]')).toBeDefined();
   });
 
   it('renders loading state if fetching period stats', async () => {
-    const { element, todayRideStatsSubject, fixture } = await setup();
+    const { element, stravaSyncSubject, todayRideStatsSubject, fixture } =
+      await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     fixture.detectChanges();
     expect(element.querySelector('[aria-busy="true"]')).toBeDefined();
   });
 
   it('renders today ride stats', async () => {
-    const { element, fixture, todayRideStatsSubject, periodRideStatsSubject } =
-      await setup();
+    const {
+      element,
+      fixture,
+      stravaSyncSubject,
+      todayRideStatsSubject,
+      periodRideStatsSubject,
+    } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({
       calories: 646,
       elevationGain: 408,
@@ -78,8 +99,14 @@ describe('RideComponent', () => {
   });
 
   it('renders period ride stats', async () => {
-    const { element, fixture, todayRideStatsSubject, periodRideStatsSubject } =
-      await setup();
+    const {
+      element,
+      fixture,
+      stravaSyncSubject,
+      todayRideStatsSubject,
+      periodRideStatsSubject,
+    } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     periodRideStatsSubject.next({
       calories: 646 * 4,
@@ -96,8 +123,14 @@ describe('RideComponent', () => {
   });
 
   it('renders - if no today stats values are returned', async () => {
-    const { element, fixture, todayRideStatsSubject, periodRideStatsSubject } =
-      await setup();
+    const {
+      element,
+      fixture,
+      stravaSyncSubject,
+      todayRideStatsSubject,
+      periodRideStatsSubject,
+    } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     periodRideStatsSubject.next({});
     fixture.detectChanges();
@@ -109,8 +142,14 @@ describe('RideComponent', () => {
   });
 
   it('renders - if no period stats values are returned', async () => {
-    const { element, fixture, todayRideStatsSubject, periodRideStatsSubject } =
-      await setup();
+    const {
+      element,
+      fixture,
+      stravaSyncSubject,
+      todayRideStatsSubject,
+      periodRideStatsSubject,
+    } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     periodRideStatsSubject.next({});
     fixture.detectChanges();
@@ -121,13 +160,33 @@ describe('RideComponent', () => {
     expect(valueElements[3].textContent?.trim()).toEqual('-');
   });
 
+  it('renders error state if strava sync fails', async () => {
+    const { mockNotificationService, fixture, stravaSyncSubject } =
+      await setup();
+    stravaSyncSubject.error({});
+    fixture.detectChanges();
+    expect(mockNotificationService.showNotification).toHaveBeenCalledWith(
+      'Unable to sync with Strava',
+      'error'
+    );
+  });
+
+  it('doesnt fetch rides if sync fails', async () => {
+    const { fixture, stravaSyncSubject, mockRideService } = await setup();
+    stravaSyncSubject.error({});
+    fixture.detectChanges();
+    expect(mockRideService.getRideStats).not.toHaveBeenCalled();
+  });
+
   it('renders error state if fetching today stats fails', async () => {
     const {
       mockNotificationService,
       fixture,
+      stravaSyncSubject,
       todayRideStatsSubject,
       periodRideStatsSubject,
     } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.error({});
     periodRideStatsSubject.next({});
     fixture.detectChanges();
@@ -141,9 +200,11 @@ describe('RideComponent', () => {
     const {
       mockNotificationService,
       fixture,
+      stravaSyncSubject,
       todayRideStatsSubject,
       periodRideStatsSubject,
     } = await setup();
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     periodRideStatsSubject.error({});
     fixture.detectChanges();
@@ -156,12 +217,14 @@ describe('RideComponent', () => {
   it('fetches weight meausrements with week period', async () => {
     const {
       fixture,
+      stravaSyncSubject,
       todayRideStatsSubject,
       periodRideStatsSubject,
       mockRideService,
     } = await setup({
       period: 7,
     });
+    stravaSyncSubject.next();
     todayRideStatsSubject.next({});
     periodRideStatsSubject.next({});
     fixture.detectChanges();

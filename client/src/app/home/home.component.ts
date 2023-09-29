@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WeightComponent } from '../weight/weight.component';
+import { Component } from '@angular/core';
 import { RideComponent } from '../ride/ride.component';
+import { WeightComponent } from '../weight/weight.component';
 
 @Component({
   selector: 'app-home',
@@ -10,7 +10,4 @@ import { RideComponent } from '../ride/ride.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent {
-  @Input()
-  period: number | undefined;
-}
+export class HomeComponent {}
