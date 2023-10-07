@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  EMPTY,
   Observable,
   catchError,
   mergeMap,
-  of,
   shareReplay,
-  switchMap,
+  switchMap
 } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { StravaService } from './strava.service';
@@ -54,7 +54,7 @@ export class RideService {
             'Unable to fetch ride stats',
             'error'
           );
-          return of();
+          return EMPTY;
         }),
         shareReplay(1)
       );

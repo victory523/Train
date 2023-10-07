@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, map, of, shareReplay, tap } from 'rxjs';
+import { EMPTY, catchError, map, of, shareReplay, tap } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class BackupService {
         'Unable to fetch last backup time',
         'error'
       );
-      return of();
+      return EMPTY;
     }),
     shareReplay(1)
   );

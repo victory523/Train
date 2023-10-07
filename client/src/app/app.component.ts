@@ -34,8 +34,9 @@ import { RelativeTimePipe } from './utils/relative-time.pipe';
 })
 export class AppComponent {
   readonly routerTokens = RouterTokens;
+  $lastBackupTime = this.backupService.$lastBackupTime;
 
   constructor(
-    readonly backupService: BackupService
+    private readonly backupService: BackupService
   ) {}
 }

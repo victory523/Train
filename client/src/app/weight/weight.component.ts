@@ -32,10 +32,9 @@ export class WeightComponent {
   initOpts: NgxEchartsDirective['initOpts'] = {
     renderer: 'svg',
   };
-
   constructor(
-    readonly weightService: WeightService,
-    readonly route: ActivatedRoute
+    private readonly weightService: WeightService,
+    route: ActivatedRoute
   ) {
     route.data.subscribe((data) => weightService.selectPeriod(data['period']));
   }

@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   BehaviorSubject,
+  EMPTY,
   Observable,
   catchError,
   map,
   mergeMap,
-  of,
   shareReplay,
-  switchMap,
+  switchMap
 } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { WithingsService } from './withings.service';
@@ -60,7 +60,7 @@ export class WeightService {
             'Unable to fetch weight',
             'error'
           );
-          return of();
+          return EMPTY;
         }),
         shareReplay(1)
       );

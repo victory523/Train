@@ -1,11 +1,11 @@
+import { provideHttpClient } from '@angular/common/http';
 import {
   HttpTestingController,
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { BackupService } from './backup.service';
-import { provideHttpClient } from '@angular/common/http';
 import { NotificationService } from '../common-components/notification.service';
+import { BackupService } from './backup.service';
 
 function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
@@ -29,7 +29,7 @@ describe('BackupService', () => {
       const mockTime = new Date();
       const { service, httpTestingController } = setup();
       service.$lastBackupTime.subscribe((lastBackup) => {
-        expect(lastBackup).toEqual({ time: mockTime });
+        expect(lastBackup).toEqual(mockTime);
       });
       httpTestingController
         .expectOne('/db/last-backup-time')
@@ -37,21 +37,52 @@ describe('BackupService', () => {
       httpTestingController.verify();
     });
 
-    it('should return error message if last backup was more that 1 day ago', () => {
+    it('should show notification if last backup was more that 1 day ago', () => {
       const mockTime = new Date(Date.now() - 25 * 60 * 60 * 1000);
       const { service, httpTestingController, mockNotificationService } =
         setup();
       service.$lastBackupTime.subscribe((lastBackup) => {
-        expect(lastBackup).toEqual({
-          time: mockTime,
-          errorMessage: 'No backup since 1 day',
-        });
+        expect(lastBackup).toEqual(mockTime);
       });
       httpTestingController
         .expectOne('/db/last-backup-time')
         .flush(mockTime.toISOString());
       httpTestingController.verify();
-      expect(mockNotificationService).toHaveBeenCalledWith();
+      expect(mockNotificationService.showNotification).toHaveBeenCalledWith(
+        'No backup since 1 day',
+        'error'
+      );
+    });
+
+    it('should show notification if fetching last backup was not succesful', () => {
+      const { service, httpTestingController, mockNotificationService } =
+        setup();
+      service.$lastBackupTime.subscribe((lastBackup) => {
+        expect(lastBackup).toBeUndefined();
+      });
+      httpTestingController
+        .expectOne('/db/last-backup-time')
+        .error(new ProgressEvent(''));
+      httpTestingController.verify();
+      expect(mockNotificationService.showNotification).toHaveBeenCalledWith(
+        'Unable to fetch last backup time',
+        'error'
+      );
+    });
+
+    it('caches last backup time', () => {
+      const mockTime = new Date();
+      const { service, httpTestingController } = setup();
+      service.$lastBackupTime.subscribe((lastBackup) => {
+        expect(lastBackup).toEqual(mockTime);
+      });
+      service.$lastBackupTime.subscribe((lastBackup) => {
+        expect(lastBackup).toEqual(mockTime);
+      });
+      httpTestingController
+        .expectOne('/db/last-backup-time')
+        .flush(mockTime.toISOString());
+      httpTestingController.verify();
     });
   });
 });

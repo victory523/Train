@@ -29,8 +29,8 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class RideComponent {
   constructor(
-    readonly rideService: RideService,
-    private readonly route: ActivatedRoute
+    private readonly rideService: RideService,
+    route: ActivatedRoute
   ) {
     route.data.subscribe((data) => rideService.selectPeriod(data['period']));
   }

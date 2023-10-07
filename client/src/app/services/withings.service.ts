@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, of, shareReplay } from 'rxjs';
+import { EMPTY, catchError, shareReplay } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class WithingsService {
         'Unable to sync with Withings',
         'error'
       );
-      return of();
+      return EMPTY;
     }),
     shareReplay(1)
   );

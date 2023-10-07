@@ -9,20 +9,16 @@ import { RideComponent } from '../ride/ride.component';
 @Component({
   standalone: true,
   selector: 'app-weight',
+  template: 'weight'
 })
-class MockWeightComponent {
-  @Input()
-  period: number | undefined;
-}
+class MockWeightComponent {}
 
 @Component({
   standalone: true,
   selector: 'app-ride',
+  template: 'ride'
 })
-class MockRideComponent {
-  @Input()
-  period: number | undefined;
-}
+class MockRideComponent {}
 
 async function setup() {
   TestBed.configureTestingModule({
@@ -45,23 +41,13 @@ async function setup() {
 }
 
 describe('HomeComponent', () => {
-  it('renders weight with passed period', async () => {
-    const { fixture } = await setup();
-    fixture.componentInstance.period = 7;
-    fixture.detectChanges();
-    expect(
-      fixture.debugElement.query(By.directive(MockWeightComponent))
-        .componentInstance.period
-    ).toBe(7);
+  it('renders weight', async () => {
+    const { element } = await setup();
+    expect(element.textContent).toContain('weight')
   });
 
   it('renders ride with passed period', async () => {
-    const { fixture } = await setup();
-    fixture.componentInstance.period = 7;
-    fixture.detectChanges();
-    expect(
-      fixture.debugElement.query(By.directive(MockRideComponent))
-        .componentInstance.period
-    ).toBe(7);
+    const { element } = await setup();
+    expect(element.textContent).toContain('ride')
   });
 });

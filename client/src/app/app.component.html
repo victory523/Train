@@ -32,7 +32,7 @@
   </nav>
 </header>
 <main app-main>
-  <a app-badge href="/db" *ngIf="backupService.$lastBackupTime | async as lastBackupTime" class="lastBackup"
+  <a app-badge href="/db" *ngIf="$lastBackupTime | async as lastBackupTime" class="lastBackup"
     >Last backup {{ lastBackupTime | relativeTime }}</a
   >
   <section class="main">
