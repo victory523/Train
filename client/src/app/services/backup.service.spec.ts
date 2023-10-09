@@ -24,7 +24,7 @@ function setup() {
 }
 
 describe('BackupService', () => {
-  describe('getLastBackupTime', () => {
+  describe('$lastBackupTime', () => {
     it('should return last backup time', () => {
       const mockTime = new Date();
       const { service, httpTestingController } = setup();
