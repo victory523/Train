@@ -9,11 +9,11 @@ import { routes } from './app.routes';
 import { NotificationService } from './common-components/notification.service';
 import { oAuthLoginInterceptor } from './http-interceptors/oauth-login-interceptor';
 import { timezoneInterceptor } from './http-interceptors/timezone-interceptor';
-import { BackupService } from './services/backup.service';
-import { RideService } from './services/ride.service';
-import { StravaService } from './services/strava.service';
-import { WeightService } from './services/weight.service';
-import { WithingsService } from './services/withings.service';
+import { BackupService } from './backup/backup.service';
+import { RideService } from './ride/ride.service';
+import { StravaService } from './strava/strava.service';
+import { WeightService } from './weight/weight.service';
+import { WithingsService } from './withings/withings.service';
 
 function provideECharts(): Provider {
   return {

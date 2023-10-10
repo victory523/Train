@@ -48,61 +48,10 @@ const mockResponse2: RideStats = {
 };
 
 describe('RideService', () => {
-  describe('$todayRideStats', () => {
-    it('should return today ride stats', () => {
+  describe('getRideStats', () => {
+    it('should return ride stats for given period', () => {
       const { service, httpTestingController, syncActivities } = setup();
-      service.$todayRideStats.subscribe((rideStats) => {
-        expect(rideStats).toEqual(mockResponse);
-      });
-      syncActivities.next();
-      httpTestingController
-        .expectOne('/api/ride/stats?period=1')
-        .flush(mockResponse);
-      httpTestingController.verify();
-    });
-
-    it('should show notification if fetching today ride stats was not succesful', () => {
-      const {
-        service,
-        httpTestingController,
-        mockNotificationService,
-        syncActivities,
-      } = setup();
-      service.$todayRideStats.subscribe((rideStats) => {
-        expect(rideStats).toBeUndefined();
-      });
-      syncActivities.next();
-      httpTestingController
-        .expectOne('/api/ride/stats?period=1')
-        .error(new ProgressEvent(''));
-      httpTestingController.verify();
-      expect(mockNotificationService.showNotification).toHaveBeenCalledWith(
-        'Unable to fetch ride stats',
-        'error'
-      );
-    });
-
-    it('caches today ride stats', () => {
-      const { service, httpTestingController, syncActivities } = setup();
-      service.$todayRideStats.subscribe((rideStats) => {
-        expect(rideStats).toEqual(mockResponse);
-      });
-      syncActivities.next();
-      service.$todayRideStats.subscribe((rideStats) => {
-        expect(rideStats).toEqual(mockResponse);
-      });
-      httpTestingController
-        .expectOne('/api/ride/stats?period=1')
-        .flush(mockResponse);
-      httpTestingController.verify();
-    });
-  });
-
-  describe('$periodRideStats', () => {
-    it('should return period ride stats', () => {
-      const { service, httpTestingController, syncActivities } = setup();
-      service.selectPeriod(30);
-      service.$periodRideStats.subscribe((rideStats) => {
+      service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
       syncActivities.next();
@@ -112,38 +61,14 @@ describe('RideService', () => {
       httpTestingController.verify();
     });
 
-    it('should return period ride stats for multiple periods', () => {
-      let index = 0;
-      const { service, httpTestingController, syncActivities } = setup();
-      service.selectPeriod(30);
-      service.$periodRideStats.subscribe((rideStats) => {
-        if (!index) {
-          expect(rideStats).toEqual(mockResponse);
-        } else {
-          expect(rideStats).toEqual(mockResponse2);
-        }
-      });
-      syncActivities.next();
-      httpTestingController
-        .expectOne('/api/ride/stats?period=30')
-        .flush(mockResponse);
-      index++;
-      service.selectPeriod(365);
-      httpTestingController
-        .expectOne('/api/ride/stats?period=365')
-        .flush(mockResponse2);
-      httpTestingController.verify();
-    });
-
-    it('should show notification if fetching period ride stats was not succesful', () => {
+    it('should show notification if fetching ride stats was not succesful', () => {
       const {
         service,
         httpTestingController,
         mockNotificationService,
         syncActivities,
       } = setup();
-      service.selectPeriod(30);
-      service.$periodRideStats.subscribe((rideStats) => {
+      service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toBeUndefined();
       });
       syncActivities.next();
@@ -157,14 +82,13 @@ describe('RideService', () => {
       );
     });
 
-    it('caches period ride stats', () => {
+    it('caches ride stats', () => {
       const { service, httpTestingController, syncActivities } = setup();
-      service.selectPeriod(30);
-      service.$periodRideStats.subscribe((rideStats) => {
+      service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
       syncActivities.next();
-      service.$periodRideStats.subscribe((rideStats) => {
+      service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
       httpTestingController
@@ -173,39 +97,30 @@ describe('RideService', () => {
       httpTestingController.verify();
     });
 
-    it('caches period ride stats for multiple periods', () => {
-      let index = 0;
+    it('caches ride stats for multiple periods', () => {
       const { service, httpTestingController, syncActivities } = setup();
-      service.selectPeriod(30);
-      service.$periodRideStats.subscribe((rideStats) => {
-        if (!index) {
-          expect(rideStats).toEqual(mockResponse);
-        } else {
-          expect(rideStats).toEqual(mockResponse2);
-        }
+      service.getRideStats(10).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse);
+      });
+      service.getRideStats(30).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse2);
       });
       syncActivities.next();
-      service.$periodRideStats.subscribe((rideStats) => {
-        if (!index) {
-          expect(rideStats).toEqual(mockResponse);
-        } else {
-          expect(rideStats).toEqual(mockResponse2);
-        }
+      service.getRideStats(10).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse);
       });
+      service.getRideStats(30).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse2);
+      });
+      service.getRideStats(10).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse);
+      });
+      httpTestingController
+        .expectOne('/api/ride/stats?period=10')
+        .flush(mockResponse);
       httpTestingController
         .expectOne('/api/ride/stats?period=30')
-        .flush(mockResponse);
-      service.selectPeriod(365);
-      index++;
-      service.$periodRideStats.subscribe((rideStats) => {
-        expect(rideStats).toEqual(mockResponse2);
-      });
-      httpTestingController
-        .expectOne('/api/ride/stats?period=365')
         .flush(mockResponse2);
-      service.$periodRideStats.subscribe((rideStats) => {
-        expect(rideStats).toEqual(mockResponse2);
-      });
       httpTestingController.verify();
     });
   });

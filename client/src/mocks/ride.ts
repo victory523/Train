@@ -1,5 +1,5 @@
 import { rest } from 'msw';
-import { RideStats } from 'src/app/services/ride.service';
+import { RideStats } from 'src/app/ride/ride.service';
 
 const mocks: Record<number, RideStats> = {
   0: {

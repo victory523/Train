@@ -9,7 +9,7 @@ import { HeadingComponent } from './common-components/heading/heading.component'
 import { LoaderComponent } from './common-components/loader/loader.component';
 import { MainComponent } from './common-components/main/main.component';
 import { NotificationsComponent } from './common-components/notifications/notifications.component';
-import { BackupService } from './services/backup.service';
+import { BackupService } from './backup/backup.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
 
 @Component({
@@ -34,9 +34,7 @@ import { RelativeTimePipe } from './utils/relative-time.pipe';
 })
 export class AppComponent {
   readonly routerTokens = RouterTokens;
-  $lastBackupTime = this.backupService.$lastBackupTime;
+  readonly $lastBackupTime = this.backupService.getLastBackupTime();
 
-  constructor(
-    private readonly backupService: BackupService
-  ) {}
+  constructor(private readonly backupService: BackupService) {}
 }
