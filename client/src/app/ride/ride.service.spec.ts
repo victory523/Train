@@ -7,7 +7,7 @@ import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { RideService, RideStats } from './ride.service';
-import { StravaService } from './strava.service';
+import { StravaService } from '../strava/strava.service';
 
 function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =

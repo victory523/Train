@@ -10,7 +10,7 @@ import {
   switchMap
 } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
-import { StravaService } from './strava.service';
+import { StravaService } from '../strava/strava.service';
 
 export type RideStats = {
   calories?: number;

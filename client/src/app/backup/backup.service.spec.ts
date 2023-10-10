@@ -24,11 +24,11 @@ function setup() {
 }
 
 describe('BackupService', () => {
-  describe('$lastBackupTime', () => {
+  describe('getLastBackupTime', () => {
     it('should return last backup time', () => {
       const mockTime = new Date();
       const { service, httpTestingController } = setup();
-      service.$lastBackupTime.subscribe((lastBackup) => {
+      service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toEqual(mockTime);
       });
       httpTestingController
@@ -41,7 +41,7 @@ describe('BackupService', () => {
       const mockTime = new Date(Date.now() - 25 * 60 * 60 * 1000);
       const { service, httpTestingController, mockNotificationService } =
         setup();
-      service.$lastBackupTime.subscribe((lastBackup) => {
+      service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toEqual(mockTime);
       });
       httpTestingController
@@ -57,7 +57,7 @@ describe('BackupService', () => {
     it('should show notification if fetching last backup was not succesful', () => {
       const { service, httpTestingController, mockNotificationService } =
         setup();
-      service.$lastBackupTime.subscribe((lastBackup) => {
+      service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toBeUndefined();
       });
       httpTestingController
@@ -73,10 +73,10 @@ describe('BackupService', () => {
     it('caches last backup time', () => {
       const mockTime = new Date();
       const { service, httpTestingController } = setup();
-      service.$lastBackupTime.subscribe((lastBackup) => {
+      service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toEqual(mockTime);
       });
-      service.$lastBackupTime.subscribe((lastBackup) => {
+      service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toEqual(mockTime);
       });
       httpTestingController

@@ -11,7 +11,7 @@ import {
   switchMap
 } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
-import { WithingsService } from './withings.service';
+import { WithingsService } from '../withings/withings.service';
 
 export type WeightMeasurement = {
   date: Date;

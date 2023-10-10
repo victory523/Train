@@ -5,7 +5,7 @@ import { combineLatest, map } from 'rxjs';
 import { HeadingComponent } from '../common-components/heading/heading.component';
 import { LoaderComponent } from '../common-components/loader/loader.component';
 import { TextComponent } from '../common-components/text/text.component';
-import { RideService } from '../services/ride.service';
+import { RideService } from './ride.service';
 import { MeasurementWithUnitPipe } from '../utils/measurement-with-unit.pipe';
 import { PercentageDiffColorPipe } from '../utils/percentage-diff-color.pipe';
 import { PercentageDiffPipe } from '../utils/percentage-diff.pipe';
