@@ -31,10 +31,10 @@ describe('BackupService', () => {
       service.getLastBackupTime().subscribe((lastBackup) => {
         expect(lastBackup).toEqual(mockTime);
       });
-      httpTestingController
-        .expectOne('/db/last-backup-time')
-        .flush(mockTime.toISOString());
+      const request = httpTestingController.expectOne('/db/last-backup-time');
+      request.flush(mockTime.toISOString());
       httpTestingController.verify();
+      expect(request.request.method).toBe('GET');
     });
 
     it('should show notification if last backup was more that 1 day ago', () => {

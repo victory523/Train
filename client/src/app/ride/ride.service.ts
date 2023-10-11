@@ -26,7 +26,7 @@ export class RideService {
       return this.cache[period];
     }
 
-    this.cache[period] = this.stravaService.$syncActivities.pipe(
+    this.cache[period] = this.stravaService.syncActivities().pipe(
       mergeMap(() =>
         this.http
           .get<RideStats>('/api/ride/stats', {

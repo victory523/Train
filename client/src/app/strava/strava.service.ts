@@ -6,11 +6,11 @@ import { NotificationService } from '../common-components/notification.service';
 @Injectable()
 export class StravaService {
   constructor(
-    private http: HttpClient,
-    private notificationService: NotificationService
+    private readonly http: HttpClient,
+    private readonly notificationService: NotificationService
   ) {}
 
-  $syncActivities = this.http
+  private readonly $syncActivities = this.http
     .post<void>('/api/strava/activities/sync', undefined)
     .pipe(
       catchError(() => {
@@ -22,4 +22,8 @@ export class StravaService {
       }),
       shareReplay(1)
     );
+
+  syncActivities() {
+    return this.$syncActivities;
+  }
 }
