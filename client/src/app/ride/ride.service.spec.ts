@@ -13,9 +13,12 @@ function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
   const syncActivities = new Subject<void>();
-  const mockStravaService = {
-    $syncActivities: syncActivities.asObservable(),
-  };
+  const mockStravaService: jasmine.SpyObj<StravaService> = jasmine.createSpyObj(
+    ['syncActivities']
+  );
+  mockStravaService.syncActivities.and.returnValue(
+    syncActivities.asObservable()
+  );
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(),
@@ -49,6 +52,18 @@ const mockResponse2: RideStats = {
 
 describe('RideService', () => {
   describe('getRideStats', () => {
+    it('should sync activities first', () => {
+      const { service, httpTestingController } = setup();
+      service.getRideStats(30).subscribe((rideStats) => {
+        expect(rideStats).toEqual(mockResponse);
+      });
+      const request = httpTestingController.expectNone(
+        '/api/ride/stats?period=30'
+      );
+      expect(request).toBeUndefined();
+      httpTestingController.verify();
+    });
+
     it('should return ride stats for given period', () => {
       const { service, httpTestingController, syncActivities } = setup();
       service.getRideStats(30).subscribe((rideStats) => {

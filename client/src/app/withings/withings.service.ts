@@ -6,18 +6,24 @@ import { NotificationService } from '../common-components/notification.service';
 @Injectable()
 export class WithingsService {
   constructor(
-    private http: HttpClient,
-    private notificationService: NotificationService
+    private readonly http: HttpClient,
+    private readonly notificationService: NotificationService
   ) {}
 
-  $sync = this.http.post<void>('/api/withings/sync', undefined).pipe(
-    catchError(() => {
-      this.notificationService.showNotification(
-        'Unable to sync with Withings',
-        'error'
-      );
-      return EMPTY;
-    }),
-    shareReplay(1)
-  );
+  private readonly $syncMeasurements = this.http
+    .post<void>('/api/withings/sync', undefined)
+    .pipe(
+      catchError(() => {
+        this.notificationService.showNotification(
+          'Unable to sync with Withings',
+          'error'
+        );
+        return EMPTY;
+      }),
+      shareReplay(1)
+    );
+
+  syncMeasurements() {
+    return this.$syncMeasurements;
+  }
 }
