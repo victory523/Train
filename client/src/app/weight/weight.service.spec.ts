@@ -359,7 +359,9 @@ describe('WeightService', () => {
     service.getTodayWeight().subscribe();
     service.getDiff(1).subscribe();
     syncMeasurements.next();
-    httpTestingController.expectOne('/api/weight?period=1').flush(mockResponse);
+    const request = httpTestingController.expectOne('/api/weight?period=1');
+    request.flush(mockResponse);
+    expect(request.request.method).toBe('GET');
     httpTestingController.verify();
   });
 });
