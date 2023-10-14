@@ -40,18 +40,17 @@ import mucsi96.traininglog.rides.RideService;
 @Slf4j
 public class StravaController {
 
-  private final StravaFintnessService stravaFintnessService;
   private final StravaActivityService stravaActivityService;
   private final RideService rideService;
   private final OAuth2AuthorizedClientManager stravaAuthorizedClientManager;
 
-  @PostMapping("/sync")
+  @PostMapping("/activities/sync")
   @Operation(parameters = {
       @Parameter(in = ParameterIn.HEADER, name = "X-Timezone", required = true, example = "America/New_York")
   }, responses = { @ApiResponse(content = @Content()),
       @ApiResponse(responseCode = "401", content = @Content(), links = {
           @io.swagger.v3.oas.annotations.links.Link(name = "oauth2Login", operationId = "strava-authorize") }) })
-  public ResponseEntity<RepresentationModel<?>> sync(
+  public ResponseEntity<RepresentationModel<?>> syncActivities(
       Authentication principal,
       HttpServletRequest servletRequest,
       HttpServletResponse servletResponse,

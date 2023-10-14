@@ -99,7 +99,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   public void returns_not_authorized_if_authorized_client_is_not_found() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
-            post("/strava/sync")
+            post("/strava/activities/sync")
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
@@ -113,7 +113,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
     authorizeStravaOAuth2Client();
     MockHttpServletResponse response = mockMvc
         .perform(
-            post("/strava/sync")
+            post("/strava/activities/sync")
                 .headers(getHeaders("guest")))
         .andReturn().getResponse();
 
@@ -225,7 +225,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
 
     mockMvc
         .perform(
-            post("/strava/sync")
+            post("/strava/activities/sync")
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
@@ -259,7 +259,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
 
     MockHttpServletResponse response = mockMvc
         .perform(
-            post("/strava/sync")
+            post("/strava/activities/sync")
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
@@ -296,7 +296,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
 
     MockHttpServletResponse response = mockMvc
         .perform(
-            post("/strava/sync")
+            post("/strava/activities/sync")
                 .headers(getHeaders("user")))
         .andReturn().getResponse();
 
