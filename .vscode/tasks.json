@@ -103,6 +103,25 @@
     },
     {
       "type": "shell",
+      "label": "Stop e2e environment",
+      "command": "node",
+      "args": [
+        "docker-compose.js",
+        "|",
+        "docker",
+        "compose",
+        "--file",
+        "-",
+        "down"
+      ],
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}/test"
+      },
+      "problemMatcher": []
+    },
+    {
+      "type": "shell",
       "label": "Run e2e tests",
       "command": "mvn",
       "args": ["test"],
@@ -111,6 +130,6 @@
         "cwd": "${workspaceFolder}/test"
       },
       "problemMatcher": []
-    },
+    }
   ]
 }

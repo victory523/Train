@@ -65,14 +65,34 @@ public class BaseIntegrationTest {
         String.format("'%s',", Timestamp.from(Instant.now())) + //
         String.format("'%s'", Timestamp.from(Instant.now())) + //
         ");");
+    jdbcTemplate.execute("INSERT INTO oauth2_authorized_client (" + //
+        "client_registration_id," + //
+        "principal_name," + //
+        "access_token_type," + //
+        "access_token_value," + //
+        "access_token_issued_at," + //
+        "access_token_expires_at," + //
+        "access_token_scopes," + //
+        "refresh_token_value," + //
+        "refresh_token_issued_at," + //
+        "created_at" + //
+        ") VALUES (" + //
+        "'strava-client'," + //
+        "'rob'," + //
+        "'Bearer'," + //
+        "'test-access-token'," + //
+        String.format("'%s',", Timestamp.from(Instant.now())) + //
+        String.format("'%s',", Timestamp.from(Instant.now().plus(1, ChronoUnit.DAYS))) + //
+        "'activity:read'," + //
+        "'test-refresh-token'," + //
+        String.format("'%s',", Timestamp.from(Instant.now())) + //
+        String.format("'%s'", Timestamp.from(Instant.now())) + //
+        ");");
   }
 
   public void waitForLoad() {
     wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("main")));
-    wait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//*[@aria-busy]")));
-    wait.until(ExpectedConditions
-        .visibilityOfElementLocated(By.tagName("main")));
+        .visibilityOfElementLocated(By.tagName("article")));
   }
 
   public void open() {

@@ -260,16 +260,16 @@ class RideTest extends BaseIntegrationTest {
 
     WebElement caloriesElement = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Calories\")]/following-sibling::*/following-sibling::*"));
-    assertThat(caloriesElement.getText()).isEqualToIgnoringWhitespace("3 876");
+    assertThat(caloriesElement.getText()).isEqualToIgnoringWhitespace("4746");
     WebElement elevationGainElement = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Elevation gain\")]/following-sibling::*/following-sibling::*"));
-    assertThat(elevationGainElement.getText()).isEqualToIgnoringWhitespace("2 448 m");
+    assertThat(elevationGainElement.getText()).isEqualToIgnoringWhitespace("2 964 m");
     WebElement distanceElement = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Distance\")]/following-sibling::*/following-sibling::*"));
-    assertThat(distanceElement.getText()).isEqualToIgnoringWhitespace("70 km");
+    assertThat(distanceElement.getText()).isEqualToIgnoringWhitespace("99 km");
     WebElement timeElement = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Time\")]/following-sibling::*/following-sibling::*"));
-    assertThat(timeElement.getText()).isEqualToIgnoringWhitespace("5 h 7 min");
+    assertThat(timeElement.getText()).isEqualToIgnoringWhitespace("6 h 18 min");
   }
 
 }

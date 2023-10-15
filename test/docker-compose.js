@@ -13,6 +13,9 @@ const config = {
     "mock-withings": {
       build: "./mock_withings",
     },
+    "mock-strava": {
+      build: "./mock_strava",
+    },
     "test-db": {
       image: "postgres:15.2-bullseye",
       environment: {
@@ -50,13 +53,21 @@ const config = {
         WITHINGS_API_URI: "http://mock-withings:8080",
         WITHINGS_CLIENT_ID: "withings-client-id",
         WITHINGS_CLIENT_SECRET: "withings-client-secret",
+        STRAVA_API_URI: "http://mock-strava:8080",
+        STRAVA_CLIENT_ID: "strava-client-id",
+        STRAVA_CLIENT_SECRET: "strava-client-secret",
       },
       healthcheck: {
         test: ["CMD", "health-check"],
         interval: "10s",
         timeout: "30s",
         retries: 5,
-        start_period: "15s",
+        start_period: "1s",
+      },
+      depends_on: {
+        chrome: {
+          condition: "service_healthy",
+        },
       },
     },
     "reverse-proxy": {
@@ -71,6 +82,20 @@ const config = {
       image: `${
         arch === "arm64" ? "seleniarm" : "selenium"
       }/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828`,
+      healthcheck: {
+        test: [
+          "CMD",
+          "/opt/bin/check-grid.sh",
+          "--host",
+          "0.0.0.0",
+          "--port",
+          "4444",
+        ],
+        interval: "10s",
+        timeout: "30s",
+        retries: 5,
+        start_period: "15s",
+      },
     },
   },
   ...(dockerNetwork && {
