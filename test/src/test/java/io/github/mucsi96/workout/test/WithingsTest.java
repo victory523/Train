@@ -11,7 +11,8 @@ public class WithingsTest extends BaseIntegrationTest {
 
   @Test
   void authorizes_withings() {
-    setupMocksWithNoAuth();
+    setupMocks();
+    jdbcTemplate.execute("DELETE FROM oauth2_authorized_client WHERE client_registration_id = 'withings-client';");
     webDriver.get(baseUrl);
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Withings\")]")));

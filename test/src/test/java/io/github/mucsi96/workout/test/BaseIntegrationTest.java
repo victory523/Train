@@ -35,13 +35,9 @@ public class BaseIntegrationTest {
 
   WebDriverWait wait;
 
-  public void setupMocksWithNoAuth() {
+  public void setupMocks() {
     wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
     cleanupDB();
-  }
-
-  public void setupMocks() {
-    setupMocksWithNoAuth();
     jdbcTemplate.execute("INSERT INTO oauth2_authorized_client (" + //
         "client_registration_id," + //
         "principal_name," + //
