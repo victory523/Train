@@ -79,11 +79,10 @@ const config = {
       ],
     },
     chrome: {
-      image: `${
+      image:
         arch === "arm64"
-          ? "seleniarm/standalone-chromium"
-          : "selenium/standalone-chrome"
-      }:116.0-chromedriver-116.0-grid-4.10.0-20230828`,
+          ? "seleniarm/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828"
+          : "selenium/standalone-chrome:116.0-chromedriver-116.0-grid-4.12.1-20230912",
       healthcheck: {
         test: [
           "CMD",
