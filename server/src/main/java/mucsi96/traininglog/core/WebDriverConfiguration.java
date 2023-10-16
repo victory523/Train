@@ -41,7 +41,7 @@ public class WebDriverConfiguration {
         "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
         "--window-size=1920,1080", "--remote-allow-origins=*");
 
-    RemoteWebDriver driver = new RemoteWebDriver(new URL(apiUri), options);
+    RemoteWebDriver driver = new RemoteWebDriver(new URL(apiUri), options, false);
     driver.setLogLevel(Level.WARNING);
     return new Augmenter().augment(driver);
   }
