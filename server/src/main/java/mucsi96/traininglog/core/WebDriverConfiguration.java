@@ -39,7 +39,7 @@ public class WebDriverConfiguration {
   public WebDriver getRemoteWebDriver() throws MalformedURLException {
     ChromeOptions options = new ChromeOptions().addArguments("--headless",
         "--disable-gpu", "--no-sandbox", "--disable-dev-shm-usage",
-        "--window-size=1920,1080", "--remote-allow-origins=*", "--remote-debugging-pipe");
+        "--window-size=1920,1080", "--remote-allow-origins=*");
 
     RemoteWebDriver driver = new RemoteWebDriver(new URL(apiUri), options);
     driver.setLogLevel(Level.WARNING);
