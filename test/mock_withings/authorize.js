@@ -19,12 +19,14 @@ function authozire(request, response) {
   location.searchParams.append("code", "authorization-code");
 
   response.writeHead(200, {
-    'Content-Type': 'text/html;charset=utf-8'
-  })
-  return response.end(`
+    "Content-Type": "text/html;charset=utf-8",
+  });
+  const responseBody = `
     <h1>Mock Withings</h1>
     <a href="${location.toString()}">Authorize</a>
-  `);
+  `;
+  console.log("Response: ", responseBody);
+  return response.end(responseBody);
 }
 
 module.exports = {

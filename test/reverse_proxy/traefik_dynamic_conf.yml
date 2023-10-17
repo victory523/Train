@@ -22,6 +22,11 @@ http:
         - web
       service: mock-withings
       rule: PathPrefix(`/withings`)
+    mock-strava:
+      entryPoints:
+        - web
+      service: mock-strava
+      rule: PathPrefix(`/strava`)
 
   middlewares:
     authHeaders:
@@ -49,3 +54,7 @@ http:
       loadBalancer:
         servers:
           - url: http://mock-withings:8080
+    mock-strava:
+      loadBalancer:
+        servers:
+          - url: http://mock-strava:8080
