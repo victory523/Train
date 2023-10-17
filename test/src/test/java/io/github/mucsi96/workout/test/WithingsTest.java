@@ -17,14 +17,25 @@ public class WithingsTest extends BaseIntegrationTest {
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Withings\")]")));
     webDriver.findElement(By.xpath("//a[contains(text(), \"Authorize\")]")).click();
+    longWait.until(ExpectedConditions.urlToBe(baseUrl + "/week"));
+    String userName = jdbcTemplate.queryForObject("SELECT principal_name FROM oauth2_authorized_client WHERE client_registration_id = 'withings-client';", String.class);
+    assertThat(userName).isEqualTo("rob");
   }
 
   @Test
-  void pulls_todays_weigth_from_withings_to_db() {
+  void pulls_todays_weigth_measurements_from_withings_to_db() {
     setupMocks();
     open();
-    WebElement element = webDriver
+    wait.until(ExpectedConditions
+        .visibilityOfElementLocated(By.xpath("//h2[contains(text(),\"Weight\")]")));
+    WebElement weighElement = webDriver
         .findElement(By.xpath("//h2[contains(text(), \"Weight\")]/following-sibling::*"));
-    assertThat(element.getText()).isEqualToIgnoringWhitespace("87.2 kg");
+    assertThat(weighElement.getText()).isEqualTo("87.2 kg");
+    WebElement bodyFatElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Body fat\")]/following-sibling::*"));
+    assertThat(bodyFatElement.getText()).isEqualTo("21.8 kg");
+    WebElement fatRatioElement = webDriver
+        .findElement(By.xpath("//h2[contains(text(), \"Fat ratio\")]/following-sibling::*"));
+    assertThat(fatRatioElement.getText()).isEqualTo("35.3 %");
   }
 }

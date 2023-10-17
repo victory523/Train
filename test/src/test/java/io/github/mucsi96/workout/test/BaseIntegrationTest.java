@@ -34,9 +34,11 @@ public class BaseIntegrationTest {
   JdbcTemplate jdbcTemplate;
 
   WebDriverWait wait;
+  WebDriverWait longWait;
 
   public void setupMocks() {
     wait = new WebDriverWait(webDriver, Duration.ofSeconds(5));
+    longWait = new WebDriverWait(webDriver, Duration.ofSeconds(15));
     cleanupDB();
     jdbcTemplate.execute("INSERT INTO oauth2_authorized_client (" + //
         "client_registration_id," + //

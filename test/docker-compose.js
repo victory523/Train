@@ -46,7 +46,7 @@ const config = {
         SPRING_ACTUATOR_PORT: 8082,
         SPRING_ADMIN_SERVER_HOST: "localhost",
         SPRING_ADMIN_SERVER_PORT: 9090,
-        WEBDRIVER_API_URI: "http://chrome:4444/wd/hub",
+        WEBDRIVER_API_URI: "http://chrome:4444/",
         WITHINGS_ACCOUNTS_URI: `http://${
           dockerNetwork ? "reverse-proxy" : "localhost:9780"
         }/withings`,
@@ -83,6 +83,15 @@ const config = {
         arch === "arm64"
           ? "seleniarm/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828"
           : "selenium/standalone-chrome:116.0-chromedriver-116.0-grid-4.12.1-20230912",
+      environment: {
+        SE_SCREEN_WIDTH: 1920,
+        SE_SCREEN_HEIGHT: 1080,
+        SE_SESSION_RETRY_INTERVAL: 1,
+        SE_NODE_MAX_SESSIONS: 10,
+        SE_NODE_OVERRIDE_MAX_SESSIONS: true,
+        START_XVFB: false,
+        SE_DRAIN_AFTER_SESSION_COUNT: 5,
+      },
       healthcheck: {
         test: [
           "CMD",
