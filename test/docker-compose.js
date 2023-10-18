@@ -50,7 +50,7 @@ const config = {
         SPRING_ACTUATOR_PORT: 8082,
         SPRING_ADMIN_SERVER_HOST: "localhost",
         SPRING_ADMIN_SERVER_PORT: 9090,
-        WEBDRIVER_API_URI: `${gatewayHost}/chrome/`,
+        WEBDRIVER_API_URI: `${gatewayHost}/chrome/wd/hub`,
         WITHINGS_ACCOUNTS_URI: `${gatewayHost}/withings`,
         WITHINGS_API_URI: `${gatewayHost}/withings`,
         WITHINGS_CLIENT_ID: "withings-client-id",
@@ -93,7 +93,7 @@ const config = {
         SE_NODE_OVERRIDE_MAX_SESSIONS: true,
         START_XVFB: false,
         SE_DRAIN_AFTER_SESSION_COUNT: 5,
-        SE_SUB_PATH: '/chrome/'
+        SE_SUB_PATH: "/chrome/",
       },
       healthcheck: {
         test: [
