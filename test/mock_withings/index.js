@@ -12,9 +12,9 @@ server.on("request", async (request, response) => {
   // https://developer.withings.com/api-reference/
   if (request.method === 'GET' && request.url.startsWith("/withings/oauth2_user/authorize2")) {
     return authozire(request, response);
-  } else if (request.method === 'POST' && request.url.startsWith("/v2/oauth2")) {
+  } else if (request.method === 'POST' && request.url.startsWith("/withings/v2/oauth2")) {
     return await get_access_token(request, response);
-  } else if (request.method === 'POST' && request.url.startsWith("/measure")) {
+  } else if (request.method === 'POST' && request.url.startsWith("/withings/measure")) {
 
     return measure(request, response);
   }

@@ -27,6 +27,11 @@ http:
         - web
       service: mock-strava
       rule: PathPrefix(`/strava`)
+    chrome:
+      entryPoints:
+        - web
+      service: chrome
+      rule: PathPrefix(`/chrome`)
 
   middlewares:
     authHeaders:
@@ -58,3 +63,8 @@ http:
       loadBalancer:
         servers:
           - url: http://mock-strava:8080
+    chrome:
+      loadBalancer:
+        servers:
+          - url: http://chrome:4444
+

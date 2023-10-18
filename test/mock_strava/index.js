@@ -10,21 +10,21 @@ server.on("request", async (request, response) => {
   console.log(request.url);
 
   // https://developer.withings.com/api-reference/
-  if (request.method === "GET" && request.url.startsWith("/oauth/authorize")) {
+  if (request.method === "GET" && request.url.startsWith("/strava/oauth/authorize")) {
     return authozire(request, response);
   } else if (
     request.method === "POST" &&
-    request.url.startsWith("/oauth/token")
+    request.url.startsWith("/strava/oauth/token")
   ) {
     return await get_access_token(request, response);
   } else if (
     request.method === "GET" &&
-    request.url.startsWith("/api/v3/athlete/activities")
+    request.url.startsWith("/strava/api/v3/athlete/activities")
   ) {
     return getActivities(request, response);
   } else if (
     request.method === "GET" &&
-    request.url.startsWith("/api/v3/activities/")
+    request.url.startsWith("/strava/api/v3/activities/")
   ) {
     return getActivity(request, response);
   }
