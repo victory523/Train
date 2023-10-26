@@ -22,6 +22,7 @@ function authozire(request, response) {
     "Content-Type": "text/html;charset=utf-8",
   });
   const responseBody = `
+    <!DOCTYPE html>
     <h1>Mock Withings</h1>
     <a href="${location.toString()}">Authorize</a>
   `;

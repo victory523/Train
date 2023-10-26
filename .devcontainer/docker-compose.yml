@@ -55,8 +55,3 @@ services:
       chmod 600 /tmp/pgpass;
       /entrypoint.sh;
       "
-
-  chrome:
-    image: seleniarm/standalone-chromium:116.0-chromedriver-116.0-grid-4.10.0-20230828
-    restart: unless-stopped
-    shm_size: '2gb'

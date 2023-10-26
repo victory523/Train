@@ -1,6 +1,11 @@
 entryPoints:
   web:
-   address: ":80"
+    address: ":80"
 providers:
-  file:
-    filename: /etc/traefik/traefik_dynamic_conf.yml
+  http:
+    endpoint: "http://traefik_dynamic_conf:8080"
+experimental:
+  plugins:
+    rewriteHeaders:
+      modulename: "github.com/XciD/traefik-plugin-rewrite-headers"
+      version: "v0.0.4"

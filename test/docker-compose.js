@@ -2,10 +2,6 @@ const os = require("os");
 const arch = os.arch();
 const dockerNetwork = process.env.DOCKER_NETWORK;
 const workspaceRoot = process.env.WORKSPACE_ROOT ?? "..";
-const gatewayPort = 9780;
-const gatewayHost = `http://${
-  dockerNetwork ? "reverse-proxy" : `localhost:${gatewayPort}`
-}`;
 
 const config = {
   version: "3.8",
@@ -50,12 +46,12 @@ const config = {
         SPRING_ACTUATOR_PORT: 8082,
         SPRING_ADMIN_SERVER_HOST: "localhost",
         SPRING_ADMIN_SERVER_PORT: 9090,
-        WEBDRIVER_API_URI: `${gatewayHost}/chrome/wd/hub`,
-        WITHINGS_ACCOUNTS_URI: `${gatewayHost}/withings`,
-        WITHINGS_API_URI: `${gatewayHost}/withings`,
+        WEBDRIVER_API_URI: "http://chrome:4444/chrome/wd/hub",
+        WITHINGS_ACCOUNTS_URI: "http://mock-withings:8080/withings",
+        WITHINGS_API_URI: "http://mock-withings:8080/withings",
         WITHINGS_CLIENT_ID: "withings-client-id",
         WITHINGS_CLIENT_SECRET: "withings-client-secret",
-        STRAVA_API_URI: `${gatewayHost}/strava`,
+        STRAVA_API_URI: "http://mock-strava:8080/strava",
         STRAVA_CLIENT_ID: "strava-client-id",
         STRAVA_CLIENT_SECRET: "strava-client-secret",
       },
@@ -72,12 +68,17 @@ const config = {
         },
       },
     },
+    traefik_dynamic_conf: {
+      build: "./reverse_proxy",
+      environment: {
+        DOCKER_NETWORK: process.env.DOCKER_NETWORK,
+      },
+    },
     "reverse-proxy": {
       image: "traefik",
-      ports: [`${gatewayPort}:80`],
+      ports: ["9780:80"],
       volumes: [
         `${workspaceRoot}/test/reverse_proxy/traefik_static_conf.yml:/etc/traefik/traefik.yml`,
-        `${workspaceRoot}/test/reverse_proxy/traefik_dynamic_conf.yml:/etc/traefik/traefik_dynamic_conf.yml`,
       ],
     },
     chrome: {

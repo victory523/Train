@@ -108,9 +108,6 @@ public class StravaConfiguration {
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
       parameters.add(OAuth2ParameterNames.CLIENT_ID, request.getClientRegistration().getClientId());
       parameters.add(OAuth2ParameterNames.CLIENT_SECRET, request.getClientRegistration().getClientSecret());
-      // parameters.add(OAuth2ParameterNames.CODE,
-      //     request.getAuthorizationExchange().getAuthorizationResponse().getCode());
-      // parameters.add(OAuth2ParameterNames.GRANT_TYPE, "authorization_code");
       return parameters;
     };
   }
@@ -121,8 +118,6 @@ public class StravaConfiguration {
       MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
       parameters.add(OAuth2ParameterNames.CLIENT_ID, request.getClientRegistration().getClientId());
       parameters.add(OAuth2ParameterNames.CLIENT_SECRET, request.getClientRegistration().getClientSecret());
-      // parameters.add(OAuth2ParameterNames.GRANT_TYPE, "refresh_token");
-      // parameters.add(OAuth2ParameterNames.REFRESH_TOKEN, request.getRefreshToken().getTokenValue());
       return parameters;
     };
   }
