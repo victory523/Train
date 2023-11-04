@@ -14,7 +14,8 @@ export const oAuthLoginInterceptor: HttpInterceptorFn = (
   return next(req).pipe(
     catchError((error, caught) => {
       if (error.error?._links?.oauth2Login?.href) {
-        location.assign(error.error._links.oauth2Login.href);
+        // location.assign(error.error._links.oauth2Login.href);
+        console.log('Redirecting to', error.error._links.oauth2Login.href)
         return caught;
       }
 

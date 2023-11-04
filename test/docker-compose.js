@@ -1,5 +1,6 @@
 const os = require("os");
 const arch = os.arch();
+const withLocalApps = !!process.env.WITH_LOCAL_APPS;
 const dockerNetwork = process.env.DOCKER_NETWORK;
 const workspaceRoot = process.env.WORKSPACE_ROOT ?? "..";
 
@@ -25,53 +26,56 @@ const config = {
       },
       ports: ["9734:5432"],
     },
-    client: {
-      image: "mucsi96/training-log-pro-client",
-      healthcheck: {
-        test: ["CMD", "health-check"],
-        interval: "10s",
-        timeout: "30s",
-        retries: 5,
-        start_period: "1s",
-      },
-    },
-    server: {
-      image: "mucsi96/training-log-pro-server",
-      environment: {
-        POSTGRES_HOSTNAME: "test-db",
-        POSTGRES_PORT: 5432,
-        POSTGRES_DB: "training-log",
-        POSTGRES_PASSWORD: "postgres",
-        POSTGRES_USER: "postgres",
-        SPRING_ACTUATOR_PORT: 8082,
-        SPRING_ADMIN_SERVER_HOST: "localhost",
-        SPRING_ADMIN_SERVER_PORT: 9090,
-        WEBDRIVER_API_URI: "http://chrome:4444/chrome/wd/hub",
-        WITHINGS_ACCOUNTS_URI: "http://mock-withings:8080/withings",
-        WITHINGS_API_URI: "http://mock-withings:8080/withings",
-        WITHINGS_CLIENT_ID: "withings-client-id",
-        WITHINGS_CLIENT_SECRET: "withings-client-secret",
-        STRAVA_API_URI: "http://mock-strava:8080/strava",
-        STRAVA_CLIENT_ID: "strava-client-id",
-        STRAVA_CLIENT_SECRET: "strava-client-secret",
-      },
-      healthcheck: {
-        test: ["CMD", "health-check"],
-        interval: "10s",
-        timeout: "30s",
-        retries: 5,
-        start_period: "1s",
-      },
-      depends_on: {
-        chrome: {
-          condition: "service_healthy",
+    ...(!withLocalApps && {
+      client: {
+        image: "mucsi96/training-log-pro-client",
+        healthcheck: {
+          test: ["CMD", "health-check"],
+          interval: "10s",
+          timeout: "30s",
+          retries: 5,
+          start_period: "1s",
         },
       },
-    },
+      server: {
+        image: "mucsi96/training-log-pro-server",
+        environment: {
+          POSTGRES_HOSTNAME: "test-db",
+          POSTGRES_PORT: 5432,
+          POSTGRES_DB: "training-log",
+          POSTGRES_PASSWORD: "postgres",
+          POSTGRES_USER: "postgres",
+          SPRING_ACTUATOR_PORT: 8082,
+          SPRING_ADMIN_SERVER_HOST: "localhost",
+          SPRING_ADMIN_SERVER_PORT: 9090,
+          WEBDRIVER_API_URI: "http://chrome:4444/chrome/wd/hub",
+          WITHINGS_ACCOUNTS_URI: "http://mock-withings:8080/withings",
+          WITHINGS_API_URI: "http://mock-withings:8080/withings",
+          WITHINGS_CLIENT_ID: "withings-client-id",
+          WITHINGS_CLIENT_SECRET: "withings-client-secret",
+          STRAVA_API_URI: "http://mock-strava:8080/strava",
+          STRAVA_CLIENT_ID: "strava-client-id",
+          STRAVA_CLIENT_SECRET: "strava-client-secret",
+        },
+        healthcheck: {
+          test: ["CMD", "health-check"],
+          interval: "10s",
+          timeout: "30s",
+          retries: 5,
+          start_period: "1s",
+        },
+        depends_on: {
+          chrome: {
+            condition: "service_healthy",
+          },
+        },
+      },
+    }),
     traefik_dynamic_conf: {
       build: "./reverse_proxy",
       environment: {
         DOCKER_NETWORK: process.env.DOCKER_NETWORK,
+        WITH_LOCAL_APPS: process.env.WITH_LOCAL_APPS,
       },
     },
     "reverse-proxy": {

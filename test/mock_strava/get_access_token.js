@@ -25,16 +25,13 @@ async function get_access_token(request, response) {
   });
   return response.end(
     JSON.stringify({
-      status: 0,
-      body: {
-        token_type: "Bearer",
-        expires_at: 1568775134,
-        expires_in: 21600,
-        refresh_token: "test-refresh-token",
-        access_token: "test-access-token",
-        athlete: {
-          id: 2323,
-        },
+      token_type: "Bearer",
+      expires_at: Date.now() / 1000 + 21600,
+      expires_in: 21600,
+      refresh_token: "test-refresh-token",
+      access_token: "test-access-token",
+      athlete: {
+        id: 2323,
       },
     })
   );

@@ -1,10 +1,12 @@
 const { createServer } = require("http");
 const PORT = 8080;
 const server = createServer();
-
-const entrypoint = process.env.DOCKER_NETWORKE
+const withLocalApps = !!process.env.WITH_LOCAL_APPS;
+const entrypoint = process.env.DOCKER_NETWORK && !withLocalApps
   ? "http://reverse-proxy"
   : "http://localhost:9780";
+
+console.log('Configuration:', { withLocalApps, entrypoint })
 
 const routers = {
   client: {
@@ -84,7 +86,7 @@ const services = {
     loadBalancer: {
       servers: [
         {
-          url: "http://client:80",
+          url: withLocalApps ? "http://app:4200" : "http://client:80",
         },
       ],
     },
@@ -93,7 +95,7 @@ const services = {
     loadBalancer: {
       servers: [
         {
-          url: "http://server:8080",
+          url: withLocalApps ? "http://app:8080" : "http://server:8080",
         },
       ],
     },
@@ -137,8 +139,6 @@ const services = {
 };
 
 server.on("request", async (request, response) => {
-  console.log(request.url);
-
   response.end(
     JSON.stringify({
       http: {
@@ -154,5 +154,5 @@ process.on("SIGINT", () => server.close(() => process.exit()));
 process.on("SIGTERM", () => server.close(() => process.exit()));
 
 server.listen(PORT, () => {
-  console.log(`starting server at port ${PORT}`);
+  console.log(`starting server on port ${PORT}`);
 });
