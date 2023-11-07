@@ -12,11 +12,9 @@ export const oAuthLoginInterceptor: HttpInterceptorFn = (
 ) => {
   const location = inject(Location);
   return next(req).pipe(
-    catchError((error, caught) => {
+    catchError((error) => {
       if (error.error?._links?.oauth2Login?.href) {
-        // location.assign(error.error._links.oauth2Login.href);
-        console.log('Redirecting to', error.error._links.oauth2Login.href)
-        return caught;
+        location.assign(error.error._links.oauth2Login.href);
       }
 
       throw error;
