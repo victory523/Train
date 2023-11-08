@@ -2,6 +2,8 @@ package io.github.mucsi96.workout.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -16,6 +18,7 @@ public class StravaTest extends BaseIntegrationTest {
     webDriver.get(baseUrl);
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Strava\")]")));
+    webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
     webDriver.findElement(By.xpath("//a[contains(text(), \"Authorize\")]")).click();
     longWait.until(ExpectedConditions.urlToBe(baseUrl + "/week"));
     String userName = jdbcTemplate.queryForObject(
@@ -23,6 +26,7 @@ public class StravaTest extends BaseIntegrationTest {
         String.class);
     assertThat(userName).isEqualTo("rob");
   }
+
 
   @Test
   void pulls_todays_ride_stats_from_strava_to_db() {
