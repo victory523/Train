@@ -6,13 +6,13 @@ import {
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
-import { RideService, RideStats } from './ride.service';
 import { StravaService } from '../strava/strava.service';
+import { RideService, RideStats } from './ride.service';
 
 function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
-  const syncActivities = new Subject<void>();
+  const syncActivities = new Subject<never>();
   const mockStravaService: jasmine.SpyObj<StravaService> = jasmine.createSpyObj(
     ['syncActivities']
   );
@@ -69,7 +69,7 @@ describe('RideService', () => {
       service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
-      syncActivities.next();
+      syncActivities.complete()
       httpTestingController
         .expectOne('/api/ride/stats?period=30')
         .flush(mockResponse);
@@ -86,7 +86,7 @@ describe('RideService', () => {
       service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toBeUndefined();
       });
-      syncActivities.next();
+      syncActivities.complete()
       httpTestingController
         .expectOne('/api/ride/stats?period=30')
         .error(new ProgressEvent(''));
@@ -102,7 +102,7 @@ describe('RideService', () => {
       service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
-      syncActivities.next();
+      syncActivities.complete()
       service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });
@@ -120,7 +120,7 @@ describe('RideService', () => {
       service.getRideStats(30).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse2);
       });
-      syncActivities.next();
+      syncActivities.complete()
       service.getRideStats(10).subscribe((rideStats) => {
         expect(rideStats).toEqual(mockResponse);
       });

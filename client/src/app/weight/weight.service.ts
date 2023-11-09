@@ -1,14 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
-  BehaviorSubject,
   EMPTY,
   Observable,
   catchError,
+  concat,
   map,
-  mergeMap,
-  shareReplay,
-  switchMap,
+  shareReplay
 } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { WithingsService } from '../withings/withings.service';
@@ -35,29 +33,28 @@ export class WeightService {
       return this.cache[period];
     }
 
-    this.cache[period] = this.withingsService.syncMeasurements().pipe(
-      mergeMap(() =>
-        this.http
-          .get<WeightMeasurement[]>('/api/weight', {
-            params: { ...(period ? { period } : {}) },
-          })
-          .pipe(
-            map((measurements) =>
-              measurements.map((measurement) => ({
-                ...measurement,
-                date: new Date(measurement.date),
-              }))
-            ),
-            catchError(() => {
-              this.notificationService.showNotification(
-                'Unable to fetch weight',
-                'error'
-              );
-              return EMPTY;
-            })
-          )
-      ),
-      shareReplay(1)
+    this.cache[period] = concat(
+      this.withingsService.syncMeasurements(),
+      this.http
+        .get<WeightMeasurement[]>('/api/weight', {
+          params: { ...(period ? { period } : {}) },
+        })
+        .pipe(
+          map((measurements) =>
+            measurements.map((measurement) => ({
+              ...measurement,
+              date: new Date(measurement.date),
+            }))
+          ),
+          catchError(() => {
+            this.notificationService.showNotification(
+              'Unable to fetch weight',
+              'error'
+            );
+            return EMPTY;
+          }),
+          shareReplay(1)
+        )
     );
 
     return this.cache[period];

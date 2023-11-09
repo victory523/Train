@@ -1,6 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, Observable, catchError, mergeMap, shareReplay } from 'rxjs';
+import {
+  EMPTY,
+  Observable,
+  catchError,
+  concat,
+  shareReplay
+} from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 import { StravaService } from '../strava/strava.service';
 
@@ -26,25 +32,24 @@ export class RideService {
       return this.cache[period];
     }
 
-    this.cache[period] = this.stravaService.syncActivities().pipe(
-      mergeMap(() =>
-        this.http
-          .get<RideStats>('/api/ride/stats', {
-            params: {
-              ...(period ? { period } : {}),
-            },
-          })
-          .pipe(
-            catchError(() => {
-              this.notificationService.showNotification(
-                'Unable to fetch ride stats',
-                'error'
-              );
-              return EMPTY;
-            })
-          )
-      ),
-      shareReplay(1)
+    this.cache[period] = concat(
+      this.stravaService.syncActivities(),
+      this.http
+        .get<RideStats>('/api/ride/stats', {
+          params: {
+            ...(period ? { period } : {}),
+          },
+        })
+        .pipe(
+          catchError(() => {
+            this.notificationService.showNotification(
+              'Unable to fetch ride stats',
+              'error'
+            );
+            return EMPTY;
+          }),
+          shareReplay(1)
+        )
     );
 
     return this.cache[period];

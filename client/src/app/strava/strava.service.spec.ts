@@ -4,18 +4,26 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { StravaService } from './strava.service';
+import { EMPTY } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
+import { WithingsService } from '../withings/withings.service';
+import { StravaService } from './strava.service';
 
 function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
+  const mockWithingsService: jasmine.SpyObj<WithingsService> =
+    jasmine.createSpyObj(['syncMeasurements']);
+
+  mockWithingsService.syncMeasurements.and.returnValue(EMPTY);
+
   TestBed.configureTestingModule({
     providers: [
       provideHttpClient(),
       provideHttpClientTesting(),
       StravaService,
       { provide: NotificationService, useValue: mockNotificationService },
+      { provide: WithingsService, useValue: mockWithingsService },
     ],
   });
   const service = TestBed.inject(StravaService);

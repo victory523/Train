@@ -4,15 +4,15 @@ import {
   provideHttpClientTesting,
 } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
-import { WeightMeasurement, WeightService } from './weight.service';
-import { NotificationService } from '../common-components/notification.service';
 import { Subject } from 'rxjs';
+import { NotificationService } from '../common-components/notification.service';
 import { WithingsService } from '../withings/withings.service';
+import { WeightMeasurement, WeightService } from './weight.service';
 
 function setup() {
   const mockNotificationService: jasmine.SpyObj<NotificationService> =
     jasmine.createSpyObj(['showNotification']);
-  const syncMeasurements = new Subject<void>();
+  const syncMeasurements = new Subject<never>();
   const mockWithingsService: jasmine.SpyObj<WithingsService> =
     jasmine.createSpyObj(['syncMeasurements']);
   mockWithingsService.syncMeasurements.and.returnValue(
@@ -79,7 +79,7 @@ describe('WeightService', () => {
       service.getWeight(7).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=7')
         .flush(mockResponse);
@@ -106,7 +106,7 @@ describe('WeightService', () => {
       service.getWeight(7).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=7')
         .error(new ProgressEvent(''));
@@ -122,7 +122,7 @@ describe('WeightService', () => {
       service.getWeight(7).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       service.getWeight(7).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
@@ -140,7 +140,7 @@ describe('WeightService', () => {
       service.getWeight(30).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse2);
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       service.getWeight(10).subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse);
       });
@@ -166,7 +166,7 @@ describe('WeightService', () => {
       service.getTodayWeight().subscribe((measurement) => {
         expect(measurement).toEqual(mockResponse.at(-1));
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=1')
         .flush([mockResponse.at(-1)]);
@@ -178,7 +178,7 @@ describe('WeightService', () => {
       service.getTodayWeight().subscribe((measurement) => {
         expect(measurement).toEqual(mockResponse.at(-1));
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=1')
         .flush(mockResponse);
@@ -190,7 +190,7 @@ describe('WeightService', () => {
       service.getTodayWeight().subscribe((measurement) => {
         expect(measurement).toBeUndefined();
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController.expectOne('/api/weight?period=1').flush([]);
       httpTestingController.verify();
     });
@@ -213,7 +213,7 @@ describe('WeightService', () => {
       service.getTodayWeight().subscribe((measurement) => {
         expect(measurement).toEqual(mockResponse.at(-1));
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=1')
         .error(new ProgressEvent(''));
@@ -229,7 +229,7 @@ describe('WeightService', () => {
       service.getTodayWeight().subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse.at(-1));
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       service.getTodayWeight().subscribe((measurements) => {
         expect(measurements).toEqual(mockResponse.at(-1));
       });
@@ -248,7 +248,7 @@ describe('WeightService', () => {
         expect(diff?.fatMassWeight?.toFixed(3)).toBe('-0.056');
         expect(diff?.fatRatio?.toFixed(3)).toBe('-0.033');
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController.expectOne('/api/weight?period=7').flush([
         {
           date: daysBefore(3),
@@ -271,7 +271,7 @@ describe('WeightService', () => {
       service.getDiff(7).subscribe((diff) => {
         expect(diff?.weight.toFixed(3)).toBe('-0.017');
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController.expectOne('/api/weight?period=7').flush([
         {
           date: daysBefore(3),
@@ -290,7 +290,7 @@ describe('WeightService', () => {
       service.getDiff(7).subscribe((diff) => {
         expect(diff).toBeUndefined();
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController.expectOne('/api/weight?period=7').flush([
         {
           date: daysBefore(3),
@@ -305,7 +305,7 @@ describe('WeightService', () => {
       service.getDiff(7).subscribe((diff) => {
         expect(diff).toBeUndefined();
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController.expectOne('/api/weight?period=7').flush([]);
       httpTestingController.verify();
     });
@@ -326,7 +326,7 @@ describe('WeightService', () => {
         syncMeasurements,
       } = setup();
       service.getDiff(7).subscribe();
-      syncMeasurements.next();
+      syncMeasurements.complete();
       httpTestingController
         .expectOne('/api/weight?period=7')
         .error(new ProgressEvent(''));
@@ -342,7 +342,7 @@ describe('WeightService', () => {
       service.getDiff(7).subscribe((diff) => {
         expect(diff?.weight.toFixed(3)).toEqual('-0.010');
       });
-      syncMeasurements.next();
+      syncMeasurements.complete();
       service.getDiff(7).subscribe((diff) => {
         expect(diff?.weight.toFixed(3)).toEqual('-0.010');
       });
@@ -358,7 +358,7 @@ describe('WeightService', () => {
     service.getWeight(1).subscribe();
     service.getTodayWeight().subscribe();
     service.getDiff(1).subscribe();
-    syncMeasurements.next();
+    syncMeasurements.complete();
     const request = httpTestingController.expectOne('/api/weight?period=1');
     request.flush(mockResponse);
     expect(request.request.method).toBe('GET');

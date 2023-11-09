@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { EMPTY, catchError, shareReplay } from 'rxjs';
+import { EMPTY, catchError, mergeMap, shareReplay } from 'rxjs';
 import { NotificationService } from '../common-components/notification.service';
 
 @Injectable()
@@ -13,7 +13,8 @@ export class WithingsService {
   private readonly $syncMeasurements = this.http
     .post<void>('/api/withings/sync', undefined)
     .pipe(
-      catchError(() => {
+      mergeMap(() => EMPTY),
+      catchError((e) => {
         this.notificationService.showNotification(
           'Unable to sync with Withings',
           'error'
