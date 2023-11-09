@@ -18,7 +18,6 @@ public class StravaTest extends BaseIntegrationTest {
     webDriver.get(baseUrl);
     wait.until(ExpectedConditions
         .visibilityOfElementLocated(By.xpath("//h1[contains(text(), \"Mock Strava\")]")));
-    webDriver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
     webDriver.findElement(By.xpath("//a[contains(text(), \"Authorize\")]")).click();
     longWait.until(ExpectedConditions.urlToBe(baseUrl + "/week"));
     String userName = jdbcTemplate.queryForObject(
