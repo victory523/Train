@@ -96,25 +96,12 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
-  public void returns_not_authorized_if_authorized_client_is_not_found() throws Exception {
-    MockHttpServletResponse response = mockMvc
-        .perform(
-            post("/strava/activities/sync")
-                .headers(getHeaders("user")))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(401);
-    assertThat(JsonPath.parse(response.getContentAsString()).read("$._links.oauth2Login.href", String.class))
-        .isEqualTo("http://localhost/strava/authorize");
-  }
-
-  @Test
   public void returns_forbidden_if_user_has_no_user_role() throws Exception {
     authorizeStravaOAuth2Client();
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/strava/activities/sync")
-                .headers(getHeaders("guest")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -124,7 +111,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   public void redirects_to_strava_request_authorization_page() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
-            get("/strava/authorize").headers(getHeaders("user")))
+            get("/strava/authorize").headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(302);
@@ -149,7 +136,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
 
     MockHttpSession mockHttpSession = new MockHttpSession();
     MockHttpServletResponse response1 = mockMvc.perform(
-        get("/strava/authorize").headers(getHeaders("user"))
+        get("/strava/authorize").headers(getHeaders())
             .session(mockHttpSession))
         .andReturn().getResponse();
     UriComponents components = UriComponentsBuilder.fromUriString(response1.getRedirectedUrl()).build();
@@ -159,7 +146,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
 
     MockHttpServletResponse response2 = mockMvc
         .perform(get(components.getQueryParams().getFirst(OAuth2ParameterNames.REDIRECT_URI))
-            .headers(getHeaders("user"))
+            .headers(getHeaders())
             .queryParam(OAuth2ParameterNames.STATE, state)
             .queryParam(OAuth2ParameterNames.CODE, "test-authorization-code")
             .session(mockHttpSession))
@@ -226,7 +213,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/strava/activities/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -260,7 +247,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/strava/activities/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -297,7 +284,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/strava/activities/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(200);

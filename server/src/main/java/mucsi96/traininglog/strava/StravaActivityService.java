@@ -61,6 +61,10 @@ public class StravaActivityService {
         }, headers);
     List<StravaSummaryActivity> activities = response.getBody();
 
+    if (activities == null) {
+      return List.of();
+    }
+
     try {
       ObjectMapper mapper = new ObjectMapper();
       mapper.registerModule(new JavaTimeModule());
@@ -109,6 +113,10 @@ public class StravaActivityService {
         mapper.registerModule(new JavaTimeModule());
         System.out.println(mapper.writeValueAsString(activity));
       } catch (JsonProcessingException e) {
+      }
+
+      if (activity == null) {
+        throw new RuntimeException("No matching activity");
       }
 
       return Ride.builder()

@@ -16,6 +16,7 @@
       vars:
         k8s_name: "{{ db_host }}"
         host_prefix: workout
+    - role: mucsi96.kubetools.deploy_webdriver
     - role: mucsi96.kubetools.deploy_spring_app
       vars:
         k8s_name: spring-app
@@ -33,6 +34,10 @@
           WITHINGS_API_URI: "{{ withings_api_uri }}"
           WITHINGS_CLIENT_ID: "{{ withings_client_id }}"
           WITHINGS_CLIENT_SECRET: "{{ withings_client_secret }}"
+          STRAVA_API_URI: "{{ strava_api_uri }}"
+          STRAVA_CLIENT_ID: "{{ strava_client_id }}"
+          STRAVA_CLIENT_SECRET: "{{ strava_client_secret }}"
+          WEBDRIVER_API_URI: "http://{{ webdriver_host }}:{{ webdriver_port }}/wd/hub"
     - role: mucsi96.kubetools.deploy_client_app
       vars:
         k8s_name: client-app

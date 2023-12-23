@@ -15,3 +15,8 @@ spring:
           service-base-url: http://${K8S_POD_IP}:8080
           management-base-url: http://${K8S_POD_IP}:${SPRING_ACTUATOR_PORT}
         auto-deregistration: true
+kubetools:
+  introspection-uri: ${INTROSPECTION_URI}
+  user-info-uri: ${USER_INFO_URI}
+  client-id: ${CLIENT_ID}
+  client-secret: ${CLIENT_SECRET}

@@ -46,7 +46,9 @@
     },
     "vs-kubernetes": {
       "vs-kubernetes.kubeconfig": ".kube/config",
-      "vs-kubernetes.knownKubeconfigs": [".kube/config"],
+      "vs-kubernetes.knownKubeconfigs": [
+        ".kube/config"
+      ]
     },
     "java.configuration.updateBuildConfiguration": "interactive",
     "search.exclude": {

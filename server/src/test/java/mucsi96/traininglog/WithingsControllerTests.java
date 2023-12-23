@@ -100,7 +100,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(401);
@@ -114,7 +114,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getHeaders("guest")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -124,7 +124,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   public void redirects_to_withings_request_authorization_page() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
-            get("/withings/authorize").headers(getHeaders("user")))
+            get("/withings/authorize").headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(302);
@@ -149,7 +149,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
 
     MockHttpSession mockHttpSession = new MockHttpSession();
     MockHttpServletResponse response1 = mockMvc.perform(
-        get("/withings/authorize").headers(getHeaders("user"))
+        get("/withings/authorize").headers(getHeaders())
             .session(mockHttpSession))
         .andReturn().getResponse();
     UriComponents components = UriComponentsBuilder.fromUriString(response1.getRedirectedUrl()).build();
@@ -159,7 +159,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
 
     MockHttpServletResponse response2 = mockMvc
         .perform(get(components.getQueryParams().getFirst(OAuth2ParameterNames.REDIRECT_URI))
-            .headers(getHeaders("user"))
+            .headers(getHeaders())
             .queryParam(OAuth2ParameterNames.STATE, state)
             .queryParam(OAuth2ParameterNames.CODE, "test-authorization-code")
             .session(mockHttpSession))
@@ -215,7 +215,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -249,7 +249,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     Optional<TestAuthorizedClient> authorizedClient = authorizedClientRepository
@@ -274,7 +274,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             post("/withings/sync")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(200);

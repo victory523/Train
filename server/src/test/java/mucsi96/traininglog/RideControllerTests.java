@@ -68,21 +68,11 @@ public class RideControllerTests extends BaseIntegrationTest {
   }
 
   @Test
-  public void returns_not_authorized_if_no_preauth_headers_are_sent() throws Exception {
-    MockHttpServletResponse response = mockMvc
-        .perform(
-            get("/ride/stats"))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(401);
-  }
-
-  @Test
   public void returns_forbidden_if_user_has_no_user_role() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/ride/stats")
-                .headers(getHeaders("guest")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -94,7 +84,7 @@ public class RideControllerTests extends BaseIntegrationTest {
         .perform(
             get("/ride/stats")
                 .queryParam("period", "1")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isCloseTo(646.0, withPrecision(0.1));
@@ -109,7 +99,7 @@ public class RideControllerTests extends BaseIntegrationTest {
         .perform(
             get("/ride/stats")
                 .queryParam("period", "7")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isEqualTo(646.0, withPrecision(0.1));
@@ -123,7 +113,7 @@ public class RideControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/ride/stats")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.calories", Double.class)).isEqualTo(1192.0, withPrecision(0.1));

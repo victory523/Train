@@ -41,12 +41,8 @@ public class BaseIntegrationTest {
 
   static PostgreSQLContainer<?> dbMock;
 
-  HttpHeaders getHeaders(String authority) {
+  HttpHeaders getHeaders() {
     HttpHeaders headers = new HttpHeaders();
-    headers.add("Remote-User", "rob");
-    headers.add("Remote-Groups", authority);
-    headers.add("Remote-Name", "Robert White");
-    headers.add("Remote-Email", "robert.white@mockemail.com");
     headers.add("X-Timezone", "America/New_York");
     return headers;
   }

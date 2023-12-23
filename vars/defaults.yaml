@@ -15,3 +15,6 @@ db_backup_exclude_tables:
 db_backup_region: us-east-1
 withings_accounts_uri: https://account.withings.com
 withings_api_uri: https://wbsapi.withings.net
+strava_api_uri: https://www.strava.com
+webdriver_host: webdriver
+webdriver_port: 4444

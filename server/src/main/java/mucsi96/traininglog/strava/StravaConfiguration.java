@@ -5,7 +5,9 @@ import java.util.Set;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientProvider;
@@ -28,6 +30,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
+import io.github.mucsi96.kubetools.security.MockSecurityConfigurer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -44,14 +47,30 @@ public class StravaConfiguration {
   private String apiUri;
 
   @Bean
+  @Profile("prod")
   SecurityFilterChain stravaSecurityFilterChain(
       HttpSecurity http,
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer) throws Exception {
-    return kubetoolsSecurityConfigurer.configure(http)
+    return http
         .securityMatcher("/strava/**")
         .oauth2Client(configurer -> configurer
-            .authorizationCodeGrant(customizer -> customizer
-                .accessTokenResponseClient(stravaAccessTokenResponseClient())))
+        .authorizationCodeGrant(customizer -> customizer
+        .accessTokenResponseClient(stravaAccessTokenResponseClient())))
+        .with(kubetoolsSecurityConfigurer, Customizer.withDefaults())
+        .build();
+  }
+
+  @Bean
+  @Profile("!prod")
+  SecurityFilterChain mockStravaSecurityFilterChain(
+      HttpSecurity http,
+      MockSecurityConfigurer mockSecurityConfigurer) throws Exception {
+    return http
+        .securityMatcher("/strava/**")
+        .oauth2Client(configurer -> configurer
+        .authorizationCodeGrant(customizer -> customizer
+        .accessTokenResponseClient(stravaAccessTokenResponseClient())))
+        .with(mockSecurityConfigurer, Customizer.withDefaults())
         .build();
   }
 

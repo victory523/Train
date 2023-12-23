@@ -59,21 +59,11 @@ public class WeightControllerTests extends BaseIntegrationTest {
   }
 
   @Test
-  public void returns_not_authorized_if_no_preauth_headers_are_sent() throws Exception {
-    MockHttpServletResponse response = mockMvc
-        .perform(
-            get("/weight"))
-        .andReturn().getResponse();
-
-    assertThat(response.getStatus()).isEqualTo(401);
-  }
-
-  @Test
   public void returns_forbidden_if_user_has_no_user_role() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/weight")
-                .headers(getHeaders("guest")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(response.getStatus()).isEqualTo(403);
@@ -85,7 +75,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .perform(
             get("/weight")
                 .queryParam("period", "1")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(1);
@@ -102,7 +92,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
         .perform(
             get("/weight")
                 .queryParam("period", "7")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(4);
@@ -125,7 +115,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
     MockHttpServletResponse response = mockMvc
         .perform(
             get("/weight")
-                .headers(getHeaders("user")))
+                .headers(getHeaders()))
         .andReturn().getResponse();
 
     assertThat(JsonPath.parse(response.getContentAsString()).read("$.length()", Integer.class)).isEqualTo(6);

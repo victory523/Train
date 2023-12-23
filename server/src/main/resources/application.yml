@@ -74,3 +74,9 @@ strava:
   username: ${STRAVA_USERNAME}
   password: ${STRAVA_PASSWORD}
   api-uri: ${STRAVA_API_URI}
+kubetools:
+  introspection-uri: /
+  user-info-uri: /
+  client-id: clientId
+  client-secret: clientSecret
+
