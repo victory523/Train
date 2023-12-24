@@ -7,7 +7,6 @@ import java.util.Set;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.config.Customizer;
@@ -41,7 +40,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.github.mucsi96.kubetools.security.KubetoolsSecurityConfigurer;
-import io.github.mucsi96.kubetools.security.MockSecurityConfigurer;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -57,7 +55,6 @@ public class WithingsConfiguration {
   private String apiUri;
 
   @Bean
-  @Profile("prod")
   SecurityFilterChain withingsSecurityFilterChain(
       HttpSecurity http,
       KubetoolsSecurityConfigurer kubetoolsSecurityConfigurer) throws Exception {
@@ -67,20 +64,6 @@ public class WithingsConfiguration {
             .authorizationCodeGrant(customizer -> customizer
                 .accessTokenResponseClient(withingsAccessTokenResponseClient())))
         .with(kubetoolsSecurityConfigurer, Customizer.withDefaults())
-        .build();
-  }
-
-  @Bean
-  @Profile("!prod")
-  SecurityFilterChain mockWithingsSecurityFilterChain(
-      HttpSecurity http,
-      MockSecurityConfigurer mockSecurityConfigurer) throws Exception {
-    return http
-        .securityMatcher("/withings/**")
-        .oauth2Client(configurer -> configurer
-            .authorizationCodeGrant(customizer -> customizer
-                .accessTokenResponseClient(withingsAccessTokenResponseClient())))
-        .with(mockSecurityConfigurer, Customizer.withDefaults())
         .build();
   }
 

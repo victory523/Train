@@ -96,6 +96,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_not_authorized_if_authorized_client_is_not_found() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
@@ -121,6 +122,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void redirects_to_withings_request_authorization_page() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
@@ -141,6 +143,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void requests_access_token_after_consent_is_granted() throws Exception {
     mockWithingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
         WireMock.aResponse()
@@ -166,7 +169,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
         .andReturn().getResponse();
 
     assertThat(response2.getStatus()).isEqualTo(302);
-    assertThat(response2.getRedirectedUrl()).isEqualTo("http://localhost/withings/authorize");
+    assertThat(response2.getRedirectedUrl()).isEqualTo("http://localhost/withings/authorize?continue");
 
     List<LoggedRequest> requests = mockWithingsServer
         .findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/v2/oauth2")));
@@ -190,6 +193,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void requests_new_access_token_if_its_expired() throws Exception {
     mockWithingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
         WireMock.aResponse()
@@ -230,6 +234,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_not_authorized_if_refresh_token_is_invalid() throws Exception {
     mockWithingsServer.stubFor(WireMock.post("/v2/oauth2").willReturn(
         WireMock.aResponse()
@@ -262,6 +267,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void pulls_todays_weight_from_withings_to_database() throws Exception {
     authorizeWithingsOAuth2Client();
     mockWithingsServer.stubFor(WireMock
@@ -281,7 +287,7 @@ public class WithingsControllerTests extends BaseIntegrationTest {
     Optional<Weight> weight = weightRepository.findAll().stream().findFirst();
     assertThat(weight.isPresent()).isTrue();
     assertThat(weight.get().getCreatedAt().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-        .isEqualTo("2020-07-08T22:16:40Z[Etc/UTC]");
+        .isEqualTo("2020-07-08T22:16:40Z");
     assertThat(weight.get().getWeight()).isEqualTo(65.8f);
     assertThat(weight.get().getFatRatio()).isEqualTo(32.3f);
     assertThat(weight.get().getFatMassWeight()).isEqualTo(21.8f);

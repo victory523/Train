@@ -70,6 +70,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_today_weight_measurement() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
@@ -87,6 +88,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_one_week_weight_measurements() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
@@ -111,6 +113,7 @@ public class WeightControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_all_time_weight_measurements() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(

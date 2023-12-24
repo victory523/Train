@@ -108,6 +108,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void redirects_to_strava_request_authorization_page() throws Exception {
     MockHttpServletResponse response = mockMvc
         .perform(
@@ -128,6 +129,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void requests_access_token_after_consent_is_granted() throws Exception {
     mockStravaServer.stubFor(WireMock.post("/oauth/token").willReturn(
         WireMock.aResponse()
@@ -153,7 +155,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
         .andReturn().getResponse();
 
     assertThat(response2.getStatus()).isEqualTo(302);
-    assertThat(response2.getRedirectedUrl()).isEqualTo("http://localhost/strava/authorize");
+    assertThat(response2.getRedirectedUrl()).isEqualTo("http://localhost/strava/authorize?continue");
 
     List<LoggedRequest> requests = mockStravaServer
         .findAll(WireMock.postRequestedFor(WireMock.urlEqualTo("/oauth/token")));
@@ -176,6 +178,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void requests_new_access_token_if_its_expired() throws Exception {
     mockStravaServer.stubFor(WireMock.post("/oauth/token").willReturn(
         WireMock.aResponse()
@@ -228,6 +231,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void returns_not_authorized_if_refresh_token_is_invalid() throws Exception {
     mockStravaServer.stubFor(WireMock.post("/oauth/token").willReturn(
         WireMock.aResponse()
@@ -260,6 +264,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
   }
 
   @Test
+  @WithMockUserRoles
   public void pulls_todays_weight_from_strava_to_database() throws Exception {
     authorizeStravaOAuth2Client();
     mockStravaServer.stubFor(WireMock
@@ -291,7 +296,7 @@ public class StravaControllerTests extends BaseIntegrationTest {
     Optional<Ride> ride = rideRepository.findAll().stream().findFirst();
     assertThat(ride.isPresent()).isTrue();
     assertThat(ride.get().getCreatedAt().format(DateTimeFormatter.ISO_ZONED_DATE_TIME))
-        .isEqualTo("2018-02-16T14:52:54Z[Etc/UTC]");
+        .isEqualTo("2018-02-16T14:52:54Z");
     assertThat(ride.get().getName()).isEqualTo("Happy Friday");
     assertThat(ride.get().getMovingTime()).isEqualTo(4207);
     assertThat(ride.get().getDistance()).isEqualTo(28099.0f);
