@@ -11,6 +11,9 @@ import { MainComponent } from './common-components/main/main.component';
 import { NotificationsComponent } from './common-components/notifications/notifications.component';
 import { BackupService } from './backup/backup.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
+import { AuthService } from './auth/auth.service';
+import { combineLatest, map } from 'rxjs';
+import { ButtonComponent } from './common-components/button/button.component';
 
 @Component({
   standalone: true,
@@ -20,6 +23,7 @@ import { RelativeTimePipe } from './utils/relative-time.pipe';
     RouterLink,
     RouterLinkActive,
     RelativeTimePipe,
+    ButtonComponent,
     HeadingComponent,
     HeaderComponent,
     HeaderMenuComponent,
@@ -35,6 +39,26 @@ import { RelativeTimePipe } from './utils/relative-time.pipe';
 export class AppComponent {
   readonly routerTokens = RouterTokens;
   readonly $lastBackupTime = this.backupService.getLastBackupTime();
+  $isSignedIn = this.authService.isSignedIn();
+  $userName = this.authService.getUserName();
 
-  constructor(private readonly backupService: BackupService) {}
+  $vm = combineLatest([this.$isSignedIn, this.$userName]).pipe(
+    map(([isSignedIn, userName]) => ({
+      isSignedIn,
+      userName,
+    }))
+  );
+
+  constructor(
+    private readonly authService: AuthService,
+    private readonly backupService: BackupService
+  ) {}
+
+  onSignin(): void {
+    this.authService.signin();
+  }
+
+  onSignout(): void {
+    this.authService.signout();
+  }
 }

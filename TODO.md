@@ -1,0 +1,4 @@
+- Migrate to Angular templates. Get rid of "ngIf=" (in progress)
+- Create a dropdown button for sign out (in progress)
+- Update all dependencies
+- Rebuild dev container using dev container features

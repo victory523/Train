@@ -1,4 +1,4 @@
-import { rest } from 'msw';
+import { http, HttpResponse } from 'msw';
 import { RideStats } from 'src/app/ride/ride.service';
 
 const mocks: Record<number, RideStats> = {
@@ -30,9 +30,10 @@ const mocks: Record<number, RideStats> = {
 };
 
 export const rideMocks = [
-  rest.get('/api/ride/stats', (req, res, ctx) => {
-    const period = parseInt(req.url.searchParams.get('period') ?? '0');
+  http.get('/api/ride/stats', ({ request }) => {
+    const url = new URL(request.url);
+    const period = parseInt(url.searchParams.get('period') ?? '0');
 
-    return res(ctx.json(mocks[period]));
+    return HttpResponse.json(mocks[period]);
   }),
 ];

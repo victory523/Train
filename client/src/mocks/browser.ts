@@ -1,12 +1,15 @@
-import { rest, setupWorker } from 'msw';
-import { weightMocks } from './weight';
+import { http, HttpResponse } from 'msw';
+import { setupWorker } from 'msw/browser';
 import { rideMocks } from './ride';
+import { weightMocks } from './weight';
+import { authMocks } from './auth';
 
 export const mocks = [
-  rest.get('/db/last-backup-time', (_req, res, ctx) => {
-    return res(ctx.status(200), ctx.json(new Date(Date.now() - 5 * 60 * 1000)));
-  }),
-  rest.post('/api/withings/sync', (_req, res) => {
+  ...authMocks,
+  http.get('/db/last-backup-time', () =>
+    HttpResponse.json(new Date(Date.now() - 5 * 60 * 1000))
+  ),
+  http.post('/api/withings/sync', () => {
     // return res(
     //   ctx.status(401),
     //   ctx.json({
@@ -17,18 +20,14 @@ export const mocks = [
     //     },
     //   })
     // );
-    return res();
+    return new HttpResponse();
   }),
-  rest.post('/api/strava/activities/sync', (_req, res) => {
-    return res();
-  }),
+  http.post('/api/strava/activities/sync', () => new HttpResponse()),
   ...rideMocks,
-  ...weightMocks
+  ...weightMocks,
 ];
 
 const worker = setupWorker(...mocks);
 worker.start({
   onUnhandledRequest: 'bypass',
 });
-
-export { rest, worker };

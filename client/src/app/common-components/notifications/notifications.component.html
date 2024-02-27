@@ -1,9 +1,10 @@
+@for (notification of notifications; track notification) {
 <li
   app-notification
   role="alert"
-  *ngFor="let notification of notifications"
   [type]="notification.type"
   (settled)="removeNotification(notification)"
 >
   {{ notification.message }}
 </li>
+}

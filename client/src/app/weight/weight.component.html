@@ -1,4 +1,5 @@
-<section *ngIf="$vm | async as vm">
+@if ($vm | async; as vm) {
+<section>
   <div class="chart-wrapper">
     <div
       role="img"
@@ -45,3 +46,4 @@
     </p>
   </article>
 </section>
+}

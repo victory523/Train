@@ -1,9 +1,12 @@
+@if ($vm | async; as vm) {
 <header app-header>
   <nav>
     <a app-header-menu routerLink="/"><h1 app-heading>W6</h1></a>
+    @if (vm.isSignedIn) {
     <a
       app-header-menu
       [routerLink]="routerTokens.WEEK"
+      [routerLinkActiveOptions]="{ exact: true }"
       routerLinkActive
       ariaCurrentWhenActive="page"
       >Week</a
@@ -29,14 +32,24 @@
       ariaCurrentWhenActive="page"
       >All time</a
     >
+    <span app-badge>{{ vm.userName }}</span>
+    <button app-button color="red" (click)="onSignout()" type="button">
+      Sign out
+    </button>
+    } @else {
+    <button app-button (click)="onSignin()" type="button">Sign in</button>
+    }
   </nav>
 </header>
 <main app-main>
-  <a app-badge href="/db" *ngIf="$lastBackupTime | async as lastBackupTime" class="lastBackup"
+  @if ($lastBackupTime | async; as lastBackupTime) {
+  <a app-badge href="/db" class="lastBackup"
     >Last backup {{ lastBackupTime | relativeTime }}</a
   >
+  }
   <section class="main">
     <router-outlet></router-outlet>
   </section>
 </main>
+}
 <ul app-notifications></ul>

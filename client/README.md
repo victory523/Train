@@ -33,3 +33,5 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 - https://flowbite.com/docs/components/tables/
 - https://hslpicker.com/
 - https://softchris.github.io/books/rxjs/cascading-calls/
+- https://github.com/search?q=%40ungap%2Fcustom-elements+language%3ATypeScript&type=code&l=TypeScript
+- https://github.com/milieuinfo/uigov-web-components?tab=readme-ov-file#documentatie

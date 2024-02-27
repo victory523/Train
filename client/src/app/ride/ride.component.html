@@ -1,4 +1,5 @@
-<section *ngIf="$vm | async as vm">
+@if ($vm | async; as vm) {
+<section>
   <article>
     <h2 app-text>Calories</h2>
     <p app-heading large>
@@ -36,3 +37,4 @@
     </p>
   </article>
 </section>
+}

@@ -14,6 +14,7 @@ import { RideService } from './ride/ride.service';
 import { StravaService } from './strava/strava.service';
 import { WeightService } from './weight/weight.service';
 import { WithingsService } from './withings/withings.service';
+import { AuthService } from './auth/auth.service';
 
 function provideECharts(): Provider {
   return {
@@ -35,6 +36,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideLocation(),
     provideECharts(),
+    AuthService,
     StravaService,
     RideService,
     WeightService,

@@ -7,7 +7,13 @@ import { NotificationService } from './common-components/notification.service';
 import { BackupService } from './backup/backup.service';
 import { RelativeTimePipe } from './utils/relative-time.pipe';
 import { provideHttpClient } from '@angular/common/http';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import {
+  IsActiveMatchOptions,
+  RouterLink,
+  RouterLinkActive,
+  RouterOutlet,
+} from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 @Directive({
   standalone: true,
@@ -16,6 +22,18 @@ import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 class MockRouterLink {
   @Input()
   routerLink?: string;
+}
+
+@Directive({
+  standalone: true,
+  selector: '[routerLinkActive]',
+})
+class MockRouterLinkActive {
+  @Input()
+  routerLinkActive?: boolean;
+
+  @Input()
+  routerLinkActiveOptions?: IsActiveMatchOptions;
 }
 
 @Component({
@@ -29,9 +47,17 @@ async function setup() {
   const mockBackupService: jasmine.SpyObj<BackupService> = jasmine.createSpyObj(
     ['getLastBackupTime']
   );
+  const mockAuthService: jasmine.SpyObj<AuthService> = jasmine.createSpyObj([
+    'isSignedIn',
+    'getUserName',
+    'signin',
+    'signout',
+  ]);
   mockBackupService.getLastBackupTime.and.returnValue(
     of(new Date(Date.now() - 5 * 60 * 1000))
   );
+  mockAuthService.getUserName.and.returnValue(of('Igor'));
+  mockAuthService.isSignedIn.and.returnValue(of(true));
 
   await TestBed.configureTestingModule({
     imports: [RelativeTimePipe],
@@ -40,6 +66,7 @@ async function setup() {
       provideHttpClient(),
       NotificationService,
       { provide: BackupService, useValue: mockBackupService },
+      { provide: AuthService, useValue: mockAuthService },
     ],
   }).compileComponents();
 
@@ -48,7 +75,7 @@ async function setup() {
       imports: [RouterOutlet, RouterLink, RouterLinkActive],
     },
     add: {
-      imports: [MockRouterOutlet, MockRouterLink],
+      imports: [MockRouterOutlet, MockRouterLink, MockRouterLinkActive],
     },
   });
 
